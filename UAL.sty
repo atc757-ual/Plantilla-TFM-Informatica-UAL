@@ -71,6 +71,7 @@
 \definecolor{Color2}{rgb}{0.0, 0.22, 0.62}
 \definecolor{Color1}{rgb}{0.0, 0.22, 0.62}%{0.48, 0.41, 0.93}
 \definecolor{BackgroundColor}{rgb}{1,0.88,0.21}
+\definecolor{ColorEtiqueta}{RGB}{99,37,35} % color de las etiquetas de portada (Curso/Alumno/Director)
 
 \g@addto@macro{\UrlBreaks}{\UrlOrds}  %PAra salto lineas url
 
@@ -158,10 +159,10 @@ at (fondo)
           {\parbox{0.71\paperwidth}{\centering 
           \fontsize{45}{50} \selectfont \tituloTFG \\[8cm]
           }};
-        \node [xshift=-150pt, yshift=-255-\hoffset,right] at (titulo) {\textbf{\LARGE Curso: \curso}};
-        \node [xshift=-150pt, yshift=-330-\hoffset, right] at (titulo) {\textbf{\LARGE\alumno}};
-        \node [xshift=250pt, yshift=-380-\hoffset,left] at (titulo) {\textbf{\LARGE\director}};
-        \node [xshift=250pt, yshift=-400-\hoffset,left] at (titulo) {\textbf{\LARGE\direct}};
+        \node [xshift=-105pt, yshift=-246-\hoffset,right] at (titulo) {\textbf{\rmfamily\color{ColorEtiqueta}\huge\curso}};
+        \node [xshift=-150pt, yshift=-330-\hoffset, right] at (titulo) {\rmfamily\color{ColorEtiqueta}\LARGE\alumno};
+        \node [xshift=250pt, yshift=-380-\hoffset,left] at (titulo) {\rmfamily\color{ColorEtiqueta}\LARGE\director};
+        \node [xshift=250pt, yshift=-400-\hoffset,left] at (titulo) {\rmfamily\color{ColorEtiqueta}\LARGE\direct};
   \end{tikzpicture}
 }
 
