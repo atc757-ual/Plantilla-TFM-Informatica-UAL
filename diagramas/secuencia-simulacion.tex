@@ -1,0 +1,48 @@
+% Diagrama: Figura F.3 - Secuencia de simulacion de escenario
+% TikZ vectorial, con los estilos definidos en main.tex (bloque, capa,
+% participante, actividad...). Se incluye con \input desde apendices.tex.
+
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \useasboundingbox (0.0,2.60) rectangle (15.4,12.65);
+  \foreach \x in {1.30, 3.10, 4.90, 6.90, 8.90, 10.80, 12.70, 14.60} {
+    \draw[linea] (\x,11.80) -- (\x,2.75);
+  }
+  \node[participante] at (1.30,12.20) {Administrador};
+  \node[participante] at (3.10,12.20) {Panel admin};
+  \node[participante] at (4.90,12.20) {\textit{Backend}};
+  \node[participante] at (6.90,12.20) {Generador (A)};
+  \node[participante] at (8.90,12.20) {Motor (B)};
+  \node[participante] at (10.80,12.20) {\textit{Matching}};
+  \node[participante] at (12.70,12.20) {Gemelo Digital};
+  \node[participante] at (14.60,12.20) {Persistencia};
+
+  \draw[msg] (1.30,11.35) -- node[etq] {selecciona escenario (S0--S5)} (3.10,11.35);
+  \draw[msg] (3.10,10.77) -- node[etq] {POST /simulaciones} (4.90,10.77);
+  \draw[msg] (4.90,10.19) -- node[etq] {crear escenario} (6.90,10.19);
+
+  \draw[msg] (6.90,9.61) -- node[etq] {solicitar estado actual} (12.70,9.61);
+  \draw[ret] (12.70,9.03) -- node[etq] {copia del estado} (6.90,9.03);
+
+  \draw[msg] (6.90,8.45) -- (7.50,8.45) -- (7.50,8.10) -- (6.90,8.10);
+  \node[etq, anchor=west] at (7.55,8.42) {generar agentes sintéticos};
+
+  \draw[msg] (6.90,7.85) -- node[etq] {iniciar simulación} (8.90,7.85);
+
+  \draw[frag] (8.45,7.20) rectangle (11.30,5.05);
+  \node[fragtab] at (8.45,7.20) {\textbf{loop} [durante la simulación]};
+
+  \draw[msg] (8.90,6.70) -- node[etq] {ejecutar \textit{matching}} (10.80,6.70);
+  \draw[ret] (10.80,6.15) -- node[etq] {asignaciones} (8.90,6.15);
+  \draw[msg] (8.90,5.65) -- (9.50,5.65) -- (9.50,5.30) -- (8.90,5.30);
+  \node[etq, anchor=west] at (9.55,5.62) {actualizar estado};
+
+  \draw[msg] (8.90,4.90) -- (9.50,4.90) -- (9.50,4.55) -- (8.90,4.55);
+  \node[etq, anchor=west] at (9.55,4.87) {calcular métricas};
+
+  \draw[msg] (8.90,3.95) -- node[etq] {guardar resultados} (14.60,3.95);
+  \draw[ret] (8.90,3.37) -- node[etq] {resultados} (4.90,3.37);
+  \draw[ret] (4.90,2.90) -- node[etq] {resultados comparables} (3.10,2.90);
+  \draw[ret] (3.10,2.45) -- node[etq] {informe de escenario} (1.30,2.45);
+\end{tikzpicture}
+}

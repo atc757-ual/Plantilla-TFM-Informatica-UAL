@@ -1,0 +1,50 @@
+% Diagrama: Figura F.2 - Secuencia de matching y solicitud de plaza
+% TikZ vectorial, con los estilos definidos en main.tex (bloque, capa,
+% participante, actividad...). Se incluye con \input desde apendices.tex.
+
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \useasboundingbox (0.0,1.10) rectangle (15.4,12.65);
+  \foreach \x in {1.35, 3.45, 5.55, 7.65, 9.75, 11.85, 13.95} {
+    \draw[linea] (\x,11.80) -- (\x,1.25);
+  }
+  \node[participante] at (1.35,12.20) {Pasajero};
+  \node[participante] at (3.45,12.20) {\textit{Frontend}};
+  \node[participante] at (5.55,12.20) {\textit{Backend}};
+  \node[participante] at (7.65,12.20) {\textit{Matching}};
+  \node[participante] at (9.75,12.20) {PostGIS};
+  \node[participante] at (11.85,12.20) {Motor de rutas};
+  \node[participante] at (13.95,12.20) {Gemelo Digital};
+
+  \draw[msg] (1.35,11.35) -- node[etq] {busca viajes (origen, destino, ventana)} (3.45,11.35);
+  \draw[msg] (3.45,10.77) -- node[etq] {GET /viajes/buscar} (5.55,10.77);
+  \draw[msg] (5.55,10.19) -- node[etq] {ejecutar \textit{matching}} (7.65,10.19);
+
+  \draw[msg] (7.65,9.61) -- node[etq] {filtrar por proximidad} (9.75,9.61);
+  \draw[ret] (9.75,9.03) -- node[etq] {lista reducida} (7.65,9.03);
+
+  \draw[msg] (7.65,8.55) -- (8.35,8.55) -- (8.35,8.20) -- (7.65,8.20);
+  \node[etq, anchor=west] at (8.40,8.52) {comprobar ventana horaria};
+
+  \draw[frag] (7.20,8.00) rectangle (12.35,5.90);
+  \node[fragtab] at (7.20,8.00) {\textbf{loop} [por cada viaje candidato]};
+
+  \draw[msg] (7.65,7.55) -- node[etq] {calcular desvío y tiempo} (11.85,7.55);
+  \draw[ret] (11.85,6.97) -- node[etq] {métricas de ruta} (7.65,6.97);
+  \draw[msg] (7.65,6.52) -- (8.35,6.52) -- (8.35,6.17) -- (7.65,6.17);
+  \node[etq, anchor=west] at (8.40,6.49) {puntuar compatibilidad};
+
+  \draw[ret] (7.65,5.55) -- node[etq] {lista ordenada por compatibilidad} (5.55,5.55);
+  \draw[ret] (5.55,4.97) -- node[etq] {resultados} (3.45,4.97);
+  \draw[ret] (3.45,4.39) -- node[etq] {viajes compatibles} (1.35,4.39);
+
+  \draw[msg] (1.35,3.81) -- node[etq] {solicita plaza} (3.45,3.81);
+  \draw[msg] (3.45,3.23) -- node[etq] {POST /solicitudes} (5.55,3.23);
+  \draw[msg] (5.55,2.65) -- node[etq] {evento \texttt{SolicitudCreada}} (13.95,2.65);
+
+  \draw[msg] (13.95,2.05) -- (14.65,2.05) -- (14.65,1.70) -- (13.95,1.70);
+  \node[etq, anchor=east] at (13.85,2.02) {actualizar estado};
+
+  \draw[ret] (5.55,1.45) -- node[etq] {201 Created} (3.45,1.45);
+\end{tikzpicture}
+}
