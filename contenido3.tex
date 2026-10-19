@@ -1,0 +1,67 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CAPÍTULO 3: OBJETIVOS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Objetivos}
+\label{ch:objetivos}
+
+\section{Objetivo general}
+
+Diseñar, implementar y evaluar una plataforma de carpooling universitario P2P, orientada a estudiantes y personal de la Universidad de Almería, que integre un Gemelo Digital del sistema de movilidad, un mecanismo de \textit{matching} conductor-pasajero y un entorno de simulación que permita analizar el comportamiento del sistema bajo distintos escenarios.
+
+\section{Objetivos específicos}
+
+Los objetivos específicos (OE) se agrupan en cuatro bloques, coherentes con las preguntas de investigación y con las categorías de la revisión sistemática.
+
+\subsection{Bloque A: Fundamentos y arquitectura}
+
+\begin{itemize}
+    \item \textbf{OE1.} Analizar el estado del arte de Gemelos Digitales aplicados a movilidad, transporte y sistemas inteligentes.
+    \item \textbf{OE2.} Analizar la literatura y soluciones existentes de carpooling, \textit{ride-sharing} y movilidad universitaria.
+    \item \textbf{OE3.} Definir una arquitectura software modular que separe presentación, servicios, persistencia, Gemelo Digital y simulación.
+\end{itemize}
+
+\subsection{Bloque B: Modelo digital y sincronización}
+
+\begin{itemize}
+    \item \textbf{OE4.} Diseñar el modelo digital de usuarios, vehículos, viajes, solicitudes y rutas.
+    \item \textbf{OE5.} Definir los eventos y mecanismos de sincronización entre la plataforma y el Gemelo Digital.
+    \item \textbf{OE6.} Implementar el módulo de Gemelo Digital que mantiene actualizado el estado del sistema.
+\end{itemize}
+
+\subsection{Bloque C: \textit{Matching} y gestión de viajes}
+
+\begin{itemize}
+    \item \textbf{OE7.} Diseñar e implementar la lógica de \textit{matching} conductor-pasajero basada en criterios de compatibilidad.
+    \item \textbf{OE8.} Implementar la gestión del ciclo de vida del viaje y de las solicitudes asociadas.
+    \item \textbf{OE9.} Implementar el \textit{frontend} multiplataforma (Angular + Ionic) y el \textit{backend} con interfaces de programación de aplicaciones (API, del inglés \textit{Application Programming Interface}) en Node.js.
+\end{itemize}
+
+\subsection{Bloque D: Simulación y evaluación}
+
+\begin{itemize}
+    \item \textbf{OE10.} Implementar un módulo de simulación que permita generar escenarios de movilidad compartida.
+    \item \textbf{OE11.} Definir indicadores para evaluar eficiencia, ocupación y comportamiento del sistema.
+    \item \textbf{OE12.} Validar la solución mediante casos de prueba funcionales, evaluación técnica y experimentos controlados.
+\end{itemize}
+
+\section{Trazabilidad entre objetivos y preguntas de investigación}
+
+La Tabla~\ref{tab:trazabilidad-objetivos} muestra la trazabilidad entre los objetivos específicos y las preguntas de investigación.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{Y{0.8} Y{1.4} Y{0.8}}
+    \hline
+    \textbf{Objetivo} & \textbf{Pregunta de investigación} & \textbf{Categorías SLR} \\
+    \hline
+    OE1, OE2 & RQ1 & A, B, D, E \\
+    OE3 & RQ1 & A \\
+    OE4, OE5, OE6 & RQ2 & A, C \\
+    OE7, OE8, OE9 & RQ3 & E \\
+    OE10, OE11, OE12 & RQ4 & D, E \\
+    \hline
+  \end{tabularx}
+  \caption{Trazabilidad entre objetivos y preguntas de investigación.}
+  \label{tab:trazabilidad-objetivos}
+\end{table}

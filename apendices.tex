@@ -1,47 +1,414 @@
-% Anexo de referencia rápida sobre archivos .bib, complementario a la
-% sección "Citas y bibliografía" del capítulo "Ejemplos prácticos".
+% Anexos de la memoria. El bloque de ejemplo de la plantilla original
+% ("Tipos de referencias") se ha eliminado por no formar parte del TFM.
 \addtocontents{toc}{ \vspace{5mm} \hrule \par}
 
+\chapter{Decisiones de diseño pendientes}
+\label{anx:decisiones-diseno}
 
-  \chapter{Tipos de referencias}
-  \label{sec:bib}
-    \begin{table}[H]
-	\begin{center}
-	\begin{tabular}{l p{10cm} }
-	 \hline
-   article& Un artículo de un periódico o revista\\
-  
-    book& Un libro con una editorial que se indica en forma explícita. Los campos requeridos en este caso son author (autor), editor, title (título), publisher (editorial) y year (año)\\
-  
-    booklet& Una obra que está impresa y encuadernada, pero sin una editorial o institución patrocinadora\\
-  
-    conference& Lo mismo que inproceedings, incluido para compatibilidad con el lenguaje de marcación Scribe\\
-  
-    inbook& Una parte de un libro, que puede ser un capítulo (o sección) o un rango de páginas\\
-  
-    incollection& Una parte de un libro que tiene su propio título\\
-  
-    inproceedings& Un artículo en las actas de sesiones (proceedings) de una conferencia\\
-  
-    manual& Documentación técnica\\
-  
-    mastersthesis& Una tesis de maestría (Master thesis) o proyecto fin de carrera\\
-  
-    misc& Para uso cuando los demás tipos no corresponden\\
-  
-    phdthesis& Una tesis de doctorado (Ph D thesis)\\
-  
-    proceedings& Las actas de sesiones de una conferencia\\
-  
-    techreport& Un reporte publicado por una escuela u otra institución, usualmente numerado dentro de una serie\\
-  
-    unpublished& Un documento que tiene un autor y título, pero que no fue formalmente publicado\\
-          \hline
-	\end{tabular}
-	\end{center}
-	\caption{Tipos posibles de elementos en bibligrafía con natbib}
+Estas decisiones no bloquean la planificación, pero deberán cerrarse antes de implementar la versión definitiva (Tabla~\ref{tab:decisiones-pendientes}).
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{Y{0.3636} Y{2.0000} Y{0.6364}}
+    \hline
+    \textbf{ID} & \textbf{Decisión pendiente} & \textbf{Fase de cierre} \\
+    \hline
+    DP-01 & Base de datos concreta y estrategia de persistencia & F1 \\
+    DP-02 & Motor de mapas/rutas (OSRM, Google Maps u otro) & F1 \\
+    DP-03 & Tecnología concreta del motor de simulación (propio o SUMO) & F1 \\
+    DP-04 & Grado de tiempo real y frecuencia de actualización del DT & F1 \\
+    DP-05 & Modelo exacto de datos y eventos entre el \textit{backend} y el DT & F1 \\
+    DP-06 & Método final de generación de datos sintéticos para evaluación & F1 \\
+    DP-07 & Criterios académicos concretos de evaluación exigidos por la dirección del TFM & F1 \\
+    \hline
+  \end{tabularx}
+  \caption{Decisiones de diseño pendientes.}
+  \label{tab:decisiones-pendientes}
 \end{table}
 
+Todas las decisiones se cierran en F1 (Diseño y requisitos) para no bloquear las fases posteriores.
 
+\chapter{Diagramas UML}
+\label{anx:diagramas-uml}
 
+\section{Diagramas del cuerpo del documento}
 
+La Tabla~\ref{tab:diagramas-cuerpo} recoge los diagramas previstos para el cuerpo de la memoria. Se han actualizado las ubicaciones para que correspondan con la estructura actual del proyecto LaTeX; los que aún no están incorporados se identifican como pendientes.
+
+\begin{longtable}{p{4.0cm} p{4.2cm} p{6.44cm}}
+  \caption{Diagramas del cuerpo del documento.}
+  \label{tab:diagramas-cuerpo}\\
+  \hline
+  \textbf{Diagrama} & \textbf{Ubicación actual o prevista} & \textbf{Descripción} \\
+  \hline
+  \endfirsthead
+  \multicolumn{3}{c}{\tablename\ \thetable{} -- continuación}\\
+  \hline
+  \textbf{Diagrama} & \textbf{Ubicación actual o prevista} & \textbf{Descripción} \\
+  \hline
+  \endhead
+  Diagrama de casos de uso & Capítulo~\ref{ch:actores}, Figura~\ref{fig:casos-uso} & Actores y casos de uso prioritarios (CU-01 a CU-12) \\
+  Diagrama de estados del viaje & Pendiente; capítulo~\ref{ch:requisitos}, junto a RF-11 & Ciclo de vida del viaje \\
+  Diagrama de estados de la solicitud & Pendiente; capítulo~\ref{ch:requisitos}, junto a RF-08 y RF-09 & Ciclo de vida de la solicitud \\
+  Diagrama de clases del dominio & Capítulo~\ref{ch:arquitectura}, Figura~\ref{fig:clases} & Entidades digitales del Gemelo Digital \\
+  Diagrama de secuencia: publicar viaje & Pendiente; capítulo~\ref{ch:arquitectura} & Flujo de publicación y actualización del DT \\
+  Diagrama de secuencia: \textit{matching} y solicitud & Anexo~\ref{anx:arquitectura-capas}, Sección~\ref{sec:anx-secuencia-matching} & Flujo del \textit{matching} progresivo \\
+  Diagrama de secuencia: simulación & Anexo~\ref{anx:arquitectura-capas}, Sección~\ref{sec:anx-secuencia-simulacion} & Flujo del módulo de simulación \\
+  Diagrama de arquitectura por capas & Anexo~\ref{anx:arquitectura-capas}, Sección~\ref{sec:anx-arquitectura-capas} & Arquitectura general del sistema \\
+  \hline
+\end{longtable}
+
+\section{Diagramas complementarios}
+
+La Tabla~\ref{tab:diagramas-complementarios} conserva los diagramas complementarios propuestos en el Word. Su ubicación queda en este anexo, pendientes de elaboración.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{Y{0.6667} Y{1.3333}}
+    \hline
+    \textbf{Diagrama} & \textbf{Descripción} \\
+    \hline
+    Diagrama entidad-relación (ER) & Modelo de datos físico de la base de datos \\
+    Diagrama de despliegue & Distribución de componentes en entorno de desarrollo \\
+    Diagrama de componentes & Descomposición de módulos del \textit{backend} \\
+    \hline
+  \end{tabularx}
+  \caption{Diagramas complementarios propuestos para este anexo.}
+  \label{tab:diagramas-complementarios}
+\end{table}
+
+Estos diagramas se generarán durante la fase F1 y se incorporarán al anexo en la versión final de la memoria.
+
+\chapter{Glosario de términos}
+\label{anx:glosario}
+
+Se recogen en este anexo los términos propios del dominio que se emplean con un significado específico en la memoria. Las siglas y acrónimos se listan en el apartado de abreviaturas.
+
+\begin{longtable}{p{3.5cm} p{11.66cm}}
+  \caption{Glosario de términos.}
+  \label{tab:glosario}\\
+  \hline
+  \textbf{Término} & \textbf{Definición} \\
+  \hline
+  \endfirsthead
+  \multicolumn{2}{c}{\tablename\ \thetable{} -- continuación}\\
+  \hline
+  \textbf{Término} & \textbf{Definición} \\
+  \hline
+  \endhead
+  ARATÍES & Aplicación institucional de la UAL para la entrega de TFM \\
+  Carpooling P2P & Coche compartido entre particulares, donde el conductor ya tiene previsto realizar el desplazamiento \\
+  \textit{Ride-hailing} & Servicio donde un conductor profesional atiende solicitudes de viaje \\
+  \textit{Ride-sharing} & Uso compartido de un vehículo entre varios usuarios \\
+  \hline
+\end{longtable}
+
+\chapter{Matriz de evaluación}
+\label{anx:matriz-evaluacion}
+
+Este anexo relaciona cada objetivo específico con su pregunta de investigación, las métricas asociadas, los escenarios de simulación en los que se evalúa y el nivel de validación correspondiente. No duplica la trazabilidad del capítulo~\ref{ch:requisitos}, que relaciona requisitos, casos de uso y objetivos, sino que se centra en cómo se evalúa cada objetivo.
+
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}p{1.8cm} p{1.8cm} p{4.2cm} p{1.8cm} p{4.8cm}@{}}
+  \caption{Matriz de evaluación.}
+  \label{tab:matriz-evaluacion}\\
+  \hline
+  \textbf{Objetivo} & \textbf{Pregunta} & \textbf{Métrica principal} & \textbf{Escenario} & \textbf{Nivel de validación} \\
+  \hline
+  \endfirsthead
+  \multicolumn{5}{c}{\tablename\ \thetable{} -- continuación}\\
+  \hline
+  \textbf{Objetivo} & \textbf{Pregunta} & \textbf{Métrica principal} & \textbf{Escenario} & \textbf{Nivel de validación} \\
+  \hline
+  \endhead
+  OE1, OE2 & RQ1 & --- & --- & Revisión bibliográfica (SLR) \\
+  OE3 & RQ1 & Modularidad, acoplamiento & --- & Revisión de diseño \\
+  OE4 & RQ2 & Cobertura de entidades del modelo & --- & Revisión de diseño \\
+  OE5 & RQ2 & Latencia de sincronización & S1, S5 & Técnico \\
+  OE6 & RQ2 & Coherencia plataforma $\leftrightarrow$ DT & S1, S5 & Técnico \\
+  OE7 & RQ3 & Tiempo de respuesta del \textit{matching} & S1, S2 & Técnico + funcional \\
+  OE8 & RQ3 & Transiciones de estado correctas & S0--S5 & Funcional \\
+  OE9 & RQ3 & Casos de uso cubiertos & S0--S5 & Funcional \\
+  OE10 & RQ4 & Escenarios ejecutados sin errores & S0--S5 & Funcional \\
+  OE11 & RQ4 & Vehículos evitados, ocupación media & S0--S5 & Experimental \\
+  OE12 & RQ4 & Resultados comparables entre escenarios & S0--S5 & Experimental \\
+  \hline
+\end{longtable}
+\setlength{\tabcolsep}{6pt}
+
+Las métricas «vehículos evitados» y «ocupación media» son las principales para responder a RQ4. El resto de las métricas (solicitudes cubiertas, distancia adicional y número de incidencias) se recogen en la Sección~\ref{sec:metricas-evaluacion}.
+
+\chapter{Escenarios de simulación (detalle)}
+\label{anx:escenarios-detalle}
+
+Este anexo amplía la información de la Sección~\ref{sec:escenarios-evaluacion} con los parámetros y resultados esperados de cada escenario.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{Y{0.7007} Y{1.2263} Y{0.9635} Y{1.1095}}
+    \hline
+    \textbf{Escenario} & \textbf{Descripción} & \textbf{Parámetros} & \textbf{Resultado esperado} \\
+    \hline
+    S0 --- Base & Cada usuario realiza el desplazamiento de forma individual & Sin \textit{matching} & Base de comparación \\
+    S1 --- Carpooling básico & \textit{Matching} con reglas de compatibilidad & Umbrales estándar & Reducción de vehículos \\
+    S2 --- Mayor demanda & Aumenta el número de usuarios & 2$\times$, 5$\times$ usuarios & Análisis de escalabilidad \\
+    S3 --- Horarios variables & Cambian las ventanas temporales & $\pm$15 min, $\pm$30 min, $\pm$60 min & Análisis de compatibilidad \\
+    S4 --- Capacidad variable & Vehículos con distinto número de plazas & 2, 4, 6 plazas & Análisis de eficiencia \\
+    S5 --- Incidencias & Cancelaciones y cambios de disponibilidad & 5\%, 10\%, 20\% de incidencias & Análisis de robustez \\
+    \hline
+  \end{tabularx}
+  \caption{Escenarios de simulación (detalle).}
+  \label{tab:escenarios-detalle}
+\end{table}
+
+\chapter{Diagrama de arquitectura por capas}
+\label{anx:arquitectura-capas}
+
+\section{Arquitectura por capas}
+\label{sec:anx-arquitectura-capas}
+
+La arquitectura separa presentación, servicios, persistencia, Gemelo Digital, simulación y DevOps, permitiendo sustituir componentes sin rehacer el sistema (Figura~\ref{fig:arquitectura-capas}).
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[x=1cm,y=1cm]
+    % --- bandas de capas ---
+    \node[capa, minimum width=12.7cm, minimum height=1.45cm] (pres) at (6.5,12.30)
+      {\textbf{1. Presentación}\\[1pt]
+       {\scriptsize\textit{Frontend} de usuarios (Angular + Ionic, web y móvil) $\cdot$ panel de administración (web)}};
+
+    \node[capa, minimum width=12.7cm, minimum height=1.45cm] (api) at (6.5,10.30)
+      {\textbf{2. API / Backend (Node.js)}\\[1pt]
+       {\scriptsize autenticación $\cdot$ usuarios $\cdot$ viajes $\cdot$ solicitudes $\cdot$ \textit{matching} $\cdot$ notificaciones}};
+
+    \node[capa, minimum width=6.1cm, minimum height=2.60cm] (dt) at (3.35,7.70)
+      {\textbf{3a. Gemelo Digital}\\[1pt]
+       \scriptsize API del DT\\ sincronización por eventos\\ modelo de estado};
+
+    \node[capa, minimum width=6.1cm, minimum height=2.60cm] (sim) at (9.65,7.70)
+      {\textbf{3b. Simulación}\\[1pt]
+       \scriptsize generador de escenarios (A)\\ motor de simulación (B)\\ cálculo de métricas\\[1pt]
+       sobre una \textbf{copia} del estado del DT};
+
+    \node[capa, minimum width=12.7cm, minimum height=1.45cm] (pers) at (6.5,5.60)
+      {\textbf{4. Persistencia (PostgreSQL + PostGIS)}\\[1pt]
+       {\scriptsize usuarios, viajes, solicitudes, estados y resultados de simulación}};
+
+    % --- capa transversal ---
+    \draw[draw=Color2!70, fill=Color2!3, rounded corners=2pt, dashed]
+      (13.05,4.90) rectangle (15.60,13.00);
+    \node[font=\scriptsize, rotate=90, align=center, text=Color2] at (14.32,8.95)
+      {\textbf{DevOps (transversal)}\\ GitHub $\cdot$ GitHub Actions};
+
+    % --- conectores ---
+    \draw[flecha] (6.5,11.55) -- (6.5,11.05);
+    \draw[flecha] (api.south) -- (6.5,9.10) -- (3.35,9.10) -- (dt.north);
+    \draw[flecha] (api.south) -- (6.5,9.10) -- (9.65,9.10) -- (sim.north);
+    \draw[flecha] (dt.south) -- (dt.south |- pers.north);
+    \draw[flecha] (sim.south) -- (sim.south |- pers.north);
+
+    % --- barra de soporte ---
+    \node[font=\scriptsize, fill=white, inner sep=1pt] at (14.32,4.70) {};
+  \end{tikzpicture}
+  \caption[Diagrama de arquitectura por capas]{Diagrama de arquitectura por capas. Las capas se apilan de presentación a persistencia; la capa de simulación trabaja sobre una copia del estado del Gemelo Digital. DevOps se representa como capa transversal porque no forma parte del sistema en ejecución.}
+  \label{fig:arquitectura-capas}
+\end{figure}
+
+\section{Secuencia de \textit{matching} y solicitud de plaza}
+\label{sec:anx-secuencia-matching}
+
+El \textit{matching} se ejecuta de forma progresiva: primero se filtran candidatos por proximidad geoespacial mediante PostGIS; después se evalúan la ruta, el horario y el desvío. Cada solicitud genera un evento que actualiza el Gemelo Digital (Figura~\ref{fig:secuencia-matching}).
+
+\begin{figure}[H]
+  \centering
+  \resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \useasboundingbox (0.0,1.10) rectangle (15.4,12.65);
+  \foreach \x in {1.35, 3.45, 5.55, 7.65, 9.75, 11.85, 13.95} {
+    \draw[linea] (\x,11.80) -- (\x,1.25);
+  }
+  \node[participante] at (1.35,12.20) {Pasajero};
+  \node[participante] at (3.45,12.20) {\textit{Frontend}};
+  \node[participante] at (5.55,12.20) {\textit{Backend}};
+  \node[participante] at (7.65,12.20) {\textit{Matching}};
+  \node[participante] at (9.75,12.20) {PostGIS};
+  \node[participante] at (11.85,12.20) {Motor de rutas};
+  \node[participante] at (13.95,12.20) {Gemelo Digital};
+
+  \draw[msg] (1.35,11.35) -- node[etq] {busca viajes (origen, destino, ventana)} (3.45,11.35);
+  \draw[msg] (3.45,10.77) -- node[etq] {GET /viajes/buscar} (5.55,10.77);
+  \draw[msg] (5.55,10.19) -- node[etq] {ejecutar \textit{matching}} (7.65,10.19);
+
+  \draw[msg] (7.65,9.61) -- node[etq] {filtrar por proximidad} (9.75,9.61);
+  \draw[ret] (9.75,9.03) -- node[etq] {lista reducida} (7.65,9.03);
+
+  \draw[msg] (7.65,8.55) -- (8.35,8.55) -- (8.35,8.20) -- (7.65,8.20);
+  \node[etq, anchor=west] at (8.40,8.52) {comprobar ventana horaria};
+
+  \draw[frag] (7.20,8.00) rectangle (12.35,5.90);
+  \node[fragtab] at (7.20,8.00) {\textbf{loop} [por cada viaje candidato]};
+
+  \draw[msg] (7.65,7.55) -- node[etq] {calcular desvío y tiempo} (11.85,7.55);
+  \draw[ret] (11.85,6.97) -- node[etq] {métricas de ruta} (7.65,6.97);
+  \draw[msg] (7.65,6.52) -- (8.35,6.52) -- (8.35,6.17) -- (7.65,6.17);
+  \node[etq, anchor=west] at (8.40,6.49) {puntuar compatibilidad};
+
+  \draw[ret] (7.65,5.55) -- node[etq] {lista ordenada por compatibilidad} (5.55,5.55);
+  \draw[ret] (5.55,4.97) -- node[etq] {resultados} (3.45,4.97);
+  \draw[ret] (3.45,4.39) -- node[etq] {viajes compatibles} (1.35,4.39);
+
+  \draw[msg] (1.35,3.81) -- node[etq] {solicita plaza} (3.45,3.81);
+  \draw[msg] (3.45,3.23) -- node[etq] {POST /solicitudes} (5.55,3.23);
+  \draw[msg] (5.55,2.65) -- node[etq] {evento \texttt{SolicitudCreada}} (13.95,2.65);
+
+  \draw[msg] (13.95,2.05) -- (14.65,2.05) -- (14.65,1.70) -- (13.95,1.70);
+  \node[etq, anchor=east] at (13.85,2.02) {actualizar estado};
+
+  \draw[ret] (5.55,1.45) -- node[etq] {201 Created} (3.45,1.45);
+\end{tikzpicture}
+  }
+  \caption{Diagrama de secuencia: \textit{matching} y solicitud de plaza. Paso previo de comprobación de la ventana temporal y bucle de evaluación por candidato.}
+  \label{fig:secuencia-matching}
+\end{figure}
+
+\section{Secuencia de simulación de escenario}
+\label{sec:anx-secuencia-simulacion}
+
+El módulo de simulación parte del estado actual del Gemelo Digital, genera agentes sintéticos, ejecuta el \textit{matching} de forma iterativa y calcula las métricas al finalizar cada escenario. Los resultados se almacenan en formato estructurado para permitir su comparación posterior (Figura~\ref{fig:secuencia-simulacion}).
+
+\begin{figure}[H]
+  \centering
+  \resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \useasboundingbox (0.0,2.60) rectangle (15.4,12.65);
+  \foreach \x in {1.30, 3.10, 4.90, 6.90, 8.90, 10.80, 12.70, 14.60} {
+    \draw[linea] (\x,11.80) -- (\x,2.75);
+  }
+  \node[participante] at (1.30,12.20) {Administrador};
+  \node[participante] at (3.10,12.20) {Panel admin};
+  \node[participante] at (4.90,12.20) {\textit{Backend}};
+  \node[participante] at (6.90,12.20) {Generador (A)};
+  \node[participante] at (8.90,12.20) {Motor (B)};
+  \node[participante] at (10.80,12.20) {\textit{Matching}};
+  \node[participante] at (12.70,12.20) {Gemelo Digital};
+  \node[participante] at (14.60,12.20) {Persistencia};
+
+  \draw[msg] (1.30,11.35) -- node[etq] {selecciona escenario (S0--S5)} (3.10,11.35);
+  \draw[msg] (3.10,10.77) -- node[etq] {POST /simulaciones} (4.90,10.77);
+  \draw[msg] (4.90,10.19) -- node[etq] {crear escenario} (6.90,10.19);
+
+  \draw[msg] (6.90,9.61) -- node[etq] {solicitar estado actual} (12.70,9.61);
+  \draw[ret] (12.70,9.03) -- node[etq] {copia del estado} (6.90,9.03);
+
+  \draw[msg] (6.90,8.45) -- (7.50,8.45) -- (7.50,8.10) -- (6.90,8.10);
+  \node[etq, anchor=west] at (7.55,8.42) {generar agentes sintéticos};
+
+  \draw[msg] (6.90,7.85) -- node[etq] {iniciar simulación} (8.90,7.85);
+
+  \draw[frag] (8.45,7.20) rectangle (11.30,5.05);
+  \node[fragtab] at (8.45,7.20) {\textbf{loop} [durante la simulación]};
+
+  \draw[msg] (8.90,6.70) -- node[etq] {ejecutar \textit{matching}} (10.80,6.70);
+  \draw[ret] (10.80,6.15) -- node[etq] {asignaciones} (8.90,6.15);
+  \draw[msg] (8.90,5.65) -- (9.50,5.65) -- (9.50,5.30) -- (8.90,5.30);
+  \node[etq, anchor=west] at (9.55,5.62) {actualizar estado};
+
+  \draw[msg] (8.90,4.90) -- (9.50,4.90) -- (9.50,4.55) -- (8.90,4.55);
+  \node[etq, anchor=west] at (9.55,4.87) {calcular métricas};
+
+  \draw[msg] (8.90,3.95) -- node[etq] {guardar resultados} (14.60,3.95);
+  \draw[ret] (8.90,3.37) -- node[etq] {resultados} (4.90,3.37);
+  \draw[ret] (4.90,2.90) -- node[etq] {resultados comparables} (3.10,2.90);
+  \draw[ret] (3.10,2.45) -- node[etq] {informe de escenario} (1.30,2.45);
+\end{tikzpicture}
+  }
+  \caption{Diagrama de secuencia: simulación de escenario. El generador crea el escenario y el motor lo ejecuta sobre una copia del estado, sin afectar a los datos reales.}
+  \label{fig:secuencia-simulacion}
+\end{figure}
+
+\section{Actividad del proceso de \textit{matching}}
+\label{sec:anx-actividad-matching}
+
+El proceso de \textit{matching} es progresivo: primero se filtran candidatos por proximidad geoespacial, después se evalúan la ruta, el horario y el desvío, y finalmente se ordenan por puntuación de compatibilidad. Cada cambio de estado genera un evento que actualiza el Gemelo Digital (Figura~\ref{fig:actividad-matching}).
+
+\begin{figure}[H]
+  \centering
+  \resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[x=1cm,y=1cm]
+    \useasboundingbox (0.0,0.15) rectangle (15.4,14.55);
+
+    % ---------- particiones ----------
+    \foreach \x/\w/\n in {0.15/3.15/{Pasajero}, 3.30/6.00/{\textit{Sistema}},
+                          9.30/3.10/{Conductor}, 12.40/2.95/{Gemelo Digital}} {
+      \draw[draw=Color2!45, line width=0.4pt, fill=Color2!2]
+        (\x,0.30) rectangle (\x+\w,14.15);
+    }
+    \foreach \x/\w/\n in {0.15/3.15/{Pasajero}, 3.30/6.00/{\textit{Sistema}},
+                          9.30/3.10/{Conductor}, 12.40/2.95/{Gemelo Digital}} {
+      \node[draw=Color2, fill=Color2!12, font=\scriptsize\bfseries, text=Color2,
+            minimum width=\w cm, minimum height=0.42cm, inner sep=1pt]
+        at (\x+\w/2,14.36) {\n};
+    }
+
+    % ---------- actividades: pasajero ----------
+    \node[circle, draw=Color2, fill=Color2, line width=0.6pt, minimum size=0.22cm,
+          inner sep=0pt] (ini) at (1.65,13.75) {};
+    \node[actividad] (a1) at (1.65,12.85) {Introduce origen, destino y ventana temporal};
+    \node[actividad] (a2) at (1.65,4.65) {Recibe la lista de viajes};
+    \node[actividad] (a3) at (1.65,3.55) {Selecciona un viaje y solicita plaza\\ \textcolor{Color2}{RF-08}};
+    \node[actividad] (a4) at (1.65,1.05) {Recibe el aviso};
+
+    % ---------- actividades: sistema ----------
+    \node[actividad] (b1) at (6.30,11.75) {Filtrado geoespacial (PostGIS)\\ \textcolor{Color2}{RF-06}};
+    \node[decision]  (d1) at (6.30,10.55) {};
+    \node[actividad, text width=2.30cm] (b0) at (8.55,10.55) {Informa: sin viajes};
+    \node[actividad] (b2) at (6.30,9.35) {Recupera los candidatos};
+    \node[decision]  (d2) at (6.30,8.15) {};
+    \node[actividad] (b3) at (6.30,7.10) {Comprueba ventana temporal};
+    \node[actividad] (b4) at (6.30,6.20) {Calcula desvío y tiempo\\ \textcolor{Color2}{RF-07}};
+    \node[decision]  (d3) at (6.30,5.30) {};
+    \node[actividad, text width=2.10cm] (b5) at (4.95,4.35) {Puntúa la compatibilidad};
+    \node[actividad, text width=2.10cm] (b6) at (7.75,4.35) {Descarta el candidato};
+    \node[actividad] (b7) at (6.30,3.40) {Ordena y devuelve la lista};
+    \node[actividad] (b8) at (6.30,2.45) {Crea la solicitud PENDIENTE};
+    \node[actividad] (b9) at (6.30,1.55) {Genera el evento SolicitudCreada};
+    \node[actividad] (b10) at (6.30,0.70) {Notifica al usuario};
+
+    % ---------- actividades: conductor y DT ----------
+    \node[actividad, text width=2.55cm] (c1) at (10.85,2.45) {Acepta o rechaza la solicitud\\ \textcolor{Color2}{RF-09}};
+    \node[actividad, text width=2.45cm] (e1) at (13.87,2.45) {Actualiza el estado del viaje};
+    \node[fin] (fin) at (6.30,0.20) {};
+
+    % ---------- flujo ----------
+    \draw[flujo] (ini) -- (a1);
+    \draw[flujo] (a1.east) -- (3.75,12.85) -- (3.75,11.75) -- (b1.west);
+    \draw[flujo] (b1) -- (d1);
+    \draw[flujo] (d1) -- node[etqf] {sí} (b2);
+    \draw[flujo] (d1) -- node[etqf] {no} (b0);
+    \node[fin] (fin2) at (8.55,9.65) {};
+    \draw[flujo] (b0.south) -- (fin2.north);
+    \draw[flujo] (b2) -- (d2);
+    \draw[flujo] (d2) -- node[etqf] {sí} (b3);
+    \draw[flujo] (b3) -- (b4);
+    \draw[flujo] (b4) -- (d3);
+    \draw[flujo] (d3) -| node[etqf, pos=0.25] {sí} (b5.north);
+    \draw[flujo] (d3) -| node[etqf, pos=0.25] {no} (b6.north);
+    \draw[flujo] (b5.west) -- (4.05,4.35) -- (4.05,7.55) -- (d2.south west);
+    \draw[flujo] (b6.east) -- (8.85,4.35) -- (8.85,8.15) -- (d2.east);
+    \draw[flujo] (d2.west) -- node[etqf, above] {no} (3.55,8.15)
+      -- (3.55,3.40) -- (b7.west);
+    \draw[flujo] (b7.west) -- (3.50,3.40) -- (3.50,4.65) -- (a2.east);
+    \draw[flujo] (a2) -- (a3);
+    \draw[flujo] (a3.east) -- (3.75,3.55) -- (3.75,2.45) -- (b8.west);
+    \draw[flujo] (b8) -- (b9);
+    \draw[flujo] (b9.east) -- (c1.west);
+    \draw[flujo] (c1.east) -- (e1.west);
+    \draw[flujo] (c1.south) -- (10.85,0.70) -- (b10.east);
+    \draw[flujo] (b10.west) -- (a4.east);
+    \draw[flujo] (a4.south) -- (1.65,0.20) -- (fin.west);
+    \draw[flujo] (e1.south) -- (13.87,0.20) -- (fin.east);
+    \draw[flujo] (b10.south) -- (fin.north);
+  \end{tikzpicture}
+  }
+  \caption{Diagrama de actividad del proceso de \textit{matching}, con particiones por actor.} \label{fig:actividad-matching}
+\end{figure}

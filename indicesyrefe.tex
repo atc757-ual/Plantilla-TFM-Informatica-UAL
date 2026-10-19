@@ -14,7 +14,9 @@
 \tableofcontents
 \listoffigures % indice de figuras
 \listoftables % indice de tablas
-\lstlistoflistings % indice de listados
+% \lstlistoflistings % indice de listados: descomentar cuando la memoria
+% incluya bloques de código con el paquete listings (codigo.sty). Con el
+% documento actual genera una página vacía titulada "LISTADOS".
 
 
 
@@ -27,20 +29,26 @@
 \clearpage
 \vspace{0.2cm}
 \section*{ABREVIATURAS}
-% Tabla de ejemplo. Sustitúyela por los acrónimos y abreviaturas que
-% realmente uses en tu memoria, ordenados alfabéticamente. Cada acrónimo
-% debe definirse la primera vez que se usa en el texto, ver capítulo
-% "Ejemplos prácticos de la plantilla".
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{|l|l|l|l}
-
-API & Application Programming Interface & TFG & Trabajo Fin de Grado \\
-ESI & Escuela Superior de Ingeniería & TFM & Trabajo Fin de Máster \\
-IDE & Integrated Development Environment & UAL & Universidad de Almería \\
-IEEE & Institute of Electrical and Electronics Engineers & UML & Unified Modeling Language \\
-PDF & Portable Document Format & URL & Uniform Resource Locator \\
-
-\end{tabular}
-}
+% Acrónimos y abreviaturas empleados en la memoria, ordenados alfabéticamente
+% y leídos por columnas: primero la pareja izquierda y después la derecha.
+\noindent
+\begin{tabularx}{\textwidth}{|Y{0.5000}|Y{1.5000}|Y{0.5000}|Y{1.5000}|}
+\hline
+ACT & Actor del sistema & RES & Restricción \\
+API & Application Programming Interface & RF & Requisito Funcional \\
+CI/CD & Integración y despliegue continuos & RNF & Requisito No Funcional \\
+CSV & Comma-Separated Values & RQ & \textit{Research Question} \\
+CU & Caso de Uso & SLR & \textit{Systematic Literature Review} \\
+DSR & \textit{Design Science Research} & SMTP & \textit{Simple Mail Transfer Protocol} \\
+DT & \textit{Digital Twin} (Gemelo Digital) & SUMO & \textit{Simulation of Urban MObility} \\
+FCM & \textit{Firebase Cloud Messaging} & TFM & Trabajo Fin de Máster \\
+MoSCoW & \textit{Must, Should, Could, Won't} & UAL & Universidad de Almería \\
+MVP & \textit{Minimum Viable Product} & UML & \textit{Unified Modeling Language} \\
+OE & Objetivo Específico & V2X & \textit{Vehicle-to-Everything} \\
+OSRM & \textit{Open Source Routing Machine} & & \\
+P2P & \textit{Peer-to-Peer} (entre particulares) & & \\
+PostGIS & Extensión geoespacial de PostgreSQL & & \\
+\hline
+\end{tabularx}
 %\addcontentsline{toc}{section}{ABREVIATURAS}
 

@@ -1,0 +1,130 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CAPÍTULO 11: PLAN DE EVALUACIÓN
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Plan de evaluación}
+\label{ch:evaluacion}
+
+\section{Objetivo de la evaluación}
+
+La evaluación debe demostrar dos aspectos:
+\begin{itemize}
+    \item Que la plataforma funciona de acuerdo con los casos de uso y requisitos definidos.
+    \item Que el Gemelo Digital aporta una capacidad útil para representar, analizar y evaluar el sistema de carpooling.
+\end{itemize}
+
+\section{Niveles de evaluación}
+
+La evaluación se organiza en tres niveles complementarios (Tabla~\ref{tab:niveles-evaluacion}).
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{Y{0.6761} Y{1.1549} Y{1.2113} Y{0.9577}}
+    \hline
+    \textbf{Nivel} & \textbf{Qué se evalúa} & \textbf{Técnica} & \textbf{Herramientas} \\
+    \hline
+    Funcional & Correcto funcionamiento de los casos de uso & Pruebas unitarias, de integración y de sistema & Jest/Mocha, Karma/Jasmine, Postman \\
+    Técnico & Rendimiento y robustez del sistema & Pruebas de carga y verificación de sincronización & Artillery/k6, registros del DT \\
+    Experimental & Impacto de las estrategias de carpooling & Simulación de escenarios S0--S5 & Módulo de simulación propio \\
+    \hline
+  \end{tabularx}
+  \caption{Niveles de evaluación.}
+  \label{tab:niveles-evaluacion}
+\end{table}
+
+\section{Hipótesis experimental}
+
+\begin{description}
+    \item[H1.] En escenarios simulados con demanda realista, el carpooling reduce el número de vehículos utilizados respecto al escenario base individual, manteniendo una proporción aceptable de solicitudes cubiertas.
+    \item[H0 (nula).] No existe diferencia significativa entre el escenario base y los escenarios de carpooling en el número de vehículos utilizados.
+\end{description}
+
+Como criterio de éxito orientativo, se plantea una reducción de al menos el 15\% en los vehículos utilizados en, como mínimo, un escenario de carpooling respecto a S0, con al menos el 70\% de las solicitudes cubiertas. Este umbral deberá concretarse tras la primera ejecución.
+
+\section{Métricas}
+\label{sec:metricas-evaluacion}
+
+Las métricas previstas y su nivel de evaluación se recogen en la Tabla~\ref{tab:metricas-evaluacion}.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{Y{0.7183} Y{1.6268} Y{0.6549}}
+    \hline
+    \textbf{Métrica} & \textbf{Descripción} & \textbf{Nivel} \\
+    \hline
+    Tiempo de respuesta del \textit{matching} & Tiempo medio para resolver una búsqueda & Técnico \\
+    Latencia de sincronización del DT & Tiempo entre la generación de un evento y la actualización del estado digital & Técnico \\
+    Número de vehículos utilizados & Vehículos necesarios para cubrir los viajes & Experimental \\
+    Vehículos evitados & Diferencia respecto al escenario base & Experimental \\
+    Ocupación media & Pasajeros por vehículo & Experimental \\
+    Solicitudes cubiertas & Porcentaje de solicitudes atendidas & Experimental \\
+    Distancia adicional & Desvío medio por recogida & Experimental \\
+    Número de incidencias & Cancelaciones o cambios gestionados & Experimental \\
+    \hline
+  \end{tabularx}
+  \caption{Métricas de evaluación.}
+  \label{tab:metricas-evaluacion}
+\end{table}
+
+\section{Escenarios de simulación}
+\label{sec:escenarios-evaluacion}
+
+Los escenarios permitirán comparar una situación base con variaciones en la demanda, los horarios, la capacidad de los vehículos y la presencia de incidencias (Tabla~\ref{tab:escenarios-evaluacion}).
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{Y{0.5245} Y{1.2587} Y{1.2168}}
+    \hline
+    \textbf{Escenario} & \textbf{Descripción} & \textbf{Métricas principales} \\
+    \hline
+    S0 --- Base & Cada usuario realiza el viaje de forma individual & Vehículos y ocupación \\
+    S1 --- Carpooling básico & \textit{Matching} con reglas de compatibilidad & Vehículos evitados y ocupación \\
+    S2 --- Mayor demanda & Aumento del número de usuarios & Escalabilidad y tiempo de \textit{matching} \\
+    S3 --- Horarios variables & Variación de las ventanas temporales & Compatibilidad y solicitudes cubiertas \\
+    S4 --- Capacidad variable & Vehículos con distinto número de plazas & Ocupación y eficiencia \\
+    S5 --- Incidencias & Cancelaciones y cambios de disponibilidad & Robustez y recuperación \\
+    \hline
+  \end{tabularx}
+  \caption{Escenarios de simulación para la evaluación.}
+  \label{tab:escenarios-evaluacion}
+\end{table}
+
+\section{Procedimiento experimental}
+
+La evaluación experimental seguirá estos pasos:
+\begin{enumerate}
+    \item Definir el escenario base S0 con parámetros fijos.
+    \item Ejecutar cada escenario con la misma semilla para garantizar la reproducibilidad.
+    \item Registrar los resultados en un formato estructurado (CSV/JSON).
+    \item Comparar cada escenario con S0.
+    \item Analizar la sensibilidad ante variaciones de los parámetros.
+    \item Documentar los supuestos, las limitaciones y las amenazas a la validez.
+\end{enumerate}
+
+\section{Criterios de éxito}
+
+Los criterios iniciales de éxito se resumen en la Tabla~\ref{tab:criterios-exito}.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{Y{0.3776} Y{1.6224}}
+    \hline
+    \textbf{Nivel} & \textbf{Criterio} \\
+    \hline
+    Funcional & Todos los casos de uso del MVP funcionan sin errores críticos. \\
+    Técnico & El \textit{matching} responde en menos de 2 segundos para 50 usuarios y la sincronización del DT se produce en tiempo casi real. \\
+    Experimental & Se reduce al menos un 15\% el número de vehículos utilizados en, como mínimo, un escenario, con al menos el 70\% de las solicitudes cubiertas. \\
+    \hline
+  \end{tabularx}
+  \caption{Criterios de éxito de la evaluación.}
+  \label{tab:criterios-exito}
+\end{table}
+
+\section{Amenazas a la validez}
+
+Se consideran las siguientes amenazas a la validez:
+\begin{itemize}
+    \item \textbf{Validez interna:} los resultados dependen de los supuestos del modelo, como las distribuciones, las tolerancias y el comportamiento representado.
+    \item \textbf{Validez externa:} los escenarios sintéticos no garantizan que los resultados sean transferibles al comportamiento real de la comunidad universitaria de la UAL.
+    \item \textbf{Validez de constructo:} los indicadores son aproximaciones razonables, pero no capturan toda la complejidad de la movilidad compartida.
+\end{itemize}

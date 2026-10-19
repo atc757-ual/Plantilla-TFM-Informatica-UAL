@@ -1,0 +1,137 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CAPÍTULO 6: ALCANCE Y LIMITACIONES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Alcance y limitaciones}
+\label{ch:alcance}
+
+\section{Alcance del proyecto}
+
+\subsection{Dentro del alcance}
+
+Los elementos que se incluyen dentro del alcance del proyecto se detallan en la Tabla~\ref{tab:dentro-alcance}.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{@{}p{\textwidth}@{}}
+    \hline
+    \textbf{Elemento} \\
+    \hline
+    Registro/autenticación y perfiles de usuario \\
+    Roles conductor y pasajero \\
+    Publicación y solicitud de viajes \\
+    \textit{Matching} conductor-pasajero \\
+    Gestión de plazas y estado del viaje \\
+    Representación mediante Gemelo Digital \\
+    Simulación de escenarios \\
+    Métricas y evaluación experimental \\
+    CI/CD y documentación técnica \\
+    \hline
+  \end{tabular}
+  \caption{Elementos dentro del alcance.}
+  \label{tab:dentro-alcance}
+\end{table}
+
+\subsection{Fuera del alcance inicial}
+
+Los elementos que quedan fuera del alcance inicial y sus motivos se muestran en la Tabla~\ref{tab:fuera-alcance}.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{Y{0.7692} Y{1.2308}}
+    \hline
+    \textbf{Elemento} & \textbf{Motivo} \\
+    \hline
+    Integración obligatoria con sistemas institucionales de identidad de la UAL & Dependencia externa no controlada \\
+    Despliegue productivo para toda la universidad & Escala no requerida para demostrar la contribución \\
+    Pagos reales entre usuarios & Fuera del foco funcional del TFM \\
+    Gestión financiera o facturación & No aporta a la pregunta de investigación \\
+    Vehículos autónomos & Modelo operativo distinto (B5, B6) \\
+    Control físico de vehículos & Requiere hardware no disponible \\
+    Predicción avanzada obligatoria con modelos de IA complejos & No necesaria para el MVP \\
+    Optimización multiagente de tráfico urbano a escala de ciudad & Excede el alcance del prototipo \\
+    Infraestructura 6G/\textit{edge} especializada & No aporta al problema estudiado (E11) \\
+    Parametrización libre de escenarios de simulación & Se sustituye por selección entre configuraciones predefinidas \\
+    Cálculo de métricas en tiempo real & Se calculan al finalizar cada simulación \\
+    Notificaciones \textit{push} (FCM/OneSignal) & Requiere configuración externa; recortable \\
+    Notificaciones por \textit{email} (SMTP) & Requiere dominio verificado; recortable \\
+    Panel de administrador con gráficos interactivos & Se sustituye por vista de resultados con exportación CSV \\
+    \hline
+  \end{tabularx}
+  \caption{Elementos fuera del alcance inicial.}
+  \label{tab:fuera-alcance}
+\end{table}
+
+\subsection{Fuera del alcance obligatorio, pero recortable}
+\label{sec:moscow-alcance}
+
+Estas funcionalidades no son obligatorias para el MVP, pero se implementarán si el avance del proyecto lo permite. En caso contrario, se pospondrán a trabajo futuro sin afectar a la validación del TFM (véase la Tabla~\ref{tab:moscow}).
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{@{}Y{1.0268} Y{0.4027} Y{1.5705}@{}}
+    \hline
+    \textbf{Elemento} & \textbf{Prioridad} & \textbf{Condición} \\
+    \hline
+    Notificaciones PUSH (FCM) & Debería & Se implementa si F2--F5 se cierran en plazo \\
+    Notificaciones por \textit{email} (SMTP) & Debería & Se implementa si F2--F5 se cierran en plazo \\
+    Panel de administrador con gráficos interactivos & Podría & Se implementa si sobra tiempo tras el MVP \\
+    Parametrización libre de escenarios & Podría & Se implementa si sobra tiempo tras el MVP \\
+    \hline
+  \end{tabularx}
+  \caption{Funcionalidades recortables (MoSCoW).}
+  \label{tab:moscow}
+\end{table}
+
+\subsection{Criterio de alcance}
+
+El Gemelo Digital debe aportar valor al problema del coche compartido. No se pretende construir una réplica digital de toda la ciudad ni resolver el transporte urbano completo, sino modelar el sistema específico de viajes compartidos que gestiona la plataforma. Este criterio actúa como filtro para las decisiones de diseño: si un componente no contribuye a representar, gestionar o evaluar el coche compartido universitario, queda fuera del alcance.
+
+\section{Limitaciones previstas}
+
+Las limitaciones se separan de las exclusiones de alcance porque no son decisiones de diseño, sino restricciones reales del trabajo. Se detallan en la Tabla~\ref{tab:limitaciones}.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{Y{0.6923} Y{1.8462} Y{0.4615}}
+    \hline
+    \textbf{Limitación} & \textbf{Descripción} & \textbf{Impacto} \\
+    \hline
+    Datos reales & No se dispone inicialmente de datos reales de movilidad de la UAL; se usarán datos sintéticos y escenarios reproducibles. & Medio \\
+    Fidelidad del Gemelo Digital & El DT es de baja fidelidad: representa estado y eventos, no dinámica física ni sensórica. & Medio \\
+    Escala & El prototipo se diseña para un entorno controlado, no para despliegue masivo. & Bajo \\
+    \textit{Matching} & La primera versión usa \textit{matching} heurístico interpretable, no optimización avanzada. & Bajo \\
+    Validación & Los resultados de simulación representan el comportamiento del modelo bajo condiciones definidas, no predicciones del mundo real. & Medio \\
+    Acceso bibliográfico & Algunos trabajos relevantes quedaron pendientes de evaluación por falta de acceso al texto completo. & Bajo \\
+    Trazabilidad de la SLR & No se conservaron individualmente todas las decisiones de descarte en las primeras fases de cribado. & Bajo \\
+    Tiempo & El calendario del TFM limita la profundidad de algunas fases (por ejemplo, pruebas con usuarios reales). & Medio \\
+    \hline
+  \end{tabularx}
+  \caption{Limitaciones previstas.}
+  \label{tab:limitaciones}
+\end{table}
+
+\section{Relación con el MVP}
+
+El MVP definido en el plan de trabajo constituye el núcleo mínimo que permite demostrar la contribución:
+\begin{itemize}
+    \item Usuarios con rol conductor/pasajero.
+    \item Publicación y búsqueda de viajes.
+    \item \textit{Matching} básico.
+    \item Gestión de solicitudes y estados.
+    \item Modelo de Gemelo Digital de usuarios, vehículos y viajes.
+    \item Al menos tres escenarios de simulación.
+    \item Métricas comparables entre escenario base y escenarios de carpooling.
+    \item Pruebas automatizadas básicas y \textit{pipeline} CI/CD.
+\end{itemize}
+
+Las funcionalidades de segunda prioridad (navegación avanzada, geolocalización real, IA predictiva, optimización multiobjetivo, integración institucional, despliegue a escala) quedan explícitamente fuera del MVP y se recogen como trabajo futuro.
+
+\section{Amenazas a la validez}
+
+Se identifican tres tipos de amenazas que se discutirán en la memoria final:
+\begin{itemize}
+    \item \textbf{Validez interna:} los resultados de simulación dependen de los supuestos del modelo (distribuciones de demanda, tolerancias, comportamiento de los agentes).
+    \item \textbf{Validez externa:} los escenarios sintéticos no garantizan la transferibilidad directa al comportamiento real de la comunidad universitaria.
+    \item \textbf{Validez de constructo:} los indicadores seleccionados (vehículos evitados, ocupación, solicitudes cubiertas) son proxies razonables, pero no capturan toda la complejidad de la movilidad compartida.
+\end{itemize}

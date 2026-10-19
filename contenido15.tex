@@ -1,0 +1,74 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CAPÍTULO 15: RESULTADOS ESPERADOS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Resultados esperados}
+\label{ch:resultados-esperados}
+
+\section{Resultados tangibles}
+
+Al finalizar el TFM se espera disponer de los resultados recogidos en la Tabla~\ref{tab:resultados-tangibles}.
+
+\begin{longtable}{p{1.1cm} p{8.4cm} p{5.14cm}}
+  \caption{Resultados tangibles esperados.}
+  \label{tab:resultados-tangibles}\\
+  \hline
+  \textbf{ID} & \textbf{Resultado} & \textbf{Formato} \\
+  \hline
+  \endfirsthead
+  \multicolumn{3}{c}{\tablename\ \thetable{} -- continuación}\\
+  \hline
+  \textbf{ID} & \textbf{Resultado} & \textbf{Formato} \\
+  \hline
+  \endhead
+  R1 & Estado del arte consolidado sobre Gemelos Digitales, movilidad compartida, \textit{matching} y simulación & Capítulo de la memoria + matriz bibliográfica \\
+  R2 & Especificación de requisitos y casos de uso de la plataforma & Capítulo de la memoria + tablas RF/RNF \\
+  R3 & Arquitectura de referencia para una plataforma de carpooling universitario P2P apoyada por un Gemelo Digital & Capítulo de la memoria + diagramas UML \\
+  R4 & Modelo digital explícito de usuarios, vehículos, viajes, solicitudes y rutas & Capítulo de la memoria + diagrama de clases \\
+  R5 & Implementación funcional de la plataforma (\textit{frontend} + \textit{backend}) & Repositorio de código \\
+  R6 & Módulo de \textit{matching} conductor-pasajero & Repositorio + documentación técnica \\
+  R7 & Módulo de Gemelo Digital con sincronización por eventos & Repositorio + documentación técnica \\
+  R8 & Módulo de simulación con al menos tres escenarios reproducibles & Repositorio + conjuntos de datos \\
+  R9 & Resultados de evaluación cuantitativa del efecto del carpooling & Capítulo de la memoria + tablas comparativas \\
+  R10 & Identificación de limitaciones y líneas de trabajo futuro & Capítulo de conclusiones \\
+  \hline
+\end{longtable}
+
+\section{Resultados esperados por nivel de evaluación}
+
+La Tabla~\ref{tab:resultados-nivel} relaciona cada nivel de evaluación con su resultado esperado.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{Y{0.4348} Y{1.5652}}
+    \hline
+    \textbf{Nivel} & \textbf{Resultado esperado} \\
+    \hline
+    Funcional & Todos los casos de uso del MVP funcionan sin errores críticos. \\
+    Técnico & El \textit{matching} responde en menos de 2 segundos para 50 usuarios y la sincronización del DT se produce en tiempo casi real. \\
+    Experimental & Se obtiene una reducción medible de los vehículos utilizados en al menos un escenario de carpooling respecto al escenario base. \\
+    \hline
+  \end{tabularx}
+  \caption{Resultados esperados por nivel de evaluación.}
+  \label{tab:resultados-nivel}
+\end{table}
+
+\section{Contribuciones esperadas}
+
+\begin{itemize}
+    \item \textbf{Contribución metodológica:} una forma de integrar Gemelo Digital, \textit{matching} y simulación en un contexto de carpooling universitario P2P.
+    \item \textbf{Contribución técnica:} una arquitectura modular y un modelo digital reutilizable en contextos similares.
+    \item \textbf{Contribución experimental:} evidencia cuantitativa sobre el efecto del carpooling bajo escenarios controlados.
+    \item \textbf{Contribución académica:} posicionamiento del TFM frente a la literatura existente, identificando el hueco que cubre.
+\end{itemize}
+
+\section{Qué no se espera obtener}
+
+Para gestionar expectativas y proteger el alcance, no se espera obtener:
+\begin{itemize}
+    \item Un algoritmo de \textit{matching} novedoso ni una contribución teórica a la optimización.
+    \item Un Gemelo Digital de alta fidelidad con sincronización bidireccional en tiempo real.
+    \item Una validación con usuarios reales de la UAL.
+    \item Un despliegue productivo a escala universitaria.
+    \item Predicciones del comportamiento real de la comunidad universitaria.
+\end{itemize}

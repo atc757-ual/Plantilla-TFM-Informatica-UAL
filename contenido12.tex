@@ -1,0 +1,213 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CAPÍTULO 12: PLAN DE TRABAJO Y CRONOGRAMA
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Plan de trabajo y cronograma}
+\label{ch:cronograma}
+
+\section{Plazo disponible y fechas oficiales}
+
+El TFM se desarrolla en el marco de la convocatoria de enero de 2027. Las fechas administrativas son fijas y condicionan la planificación interna (Tabla~\ref{tab:fechas-oficiales}).
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{Y{1.2286} Y{0.7714}}
+    \hline
+    \textbf{Actividad} & \textbf{Fechas} \\
+    \hline
+    Entrega del TFM al director/a (formato digital) & 08/01/2027--18/01/2027 \\
+    Entrega del TFM en ARATÍES (campus virtual) & 25/01/2027--27/01/2027 \\
+    Firma del visto bueno por el tutor/a & 27/01/2027--28/01/2027 \\
+    Petición del informe de originalidad & 28/01/2027 \\
+    Publicación del calendario de defensa & 02/02/2027 \\
+    Defensa del TFM & Desde 08/02/2027 \\
+    \hline
+  \end{tabularx}
+  \caption{Fechas oficiales de la convocatoria.}
+  \label{tab:fechas-oficiales}
+\end{table}
+
+\section{Organización del trabajo en fases}
+
+El trabajo se organiza en nueve fases internas (F1--F9). Estas fases no tienen fechas absolutas rígidas: representan bloques de trabajo que se ajustarán al avance real dentro del plazo disponible (Tabla~\ref{tab:fases-proyecto}).
+
+\begin{table}[H]
+  \centering
+  \small
+  \begin{tabularx}{\textwidth}{Y{0.9000} Y{1.1000} Y{1.0500} Y{0.9500}}
+    \hline
+    \textbf{Fase} & \textbf{Contenido} & \textbf{Entregables} & \textbf{Se paraleliza con} \\
+    \hline
+    F1. Diseño y requisitos & Arquitectura, modelo de datos, modelo DT, casos de uso y requisitos & Capítulo de arquitectura y diagramas UML & --- \\
+    F2. Backend & API, usuarios, viajes, solicitudes y estados & Código del \textit{backend} en el repositorio & F3, desde el contrato de API \\
+    F3. Frontend & Pantallas, navegación, publicación y búsqueda de viajes & Código del \textit{frontend} en el repositorio & F2 \\
+    F4. \textit{Matching} & Reglas de compatibilidad y asignación & Módulo de \textit{matching} implementado y probado & F3 y F5 \\
+    F5. Gemelo Digital & Entidades, estados y sincronización & Módulo DT operativo & F4 y F6 \\
+    F6. Simulación & Escenarios, experimentos y métricas & Motor de simulación y escenarios S0--S5 & F5 y F7 \\
+    F7. Evaluación & Pruebas funcionales, técnicas y experimentales & Resultados de pruebas y métricas & F6 \\
+    F8. Redacción & Memoria, revisión y formato & Memoria final del TFM & Todas (transversal) \\
+    F9. Defensa & Presentación y material de defensa & Presentación y guion & --- \\
+    \hline
+  \end{tabularx}
+  \normalsize
+  \caption{Fases del proyecto.}
+  \label{tab:fases-proyecto}
+\end{table}
+
+La revisión sistemática de la literatura (SLR) se ha desarrollado como trabajo preliminar al inicio formal del TFM y se documenta en el capítulo de estado del arte. Por este motivo, no aparece como fase del cronograma interno, aunque sus resultados alimentan directamente las fases F1 y F2.
+
+\section{Planificación temporal orientativa}
+
+Las duraciones son estimaciones y se ajustarán al avance real. El proyecto arranca en septiembre de 2026 y cierra con la defensa en febrero de 2027, con el hito formal de entrega al director entre el 8 y el 18 de enero (Tabla~\ref{tab:planificacion-temporal}).
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{Y{0.7600} Y{0.6400} Y{1.6000}}
+    \hline
+    \textbf{Fase} & \textbf{Duración} & \textbf{Periodo} \\
+    \hline
+    F1. Diseño y requisitos & 7 semanas & 01/09/2026 -- 20/10/2026 \\
+    F2. Backend & 6 semanas & 21/10/2026 -- 30/11/2026 \\
+    F3. Frontend & 7 semanas & 01/11/2026 -- 20/12/2026 \\
+    F4. \textit{Matching} & 5 semanas & 15/11/2026 -- 20/12/2026 \\
+    F5. Gemelo Digital & 6 semanas & 01/12/2026 -- 08/01/2027 \\
+    F6. Simulación & 4 semanas & 15/12/2026 -- 08/01/2027 \\
+    F7. Evaluación & 4 semanas & 20/12/2026 -- 15/01/2027 \\
+    F8. Redacción & 11 semanas & 01/11/2026 -- 15/01/2027 \\
+    F9. Defensa & 3 semanas & 18/01/2027 -- 08/02/2027 \\
+    \hline
+  \end{tabularx}
+  \caption{Planificación temporal orientativa.}
+  \label{tab:planificacion-temporal}
+\end{table}
+
+Como muestra la Tabla~\ref{tab:fases-proyecto}, la planificación no es estrictamente secuencial: F2 y F3 se solapan desde que se fija el contrato de la API, F4 y F5 comparten el modelado de viajes y de estado, y F6 y F7 se solapan durante el periodo de experimentación. La redacción (F8) no se concentra al final, sino que acompaña al desarrollo desde noviembre, de modo que en diciembre el grueso de la memoria esté escrito y solo falten los resultados. Esta disposición es la que hace viable el plazo: el backend no se cierra hasta finales de noviembre y la evaluación termina tres días antes de la entrega al director.
+
+\section{Hitos críticos}
+
+Se distinguen hitos internos, propios de la planificación del proyecto, e hitos oficiales, establecidos por el calendario administrativo.
+
+\subsection{Hitos internos}
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{Y{0.2400} Y{1.4800} Y{0.8200} Y{0.8600}}
+    \hline
+    \textbf{ID} & \textbf{Hito} & \textbf{Fase} & \textbf{Fecha} \\
+    \hline
+    H1 & Diseño técnico cerrado & F1 & 20/10/2026 \\
+    H2 & Backend funcional & F2 & 30/11/2026 \\
+    H3 & MVP funcional (\textit{frontend} + \textit{matching}) & F3--F4 & 20/12/2026 \\
+    H4 & Gemelo Digital operativo & F5 & 08/01/2027 \\
+    H5 & Primeros resultados de simulación & F6 & 08/01/2027 \\
+    H6 & Evaluación completa & F7 & 15/01/2027 \\
+    H7 & Borrador completo de la memoria & F8 & 20/12/2026 \\
+    \hline
+  \end{tabularx}
+  \caption{Hitos internos.}
+  \label{tab:hitos-internos}
+\end{table}
+
+\subsection{Hitos oficiales}
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{Y{0.3409} Y{1.8636} Y{0.7955}}
+    \hline
+    \textbf{ID} & \textbf{Hito} & \textbf{Fecha} \\
+    \hline
+    H8 & Entrega del TFM al director & 18/01/2027 \\
+    H9 & Entrega oficial en ARATÍES & 27/01/2027 \\
+    H10 & VºBº del tutor & 28/01/2027 \\
+    H11 & Defensa del TFM & Desde 08/02/2027 \\
+    \hline
+  \end{tabularx}
+  \caption{Hitos oficiales.}
+  \label{tab:hitos-oficiales}
+\end{table}
+
+\section{Diagrama de Gantt}
+
+El diagrama de Gantt abarca desde septiembre de 2026 hasta febrero de 2027 y representa las fases F1--F9 y los hitos internos H1--H7 (Figura~\ref{fig:gantt}). Las barras muestran el solapamiento descrito: noviembre y diciembre concentran la mayor carga, porque coinciden el final del \textit{backend}, el \textit{frontend}, el \textit{matching}, el Gemelo Digital, la simulación y el arranque de la redacción.
+
+\begin{figure}[H]
+  \centering
+  \begin{ganttchart}[
+      hgrid,
+      vgrid,
+      x unit=0.52cm,
+      y unit title=0.42cm,
+      y unit chart=0.40cm,
+      title height=1,
+      bar height=0.30,
+      bar/.append style={fill=Color2},
+      milestone/.append style={fill=Color1},
+      title label font=\scriptsize,
+      bar label font=\scriptsize,
+      milestone label font=\scriptsize,
+      canvas/.append style={draw=black!35},
+    ]{1}{23}
+    \gantttitle{2026}{17}
+    \gantttitle{2027}{6} \\
+    \gantttitle{sep}{4}
+    \gantttitle{oct}{4}
+    \gantttitle{nov}{4}
+    \gantttitle{dic}{5}
+    \gantttitle{ene}{4}
+    \gantttitle{feb}{2} \\
+    \ganttbar{F1. Diseño y requisitos}{1}{8} \\
+    \ganttbar{F2. Backend}{8}{13} \\
+    \ganttbar{F3. Frontend}{10}{16} \\
+    \ganttbar{F4. \textit{Matching}}{11}{16} \\
+    \ganttbar{F5. Gemelo Digital}{14}{19} \\
+    \ganttbar{F6. Simulación}{16}{19} \\
+    \ganttbar{F7. Evaluación}{17}{20} \\
+    \ganttbar{F8. Redacción}{10}{20} \\
+    \ganttbar{F9. Defensa}{21}{23} \\
+    \ganttmilestone{H1}{8} \\
+    \ganttmilestone{H2}{13} \\
+    \ganttmilestone{H3}{16} \\
+    \ganttmilestone{H4}{19} \\
+    \ganttmilestone{H5}{19} \\
+    \ganttmilestone{H6}{20} \\
+    \ganttmilestone{H7}{16}
+  \end{ganttchart}
+  \caption{Diagrama de Gantt del proyecto (septiembre de 2026--febrero de 2027).}
+  \label{fig:gantt}
+\end{figure}
+
+El diagrama refleja únicamente la planificación interna. Las fechas oficiales de la convocatoria de enero de 2027 —entrega al director, entrega en ARATÍES, visto bueno y defensa— se recogen en la Tabla~\ref{tab:fechas-oficiales} y en la Sección~\ref{sec:contingencias-calendario}.
+
+\section{Planificación de contingencias}
+\label{sec:contingencias-calendario}
+
+La Tabla~\ref{tab:contingencias-calendario} recoge las medidas previstas para las principales contingencias del cronograma.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{Y{0.8732} Y{1.1268}}
+    \hline
+    \textbf{Riesgo} & \textbf{Medida} \\
+    \hline
+    Retraso en F2--F3 & Priorizar el MVP y posponer funcionalidades secundarias. \\
+    Retraso en F5--F6 & Reducir el número de escenarios a S0--S2. \\
+    Problemas con datos sintéticos & Usar escenarios más simples, pero reproducibles. \\
+    Falta de tiempo para una evaluación completa & Documentar los resultados parciales y sus limitaciones. \\
+    Retraso en la redacción & Reservar la primera quincena de enero para escritura intensiva. \\
+    Problemas con el visto bueno (VºBº) & Entregar al director con margen suficiente (18/01/2027). \\
+    \hline
+  \end{tabularx}
+  \caption{Planificación de contingencias.}
+  \label{tab:contingencias-calendario}
+\end{table}
+
+\section{Notas importantes sobre el calendario}
+
+\begin{itemize}
+    \item La SLR se considera trabajo preliminar ya realizado y consolidado. No se incluye como fase del cronograma interno, aunque sus resultados alimentan F1 y F2.
+    \item La entrega al director (08--18/01/2027) es el primer hito formal. A partir de esa fecha, el margen para cambios estructurales es mínimo; solo se contemplan correcciones.
+    \item La entrega en ARATÍES (25--27/01/2027) es la entrega oficial. Una vez subida la documentación, no es posible modificarla.
+    \item El VºBº (27--28/01/2027) depende de que el director haya recibido el documento con tiempo suficiente. Por eso conviene entregar el borrador completo antes del 20/12/2026.
+    \item Diciembre de 2026 es el mes más crítico del proyecto. Coinciden el cierre de F6 (simulación), el desarrollo de F7 (evaluación) y el inicio de F8 (redacción). La planificación de contingencias prevé reducir el número de escenarios si fuese necesario.
+    \item La defensa (desde 08/02/2027) ofrece un margen aproximado de dos semanas desde la publicación del calendario (02/02/2027) para preparar la presentación.
+\end{itemize}

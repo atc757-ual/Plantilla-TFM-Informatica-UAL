@@ -1,0 +1,140 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CAPÍTULO 8: REQUISITOS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Requisitos}
+\label{ch:requisitos}
+
+Esta sección recoge una primera versión preliminar de los requisitos de la plataforma. Se trata de una especificación de trabajo que se cerrará tras la reunión con la dirección del TFM y la consolidación del estado del arte. Los requisitos se numeran de forma continua y se trazan contra los casos de uso (CU-XX) definidos en el capítulo anterior.
+
+\section{Requisitos funcionales (RF)}
+\label{sec:rf}
+
+Los requisitos funcionales se detallan en la Tabla~\ref{tab:rf}.
+
+  \begin{longtable}{p{1.2cm} p{7.0cm} p{2.7cm} p{1.3cm} p{1.6cm}}
+  \hline
+  \textbf{ID} & \textbf{Requisito} & \textbf{Módulo} & \textbf{CU} & \textbf{Prioridad} \\
+  \hline
+  \endfirsthead
+  \hline
+  \textbf{ID} & \textbf{Requisito} & \textbf{Módulo} & \textbf{CU} & \textbf{Prioridad} \\
+  \hline
+  \endhead
+  RF-01 & El sistema debe permitir registrar usuarios con rol conductor o pasajero. & Usuarios & CU-01 & Debe \\
+  RF-02 & El sistema debe permitir autenticar usuarios y mantener sesiones activas de forma segura. & Usuarios & CU-01 & Debe \\
+  RF-03 & El sistema debe permitir al usuario gestionar su perfil y sus preferencias de viaje (origen habitual, destino habitual, tolerancia horaria y preferencias declaradas). & Usuarios & CU-02 & Debe \\
+  RF-04 & El sistema debe permitir al conductor publicar un viaje indicando origen, destino, fecha/hora de salida y plazas disponibles. & Viajes & CU-03 & Debe \\
+  RF-05 & El sistema debe permitir al conductor modificar o cancelar un viaje publicado antes de su inicio. & Viajes & CU-03, CU-07 & Debe \\
+  RF-06 & El sistema debe permitir al pasajero buscar viajes compatibles aplicando filtros de origen, destino y ventana temporal. & Viajes & CU-04 & Debe \\
+  RF-07 & El sistema debe ejecutar el algoritmo de \textit{matching} y devolver al pasajero una lista de viajes ordenados por nivel de compatibilidad. & \textit{Matching} & CU-04 & Debe \\
+  RF-08 & El sistema debe permitir al pasajero solicitar una plaza en un viaje concreto. & Solicitudes & CU-05 & Debe \\
+  RF-09 & El sistema debe permitir al conductor aceptar o rechazar solicitudes de plaza recibidas. & Solicitudes & CU-06 & Debe \\
+  RF-10 & El sistema debe actualizar automáticamente las plazas disponibles tras cada aceptación. & Viajes & CU-06, CU-07 & Debe \\
+  RF-11 & El sistema debe gestionar el ciclo de vida del viaje con los estados planificado, solicitado, aceptado, en curso y finalizado, además del estado alternativo cancelado. & Viajes & CU-07 & Debe \\
+  RF-12 & El sistema debe permitir al usuario consultar la ruta asociada a un viaje y el estado actual del desplazamiento. & Viajes & CU-08 & Debe \\
+  RF-13 & El sistema debe mantener una representación digital sincronizada de usuarios, vehículos, viajes, solicitudes y rutas en el Gemelo Digital. & Gemelo Digital & CU-09 & Debe \\
+  RF-14 & El sistema debe actualizar el Gemelo Digital ante cambios de estado relevantes (creación, aceptación, inicio, finalización y cancelación). & Gemelo Digital & CU-09 & Debe \\
+  RF-15 & El sistema debe permitir al administrador lanzar simulaciones sobre escenarios previamente definidos. & Simulación & CU-10 & Debe \\
+  RF-16 & El sistema debe permitir seleccionar entre configuraciones predefinidas de escenario (número de usuarios, nivel de adopción, ventana temporal y capacidad). & Simulación & CU-10 & Debe \\
+  RF-17 & El sistema debe almacenar los resultados de cada simulación en formato estructurado para permitir su comparación posterior. & Simulación & CU-10 & Debe \\
+  RF-18 & El sistema expone métricas: vehículos utilizados, evitados, ocupación media, solicitudes cubiertas, tiempo de \textit{matching}. & Métricas & CU-11 & Debe \\
+  RF-19 & El sistema debe notificar al usuario los cambios relevantes: nuevas solicitudes, aceptaciones, rechazos y cancelaciones. & Notificaciones & CU-12 & Debería \\
+  RF-20 & El sistema debe proporcionar al administrador una vista de resultados con las métricas agregadas de las simulaciones ejecutadas y opción de exportación a CSV. & Métricas & CU-11 & Debería \\
+  RF-21 & El sistema debe requerir al conductor una declaración responsable de que posee licencia en vigor y un vehículo apto antes de publicar su primer viaje. & Usuarios & CU-03 & Debería \\
+  RF-22 & El sistema debe permitir a los usuarios valorar el viaje tras su finalización, contribuyendo a un sistema básico de reputación. & Reputación & CU-07 & Debería \\
+  \hline
+  \caption{Requisitos funcionales (RF).}
+  \label{tab:rf}
+\end{longtable}
+
+\section{Requisitos no funcionales (RNF)}
+\label{sec:rnf}
+
+Los requisitos no funcionales se clasifican siguiendo el modelo de calidad de producto de la norma ISO/IEC 25010:2011 \cite{ISO25010}, que define ocho características: idoneidad funcional, eficiencia de desempeño, compatibilidad, usabilidad, fiabilidad, seguridad, mantenibilidad y portabilidad. Cada requisito se asocia a una característica del modelo y, cuando procede, a una de sus subcaracterísticas, de modo que la especificación no introduce categorías propias y cada atributo de calidad resulta verificable de forma objetiva.
+
+Conviene distinguir dos tipos de requisito no funcional: las \emph{calidades}, que fijan niveles de servicio exigibles al sistema, y las \emph{restricciones}, que son decisiones tecnológicas u organizativas impuestas de antemano. Las calidades se recogen en la Tabla~\ref{tab:rnf}; las restricciones, en la Sección~\ref{sec:restricciones}. Por ese motivo los criterios de verificación se expresan en términos medibles y no citan tecnologías concretas: el \textit{stack} queda fijado en la Tabla~\ref{tab:restricciones}.
+
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{1.30cm} >{\raggedright\arraybackslash}p{4.90cm} >{\raggedright\arraybackslash}p{3.30cm} >{\raggedright\arraybackslash}p{3.55cm} >{\raggedright\arraybackslash}p{1.65cm}@{}}
+  \hline
+  \textbf{ID} & \textbf{Requisito} & \textbf{Característica ISO 25010} & \textbf{Criterio de verificación} & \textbf{Prioridad} \\
+  \hline
+  \endfirsthead
+  \hline
+  \textbf{ID} & \textbf{Requisito} & \textbf{Característica ISO 25010} & \textbf{Criterio de verificación} & \textbf{Prioridad} \\
+  \hline
+  \endhead
+  RNF-01 & El algoritmo de \textit{matching} debe ofrecer tiempos de respuesta compatibles con un uso interactivo. & Eficiencia de desempeño (comportamiento temporal) & $<$ 2 s para 50 usuarios simultáneos (umbral a concretar en F1) & Debe \\
+  RNF-02 & La plataforma debe ser accesible desde navegador web y desde dispositivo móvil con una única base de código. & Portabilidad (capacidad de adaptación) & Una única base de código compilada para web y móvil & Debe \\
+  RNF-03 & La arquitectura debe ser modular y permitir sustituir el motor de simulación o el motor de mapas sin rehacer el resto del sistema. & Mantenibilidad (modularidad) & Sustitución de un módulo sin cambios en el resto & Debe \\
+  RNF-04 & El sistema debe proteger las credenciales y los datos personales de los usuarios. & Seguridad (confidencialidad) & Contraseñas con \textit{hash} y autenticación por token & Debe \\
+  RNF-05 & El código debe estar versionado y disponer de integración y despliegue continuos. & Mantenibilidad (capacidad de modificación) & Repositorio versionado con integración y despliegue automáticos & Debe \\
+  RNF-06 & Los escenarios de simulación deben poder reproducirse con resultados comparables entre ejecuciones. & Mantenibilidad (capacidad de prueba) & Datos sintéticos versionados y semilla fija & Debe \\
+  RNF-07 & El Gemelo Digital debe actualizarse por eventos en el momento en que se producen, sin procesamiento por lotes. & Fiabilidad (tolerancia a fallos) & Actualización por eventos, sin procesamiento por lotes & Debe \\
+  RNF-08 & El sistema debe registrar los eventos relevantes con marca temporal para su trazabilidad y uso por parte del Gemelo Digital. & Mantenibilidad (capacidad de análisis) & Registro de eventos con marca temporal & Debe \\
+  RNF-09 & El sistema debe poder ejecutarse en un entorno de desarrollo estándar sin infraestructura especializada ni servicios en la nube propietarios. & Portabilidad (capacidad de instalación) & Despliegue en un equipo estándar sin servicios propietarios & Debe \\
+  RNF-10 & El sistema debe gestionar adecuadamente los estados inconsistentes. & Fiabilidad (tolerancia a fallos) & Transiciones de estado validadas & Debe \\
+  RNF-11 & El sistema debe mantener la coherencia entre el estado de la plataforma y el estado del Gemelo Digital, evitando divergencias por eventos perdidos o duplicados. & Seguridad (integridad) & Eventos idempotentes y verificación periódica & Debe \\
+  RNF-12 & La interfaz debe seguir principios de usabilidad reconocidos (consistencia, retroalimentación y prevención de errores). & Usabilidad (inteligibilidad) & Revisión heurística & Podría \\
+  RNF-13 & El Gemelo Digital debe exponer sus actualizaciones mediante una API de eventos versionada y documentada, consumible por la plataforma y por el simulador. & Compatibilidad (capacidad de interoperabilidad) & Contrato de eventos versionado y probado con dos consumidores & Debe \\
+  \hline
+  \caption{Requisitos no funcionales (RNF), clasificados según ISO/IEC 25010:2011.}
+  \label{tab:rnf}
+\end{longtable}
+\setlength{\tabcolsep}{6pt}
+
+De este modo quedan cubiertas siete de las ocho características del modelo: eficiencia de desempeño (RNF-01), compatibilidad (RNF-13), usabilidad (RNF-12), fiabilidad (RNF-07 y RNF-10), seguridad (RNF-04 y RNF-11), mantenibilidad (RNF-03, RNF-05, RNF-06 y RNF-08) y portabilidad (RNF-02 y RNF-09). La idoneidad funcional no se especifica aquí porque corresponde a los requisitos funcionales de la Sección~\ref{sec:rf}. Una misma subcaracterística puede agrupar varios requisitos, como ocurre con la tolerancia a fallos.
+
+\section{Restricciones}
+\label{sec:restricciones}
+
+Las restricciones del proyecto se detallan en la Tabla~\ref{tab:restricciones}. Frente a los requisitos de la sección anterior, no expresan un nivel de servicio exigido sino una decisión tomada de antemano que condiciona el diseño.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{Y{0.3333} Y{0.6667} Y{2.0000}}
+    \hline
+    \textbf{ID} & \textbf{Restricción} & \textbf{Descripción} \\
+    \hline
+    RES-01 & Stack tecnológico & \textit{Frontend} en Angular + Ionic; \textit{backend} en Node.js; control de versiones en GitHub; CI/CD con GitHub Actions. \\
+    RES-02 & Base de datos & Se utilizará una base de datos relacional con extensión geoespacial (PostgreSQL/PostGIS), pendiente de confirmación final. \\
+    RES-03 & Motor de mapas/rutas & Pendiente de decisión: OpenStreetMap + OSRM, Google Maps u otra alternativa. \\
+    RES-04 & Motor de simulación & Pendiente de decisión: motor propio basado en agentes o integración con SUMO/MATSim. \\
+    RES-05 & Datos & Se trabajará con datos sintéticos y escenarios reproducibles ante la ausencia de datos reales de movilidad de la UAL. \\
+    RES-06 & Alcance temporal & El TFM debe completarse dentro del curso académico, lo que limita la profundidad de algunas fases. \\
+    RES-07 & Nivel de fidelidad del DT & El Gemelo Digital será de baja fidelidad: estado y eventos, sin dinámica física ni sensórica. \\
+    \hline
+  \end{tabularx}
+  \caption{Restricciones.}
+  \label{tab:restricciones}
+\end{table}
+
+\section{Priorización MoSCoW}
+
+La priorización de funcionalidades sigue el modelo MoSCoW, definido en la Sección~\ref{sec:moscow-alcance}. Las categorías se aplican a los requisitos funcionales (Sección~\ref{sec:rf}) y a los no funcionales (Sección~\ref{sec:rnf}) mediante la columna ``Prioridad''.
+
+\section{Trazabilidad requisitos \texorpdfstring{$\leftrightarrow$}{<->} casos de uso \texorpdfstring{$\leftrightarrow$}{<->} objetivos}
+
+La Tabla~\ref{tab:trazabilidad-req} muestra la trazabilidad entre bloques de requisitos, casos de uso y objetivos.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{Y{0.7407} Y{1.4815} Y{0.8889} Y{0.8889}}
+    \hline
+    \textbf{Bloque} & \textbf{Requisitos} & \textbf{Casos de uso} & \textbf{Objetivos} \\
+    \hline
+    Usuarios & RF-01, RF-02, RF-03, RF-21 & CU-01, CU-02, CU-03 & OE7, OE9 \\
+    Viajes & RF-04 a RF-12 & CU-03, CU-04, CU-06, CU-07, CU-08 & OE7, OE8, OE9 \\
+    \textit{Matching} & RF-07 & CU-04 & OE7 \\
+    Solicitudes & RF-08, RF-09 & CU-05, CU-06 & OE8 \\
+    Gemelo Digital & RF-13, RF-14, RNF-13 & CU-09 & OE4, OE5, OE6 \\
+    Simulación & RF-15, RF-16, RF-17 & CU-10 & OE10 \\
+    Métricas & RF-18, RF-20 & CU-11 & OE11, OE12 \\
+    Notificaciones & RF-19 & CU-12 & OE8 \\
+    Reputación & RF-22 & CU-07 & OE8 \\
+    \hline
+  \end{tabularx}
+  \caption{Trazabilidad requisitos \texorpdfstring{$\leftrightarrow$}{<->} casos de uso \texorpdfstring{$\leftrightarrow$}{<->} objetivos.}
+  \label{tab:trazabilidad-req}
+\end{table}

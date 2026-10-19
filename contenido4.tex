@@ -1,0 +1,104 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CAPÍTULO 4: ESTADO DEL ARTE PRELIMINAR
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Estado del arte preliminar}
+\label{ch:estado-arte}
+
+\section{Metodología de la revisión}
+
+La revisión bibliográfica se estructuró como una revisión sistemática de la literatura (SLR, \textit{Systematic Literature Review}), siguiendo las recomendaciones metodológicas para revisiones sistemáticas en ingeniería del software descritas por Kitchenham et al. \cite{Kitchenham2009} y la aplicación práctica realizada por Alfonso et al. \cite{Alfonso2021}.
+
+El proceso se organizó en las siguientes fases:
+\begin{enumerate}
+    \item Definición de objetivos y preguntas de investigación.
+    \item Estrategia de búsqueda en Web of Science Core Collection.
+    \item Aplicación de criterios de inclusión y exclusión.
+    \item Identificación y depuración de publicaciones.
+    \item Extracción estructurada de información.
+    \item Clasificación temática y síntesis de resultados.
+\end{enumerate}
+
+Se ejecutaron 11 consultas estructuradas (S1--S11), organizadas en dos bloques: búsquedas iniciales (S1--S8) sobre Gemelos Digitales, transporte, movilidad compartida y simulación; y búsquedas complementarias (S9--S11) centradas en \textit{matching} P2P, carpooling universitario y \textit{Digital Twin} + \textit{ride-sharing}. Tras la consolidación y eliminación de duplicidades, el conjunto documental quedó organizado en la Tabla~\ref{tab:corpus}.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{Y{1.6} Z{0.4}}
+    \hline
+    \textbf{Grupo} & \textbf{N.º} \\
+    \hline
+    Corpus principal & 77 \\
+    Referencias secundarias & 15 \\
+    Trabajos excluidos documentados & 27 \\
+    Trabajos pendientes de evaluación & 1 \\
+    \hline
+    \textbf{Total de registros únicos} & \textbf{120} \\
+    \hline
+  \end{tabularx}
+  \caption{Organización del corpus documental.}
+  \label{tab:corpus}
+\end{table}
+
+\section{Clasificación temática del corpus principal}
+
+El corpus principal se organizó en cinco categorías temáticas, derivadas de las preguntas de investigación, tal como se muestra en la Tabla~\ref{tab:categorias}.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{@{}Y{1.0000}@{\hspace{0.5cm}}p{\dimexpr\textwidth-2.5cm\relax}@{}}
+    \hline
+    \textbf{Categoría} & \textbf{Descripción} \\
+    \hline
+    A & Fundamentos y arquitectura de Gemelos Digitales \\
+    B & Gemelos Digitales aplicados a movilidad compartida \\
+    C & Datos, integración y sincronización operativa \\
+    D & Simulación, comportamiento de usuarios y escenarios de movilidad \\
+    E & \textit{Matching}, rutas, optimización y evaluación \\
+    \hline
+  \end{tabularx}
+  \caption{Clasificación temática del corpus principal.}
+  \label{tab:categorias}
+\end{table}
+
+Esta clasificación permite analizar de forma conjunta los diferentes componentes necesarios para construir la propuesta, evitando limitar el estado del arte a un único aspecto tecnológico.
+
+\section{Síntesis transversal por categorías}
+
+\subsection{Categoría A: Fundamentos y arquitectura del Gemelo Digital}
+
+Los trabajos de esta categoría (A1--A9) \cite{A1,A2,A3,A4,A5,A6,A7,A8,A9} proporcionan la base conceptual y arquitectónica del Gemelo Digital de movilidad. De forma recurrente plantean:
+\begin{itemize}
+    \item la representación de diferentes entidades (personas, vehículos, infraestructura y entorno)
+    \item la necesidad de mantener relaciones y actualizaciones entre el sistema operativo y su representación digital
+    \item arquitecturas desacopladas basadas en servicios, APIs y modelos de dominio
+\end{itemize}
+
+Para el TFM, estas aportaciones permiten justificar el modelado de usuarios, vehículos, viajes, solicitudes, rutas, posiciones y ocupación dentro de un estado digital común, sin necesidad de reproducir infraestructuras avanzadas basadas en V2X, \textit{edge computing} o arquitecturas \textit{cloud} de gran escala.
+
+\subsection{Categoría B: Gemelos Digitales y movilidad compartida}
+
+Los trabajos de esta categoría (B1--B11) \cite{B1,B2,B3,B4,B5,B6,B7,B8,B9,B10,B11} muestran que los Gemelos Digitales ya se han aplicado a servicios de movilidad compartida, combinando usuarios, vehículos, solicitudes, rutas, simulación y procesos de asignación. Un resultado importante de la revisión es que la combinación \textit{Digital Twin} + \textit{ride-sharing} no constituye por sí misma una aportación inédita. 
+
+Los antecedentes más próximos utilizan principalmente vehículos autónomos, flotas centralizadas o servicios de transporte bajo demanda, cuyo modelo operativo difiere del carpooling P2P. Estos trabajos aportan mecanismos útiles para representar reservas, capacidad, rutas, solicitudes y estados operativos, así como indicadores de ocupación, espera o distancia recorrida.
+
+\subsection{Categoría C: Datos, integración y sincronización operativa}
+
+Los trabajos de esta categoría (C1--C16) \cite{C1,C2,C3,C4,C5,C6,C7,C8,C9,C10,C11,C12,C13,C14,C15,C16} permiten fundamentar cómo mantener actualizado el estado digital del sistema a partir de información procedente del entorno operativo. La literatura muestra diferentes mecanismos para transformar datos físicos u operacionales en un estado digital utilizable posteriormente por procesos de simulación, análisis o apoyo a decisiones.
+
+En la plataforma propuesta, la sincronización puede realizarse principalmente mediante eventos generados por la propia aplicación: publicación de un viaje, solicitud, aceptación, cancelación, cambio de posición o modificación de la ocupación. Para el TFM se adoptan los principios de actualización de estado, desacoplamiento e interoperabilidad, sin necesidad de reproducir toda la infraestructura tecnológica utilizada en otros sistemas de transporte.
+
+\subsection{Categoría D: Simulación, comportamiento de usuarios y escenarios}
+
+Los trabajos de esta categoría (D1--D18) \cite{D1,D2,D3,D4,D5,D6,D7,D8,D9,D10,D11,D12,D13,D14,D15,D16,D17,D18} proporcionan la base para utilizar la simulación como mecanismo de evaluación cuando todavía no se dispone de una comunidad real suficientemente amplia. La literatura revisada muestra que los sistemas de movilidad pueden representarse mediante modelos basados en agentes, en los que cada participante posee características, estados y comportamientos propios. Esta aproximación resulta especialmente adecuada para el carpooling, ya que conductores y pasajeros pueden presentar diferentes orígenes, destinos, horarios, disponibilidad, tolerancias al desvío y preferencias. Estos trabajos también justifican el uso de poblaciones y viajes sintéticos para generar escenarios controlados, especialmente en entornos universitarios donde pueden definirse accesos, zonas de origen, puntos de recogida y franjas horarias.
+
+\subsection{Categoría E: \textit{Matching}, rutas, optimización y evaluación}
+
+Los trabajos de esta categoría (E1--E23) \cite{E1,E2,E3,E4,E5,E6,E7,E8,E9,E10,E11,E12,E13,E14,E15,E16,E17,E18,E19,E20,E21,E22,E23} son los más directamente relacionados con la formación de viajes compartidos. La literatura muestra que el \textit{matching} en carpooling P2P no puede basarse únicamente en la proximidad espacial, sino que debe considerar también origen y destino; horario; plazas disponibles; desvío adicional; tiempo máximo aceptable y preferencias de los participantes.
+
+Los trabajos revisados permiten fundamentar un proceso progresivo de \textit{matching}: primero se eliminan candidatos claramente incompatibles y después se realiza una evaluación más detallada de ruta, horario y desvíos. También aportan criterios para evaluar los resultados mediante indicadores como porcentaje de solicitudes atendidas, ocupación, tiempos de espera, desvíos, kilómetros recorridos y vehículos evitados.
+
+\section{Hueco identificado y posicionamiento del TFM}
+
+La revisión realizada permite concluir que existen numerosas propuestas sobre Gemelos Digitales aplicados a movilidad y transporte (categoría A), trabajos que combinan \textit{Digital Twin} con servicios de movilidad compartida (categoría B), mecanismos consolidados de sincronización de estado (categoría C), enfoques de simulación basada en agentes aplicables al carpooling (categoría D) y algoritmos de \textit{matching} y criterios de compatibilidad para carpooling P2P (categoría E). 
+
+Sin embargo, estos elementos suelen abordarse desde perspectivas diferentes y no se han integrado específicamente en el contexto del carpooling universitario P2P con viajes previamente planificados. Esta integración contextualizada constituye el hueco que el presente TFM pretende cubrir. La contribución no se plantea como la creación de una tecnología completamente nueva, sino como la adaptación, integración y evaluación de estos conceptos en un escenario concreto: una comunidad universitaria relativamente definida, con desplazamientos recurrentes y una plataforma P2P donde el conductor ya tiene previsto realizar el trayecto.

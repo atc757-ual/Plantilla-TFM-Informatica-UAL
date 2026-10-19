@@ -1,0 +1,50 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CAPÍTULO 2: PROBLEMA Y PREGUNTAS DE INVESTIGACIÓN
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Problema y preguntas de investigación}
+\label{ch:problema}
+
+\section{Formulación del problema}
+
+El problema abordado por este TFM se concreta en la necesidad de diseñar, implementar y evaluar una plataforma de carpooling universitario que:
+\begin{itemize}
+    \item Facilitar la publicación y solicitud de viajes previamente planificados.
+    \item Identificar compatibilidades entre conductores y pasajeros mediante mecanismos de \textit{matching}.
+    \item Mantener una representación digital sincronizada del estado del sistema.
+    \item Evaluar el comportamiento de la solución mediante simulación antes de su despliegue real.
+\end{itemize}
+
+Este problema se sitúa en la intersección de cuatro áreas: los Gemelos Digitales aplicados a movilidad, los sistemas de movilidad compartida P2P, los algoritmos de \textit{matching} conductor-pasajero y la simulación basada en agentes como instrumento de evaluación.
+
+\section{Pregunta de investigación principal}
+
+\textbf{Pregunta de investigación 1 (RQ1, del inglés \textit{Research Question}).} ¿Cómo puede una plataforma de carpooling universitaria apoyarse en un Gemelo Digital para representar, monitorizar y simular los desplazamientos compartidos y evaluar su impacto sobre el sistema de movilidad?
+
+\section{Preguntas de investigación secundarias}
+
+\textbf{RQ2.} ¿Qué entidades, atributos y eventos deben formar parte del modelo digital de usuarios, vehículos, viajes y rutas para que el Gemelo Digital resulte útil en el contexto del carpooling universitario?
+
+\textbf{RQ3.} ¿Qué criterios de compatibilidad y qué mecanismos de \textit{matching} permiten identificar de forma eficiente oportunidades de viaje compartido en una comunidad universitaria con desplazamientos recurrentes?
+
+\textbf{RQ4.} ¿Qué métricas e indicadores permiten evaluar el efecto del carpooling sobre el uso de vehículos y la ocupación en escenarios simulados, y cómo se comporta el sistema ante variaciones de demanda, horarios y capacidad?
+
+\section{Relación entre preguntas, objetivos y categorías de la revisión}
+
+La Tabla~\ref{tab:relacion-rq} relaciona cada pregunta de investigación con su objetivo asociado y las categorías de la revisión sistemática de la literatura (SLR, del inglés \textit{Systematic Literature Review}) utilizadas.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{Y{0.4154} Y{1.2692} Y{1.3154}}
+    \hline
+    \textbf{Pregunta} & \textbf{Objetivo asociado} & \textbf{Categorías de la SLR relacionadas} \\
+    \hline
+    RQ1 & Diseñar la arquitectura de la plataforma y del Gemelo Digital & A (Fundamentos y arquitectura DT), B (DT + movilidad compartida) \\
+    RQ2 & Definir el modelo digital de usuarios, vehículos, viajes y rutas & A, C (Datos, integración y sincronización) \\
+    RQ3 & Diseñar e implementar la lógica de \textit{matching} & E (\textit{Matching}, rutas, optimización) \\
+    RQ4 & Definir métricas y evaluar el sistema mediante simulación & D (Simulación y escenarios), E (Evaluación) \\
+    \hline
+  \end{tabularx}
+  \caption{Relación entre preguntas, objetivos y categorías de la SLR.}
+  \label{tab:relacion-rq}
+\end{table}

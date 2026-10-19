@@ -53,3 +53,31 @@
 # Archivos del sistema operativo / editores
 .DS_Store
 *.swp
+
+# ---------------------------------------------------------------------------
+# Figuras que no forman parte de la memoria
+# ---------------------------------------------------------------------------
+# Se conservan en el disco, pero no se suben al repositorio.
+
+# Restos de la plantilla original (no los usa el documento)
+Figuras/articulo.jpg
+Figuras/documentos.jpg
+Figuras/ejemplo-arquitectura.pdf
+Figuras/ejemplo-modulos.pdf
+Figuras/errores.png
+Figuras/facultad.png
+Figuras/plandef.png
+
+# Variantes de logotipo no utilizadas
+Figuras/logos/escudobn.png
+Figuras/logos/escudocolor.png
+Figuras/logos/portada.jpg
+Figuras/logos/portada.png
+
+# Diagramas ya redibujados en TikZ: el PNG queda solo como respaldo local
+Figuras/bloques-funcionales.png
+Figuras/arquitectura-capas.png
+Figuras/secuencia-matching.png
+Figuras/secuencia-simulacion.png
+Figuras/actividad-matching.png
+Figuras/planificacion-gantt.png

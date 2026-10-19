@@ -1,0 +1,56 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CAPÍTULO 5: CONTRIBUCIÓN ESPERADA
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Contribución esperada}
+\label{ch:contribucion}
+
+\section{Aportaciones del trabajo}
+
+La contribución del TFM no consiste en afirmar que se ha inventado un nuevo Gemelo Digital ni un nuevo algoritmo de carpooling. La aportación se sitúa en la integración contextualizada de componentes ya existentes en la literatura, adaptados a un escenario concreto: el carpooling universitario P2P con viajes previamente planificados. En concreto, el TFM conecta los componentes que se muestran en la Tabla~\ref{tab:componentes}.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{Y{0.6667} Y{1.1111} Y{1.2222}}
+    \hline
+    \textbf{Componente} & \textbf{Aportación al TFM} & \textbf{Ejemplo en la SLR} \\
+    \hline
+    Gemelo Digital & Representación estructurada y actualizable del estado de usuarios, vehículos, viajes y solicitudes. & A1 (\textit{Mobility Digital Twin}) y A5 (\textit{architecting DT}) definen entidades y arquitecturas, pero no abordan el modelo P2P universitario. \\
+    Carpooling P2P & Modelo de servicio donde el conductor ya tiene previsto realizar el desplazamiento y comparte plazas. & E21 (\textit{review P2P ride matching}) delimita el modelo, pero no lo integra con un DT operativo. \\
+    \textit{Matching} & Identificación progresiva de viajes compatibles mediante filtrado geoespacial y evaluación de ruta, horario y desvío. & E16 y E19 fundamentan las restricciones y el filtrado por etapas, pero sin integrarse en un Gemelo Digital. \\
+    Simulación & Entorno reproducible para evaluar escenarios de demanda, adopción, capacidad y horarios. & D4 y D5 demuestran el uso de simulación con datos sintéticos y escenarios \textit{what-if}, pero en otros dominios de tráfico. \\
+    Movilidad universitaria & Contexto específico con patrones recurrentes, orígenes dispersos y destino común. & D12, D14 y E17 estudian el contexto universitario, pero sin Gemelo Digital ni plataforma P2P integrada. \\
+    \hline
+  \end{tabularx}
+  \caption{Componentes del TFM y aportación de la SLR.}
+  \label{tab:componentes}
+\end{table}
+
+Las aportaciones concretas que se esperan del trabajo son:
+\begin{itemize}
+    \item Una arquitectura de referencia para una plataforma de carpooling universitario apoyada por un Gemelo Digital, inspirada en A5 pero adaptada al modelo P2P.
+    \item Un modelo digital explícito de usuarios, vehículos, viajes, solicitudes y rutas, con sus relaciones y eventos de actualización (A1, A2, A7).
+    \item Una implementación funcional de plataforma web/móvil y servicios \textit{backend} (B5 como referencia de PoC en campus, pero sin flota autónoma).
+    \item Un mecanismo de \textit{matching} conductor-pasajero basado en criterios de compatibilidad espaciotemporal (E16, E19, E21).
+    \item Un entorno de simulación de escenarios para analizar el comportamiento del sistema (D4, D6, D10).
+    \item Una evaluación cuantitativa del efecto del carpooling bajo escenarios controlados (E3, E20).
+    \item Una identificación de limitaciones y líneas de trabajo futuro.
+\end{itemize}
+
+\section{Qué no es este TFM (delimitación)}
+
+Para evitar malentendidos y proteger el alcance, conviene explicitar qué no pretende ser este trabajo:
+\begin{itemize}
+    \item No es un nuevo algoritmo de \textit{matching} ni una contribución teórica a la optimización (E15, E18 quedan fuera del MVP).
+    \item No es un Gemelo Digital de alta fidelidad con sincronización bidireccional en tiempo real ni sensórica física (A4 permite justificar un DT funcional de menor fidelidad).
+    \item No es una réplica digital tridimensional del campus (D2; las referencias excluidas sobre Unity o CARLA quedan fuera del alcance).
+    \item No es un sistema de transporte profesional ni una flota gestionada (B6, B10 responden a flotas centralizadas, no a P2P).
+    \item No es una plataforma de producción desplegada a escala universitaria.
+    \item No incorpora IA predictiva avanzada, aprendizaje por refuerzo ni optimización multiobjetivo (B6, E15, E18 usan RL, pero exceden el alcance).
+\end{itemize}
+
+Esta delimitación es coherente con el alcance definido en el Capítulo~\ref{ch:alcance} y con el MVP establecido en el plan de trabajo.
+
+\section{Posicionamiento frente a la literatura}
+
+La contribución puede formularse como una respuesta al hueco identificado en la síntesis de la SLR. La literatura ha estudiado por separado (a) los Gemelos Digitales de movilidad, (b) los servicios de movilidad compartida con DT, (c) los mecanismos de sincronización de estado, (d) la simulación basada en agentes y (e) los algoritmos de \textit{matching} P2P. Sin embargo, no se ha documentado una propuesta que integre estos cinco elementos en un caso de carpooling universitario P2P con viajes previamente planificados, donde el conductor ya tiene previsto realizar el desplazamiento y la oferta aparece de forma dinámica.

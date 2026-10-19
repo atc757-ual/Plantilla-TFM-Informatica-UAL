@@ -1,0 +1,33 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CAPÍTULO 13: RIESGOS Y MEDIDAS DE CONTROL
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Riesgos y medidas de control}
+\label{ch:riesgos}
+
+La Tabla~\ref{tab:riesgos-control} identifica los principales riesgos del proyecto, su impacto previsto y las medidas de mitigación correspondientes.
+
+\begin{longtable}{p{4.2cm} p{2.3cm} p{8.14cm}}
+  \caption{Riesgos y medidas de control.}
+  \label{tab:riesgos-control}\\
+  \hline
+  \textbf{Riesgo} & \textbf{Impacto} & \textbf{Mitigación} \\
+  \hline
+  \endfirsthead
+  \multicolumn{3}{c}{\tablename\ \thetable{} -- continuación}\\
+  \hline
+  \textbf{Riesgo} & \textbf{Impacto} & \textbf{Mitigación} \\
+  \hline
+  \endhead
+  Alcance excesivo del Gemelo Digital & Alto & Limitar el modelo a usuarios, vehículos, viajes, rutas y estados relevantes. \\
+  Exceso de complejidad en optimización & Medio/alto & Comenzar con un \textit{matching} heurístico interpretable. \\
+  Dificultad para disponer de datos reales & Alto & Usar datos sintéticos y escenarios reproducibles para la evaluación. \\
+  Desalineación entre el DT y la aplicación & Medio & Definir contratos de datos y eventos desde el diseño. \\
+  Problemas de tiempo & Alto & Priorizar un MVP funcional antes de abordar IA u optimización avanzada. \\
+  Resultados poco medibles & Medio & Definir métricas y escenarios antes de implementar la simulación. \\
+  Problemas con el motor de mapas/rutas & Medio & Seleccionar una alternativa de código abierto (OSRM) y disponer de un plan B. \\
+  Dependencia de herramientas externas & Bajo & Documentar alternativas y mantener el núcleo desacoplado. \\
+  Dificultad para validar con usuarios reales & Medio & Aceptar la validación con datos sintéticos y documentar esta limitación. \\
+  Desviación del calendario académico & Alto & Realizar revisiones periódicas con el director y priorizar estrictamente el MVP. \\
+  \hline
+\end{longtable}
