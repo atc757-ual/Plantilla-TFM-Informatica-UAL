@@ -17,8 +17,8 @@ Los elementos que se incluyen dentro del alcance del proyecto se detallan en la 
     \hline
     \textbf{Elemento} \\
     \hline
-    Registro/autenticación y perfiles de usuario \\
-    Roles conductor y pasajero \\
+    Registro e inicio de sesión único \\
+    Perfiles de conductor, pasajero y administrador (selector de modo) \\
     Publicación y solicitud de viajes \\
     \textit{Matching} conductor-pasajero \\
     Gestión de plazas y estado del viaje \\
@@ -51,21 +51,17 @@ Los elementos que quedan fuera del alcance inicial y sus motivos se muestran en 
     Predicción avanzada obligatoria con modelos de IA complejos & No necesaria para el MVP \\
     Optimización multiagente de tráfico urbano a escala de ciudad & Excede el alcance del prototipo \\
     Infraestructura 6G/\textit{edge} especializada & No aporta al problema estudiado (E11) \\
-    Parametrización libre de escenarios de simulación & Se sustituye por selección entre configuraciones predefinidas \\
     Cálculo de métricas en tiempo real & Se calculan al finalizar cada simulación \\
-    Notificaciones \textit{push} (FCM/OneSignal) & Requiere configuración externa; recortable \\
-    Notificaciones por \textit{email} (SMTP) & Requiere dominio verificado; recortable \\
-    Panel de administrador con gráficos interactivos & Se sustituye por vista de resultados con exportación CSV \\
     \hline
   \end{tabularx}
   \caption{Elementos fuera del alcance inicial.}
   \label{tab:fuera-alcance}
 \end{table}
 
-\subsection{Fuera del alcance obligatorio, pero recortable}
+\subsection{Funcionalidades recortables}
 \label{sec:moscow-alcance}
 
-Estas funcionalidades no son obligatorias para el MVP, pero se implementarán si el avance del proyecto lo permite. En caso contrario, se pospondrán a trabajo futuro sin afectar a la validación del TFM (véase la Tabla~\ref{tab:moscow}).
+Estas funcionalidades no forman parte del MVP, pero se implementarán si el avance del proyecto lo permite. Mientras no se implementen, se usa la alternativa indicada: avisos dentro de la aplicación (RF-19) en lugar de notificaciones \textit{push} o por \textit{email}, vista de resultados con exportación CSV (RF-20) en lugar del panel con gráficos, configuraciones predefinidas (RF-16) en lugar de la parametrización libre, y reglas de aviso fijas (RF-19) en lugar de su configuración por perfil. En caso contrario, se pospondrán a trabajo futuro sin afectar a la validación del TFM (véase la Tabla~\ref{tab:moscow}).
 
 \begin{table}[H]
   \centering
@@ -73,10 +69,11 @@ Estas funcionalidades no son obligatorias para el MVP, pero se implementarán si
     \hline
     \textbf{Elemento} & \textbf{Prioridad} & \textbf{Condición} \\
     \hline
-    Notificaciones PUSH (FCM) & Debería & Se implementa si F2--F5 se cierran en plazo \\
+    Notificaciones \textit{push} (FCM) & Debería & Se implementa si F2--F5 se cierran en plazo \\
     Notificaciones por \textit{email} (SMTP) & Debería & Se implementa si F2--F5 se cierran en plazo \\
     Panel de administrador con gráficos interactivos & Podría & Se implementa si sobra tiempo tras el MVP \\
     Parametrización libre de escenarios & Podría & Se implementa si sobra tiempo tras el MVP \\
+    Configuración de avisos por perfil (cada modo configura los suyos) & Podría & Se implementa si sobra tiempo tras el MVP \\
     \hline
   \end{tabularx}
   \caption{Funcionalidades recortables (MoSCoW).}
@@ -115,11 +112,11 @@ Las limitaciones se separan de las exclusiones de alcance porque no son decision
 
 El MVP definido en el plan de trabajo constituye el núcleo mínimo que permite demostrar la contribución:
 \begin{itemize}
-    \item Usuarios con rol conductor/pasajero.
+    \item Usuarios con perfiles de conductor, de pasajero y de administrador.
     \item Publicación y búsqueda de viajes.
     \item \textit{Matching} básico.
     \item Gestión de solicitudes y estados.
-    \item Modelo de Gemelo Digital de usuarios, vehículos y viajes.
+    \item Modelo de Gemelo Digital de usuarios, vehículos, viajes, solicitudes y rutas.
     \item Al menos tres escenarios de simulación.
     \item Métricas comparables entre escenario base y escenarios de carpooling.
     \item Pruebas automatizadas básicas y \textit{pipeline} CI/CD.
@@ -129,9 +126,4 @@ Las funcionalidades de segunda prioridad (navegación avanzada, geolocalización
 
 \section{Amenazas a la validez}
 
-Se identifican tres tipos de amenazas que se discutirán en la memoria final:
-\begin{itemize}
-    \item \textbf{Validez interna:} los resultados de simulación dependen de los supuestos del modelo (distribuciones de demanda, tolerancias, comportamiento de los agentes).
-    \item \textbf{Validez externa:} los escenarios sintéticos no garantizan la transferibilidad directa al comportamiento real de la comunidad universitaria.
-    \item \textbf{Validez de constructo:} los indicadores seleccionados (vehículos evitados, ocupación, solicitudes cubiertas) son proxies razonables, pero no capturan toda la complejidad de la movilidad compartida.
-\end{itemize}
+Las amenazas a la validez de los resultados (interna, externa y de constructo) se analizan junto al plan de evaluación, en la Sección~\ref{sec:amenazas-validez}.

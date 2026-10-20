@@ -7,7 +7,7 @@
 
 \section{Enfoque metodológico}
 
-El TFM se aborda desde un enfoque de \textit{Design Science Research} (DSR), adecuado para trabajos de ingeniería informática en los que se diseña, construye y evalúa un artefacto software para resolver un problema concreto. La DSR se organiza en torno a tres ciclos complementarios (Tabla~\ref{tab:dsr}).
+El TFM se aborda desde un enfoque de \textit{Design Science Research} (DSR), adecuado para trabajos de ingeniería informática en los que se diseña, construye y evalúa un artefacto software para resolver un problema concreto. Según Hevner \cite{Hevner2007}, la DSR se organiza en torno a tres ciclos complementarios (Tabla~\ref{tab:dsr}).
 
 \begin{table}[H]
   \centering
@@ -15,9 +15,9 @@ El TFM se aborda desde un enfoque de \textit{Design Science Research} (DSR), ade
     \hline
     \textbf{Ciclo} & \textbf{Descripción} & \textbf{Aplicación al TFM} \\
     \hline
-    Ciclo de relevancia & Conectar el problema real con el conocimiento existente & Movilidad universitaria + literatura sobre DT, \textit{matching} y simulación \\
-    Ciclo de diseño & Construir y refinar el artefacto & Arquitectura, modelo digital, \textit{matching}, simulación \\
-    Ciclo de rigor & Evaluar el artefacto con criterios científicos & Validación funcional, técnica y experimental \\
+    Ciclo de relevancia & Conectar el entorno de aplicación (problema, requisitos y criterios de aceptación) con el diseño, y devolver a ese entorno el artefacto para su prueba & Movilidad universitaria de la UAL (actuación n.º 43 del Plan Director Smart Campus UAL \cite{UALSmartCampus2019}); requisitos, casos de uso y criterios de éxito \\
+    Ciclo de diseño & Iterar entre la construcción del artefacto y su evaluación & Arquitectura, modelo digital, \textit{matching} y simulación; validación funcional, técnica y experimental \\
+    Ciclo de rigor & Fundamentar el diseño en la base de conocimiento (teorías, métodos y trabajos previos) y aportar a ella los resultados & Revisión sistemática (77 trabajos), ISO/IEC 25010 y métodos de análisis de simulación; contribuciones del Capítulo~\ref{ch:contribucion} \\
     \hline
   \end{tabularx}
   \caption{Ciclos de la DSR.}
@@ -28,7 +28,7 @@ Este enfoque permite justificar que el TFM no es solo una implementación, sino 
 
 \section{Fases metodológicas}
 
-Las fases metodológicas coinciden con las fases del plan de trabajo (F1--F9), pero se reformulan desde la perspectiva de la DSR (Tabla~\ref{tab:fases-metodologicas}).
+Las fases metodológicas siguen el proceso de seis actividades de la DSR propuesto por Peffers et al. \cite{Peffers2007} y se corresponden con la revisión sistemática previa y con las fases F1--F9 del plan de trabajo (Capítulo~\ref{ch:cronograma}), tal como recoge la Tabla~\ref{tab:fases-metodologicas}.
 
 \begin{table}[H]
   \centering
@@ -36,12 +36,12 @@ Las fases metodológicas coinciden con las fases del plan de trabajo (F1--F9), p
     \hline
     \textbf{Fase DSR} & \textbf{Fase Plan} & \textbf{Actividad principal} & \textbf{Resultado} \\
     \hline
-    1. Identificación del problema & F1 & Revisión sistemática, definición de RQ, requisitos & Estado del arte + requisitos \\
-    2. Definición de objetivos & F1--F2 & Objetivos, alcance, casos de uso, arquitectura conceptual & Diseño técnico preliminar \\
-    3. Diseño y desarrollo & F3--F7 & Implementación de \textit{backend}, \textit{frontend}, \textit{matching}, DT y simulación & Artefacto software \\
-    4. Demostración & F7--F8 & Ejecución de escenarios y casos de prueba & Resultados de simulación y pruebas \\
-    5. Evaluación & F8 & Comparación de escenarios, análisis de métricas & Resultados y discusión \\
-    6. Comunicación & F9 & Redacción de la memoria y preparación de la defensa & Memoria final + presentación \\
+    1. Identificación del problema & Previa (SLR) & Revisión sistemática, definición de RQ & Estado del arte + RQ \\
+    2. Definición de objetivos & F1 & Objetivos, alcance, casos de uso, requisitos & Requisitos y diseño preliminar \\
+    3. Diseño y desarrollo & F1--F6 & Arquitectura (F1); \textit{backend}, \textit{frontend}, \textit{matching}, DT y simulación (F2--F6) & Artefacto software \\
+    4. Demostración & F6--F7 & Ejecución de escenarios y casos de prueba & Resultados de simulación y pruebas \\
+    5. Evaluación & F7 & Comparación de escenarios, análisis de métricas & Resultados y discusión \\
+    6. Comunicación & F8--F9 & Redacción de la memoria y preparación de la defensa & Memoria final + presentación \\
     \hline
   \end{tabularx}
   \caption{Fases metodológicas (DSR \texorpdfstring{$\leftrightarrow$}{<->} plan).}
@@ -58,7 +58,7 @@ La validación se articula en tres niveles complementarios (Tabla~\ref{tab:valid
     \hline
     \textbf{Nivel} & \textbf{Detalles} \\
     \hline
-    1 --- Validación funcional & Técnica: pruebas unitarias, de integración y de sistema. Objetivo: comprobar que los casos de uso (CU-01 a CU-12) funcionan según lo especificado. Herramientas: Jest / Mocha para \textit{backend}, Karma / Jasmine para \textit{frontend}, Postman para APIs. \\
+    1 --- Validación funcional & Técnica: pruebas unitarias, de integración y de sistema. Objetivo: comprobar que los casos de uso (CU-01 a CU-13) funcionan según lo especificado. Herramientas: Jest para \textit{backend}, Karma / Jasmine para \textit{frontend}, Postman para APIs. \\
     2 --- Validación técnica & Técnica: pruebas de rendimiento y verificación de sincronización. Objetivo: comprobar que el \textit{matching} responde en tiempos aceptables y que el Gemelo Digital refleja los cambios de estado. Métricas: tiempo de respuesta del \textit{matching}, latencia de sincronización, errores por escenario. \\
     3 --- Validación experimental & Técnica: simulación de escenarios controlados (S0--S5). Objetivo: analizar el efecto del carpooling sobre indicadores de movilidad. Métricas: vehículos utilizados, vehículos evitados, ocupación media, solicitudes cubiertas, distancia adicional. \\
     \hline
@@ -72,7 +72,7 @@ La validación se articula en tres niveles complementarios (Tabla~\ref{tab:valid
 Para garantizar el rigor metodológico:
 \begin{itemize}
     \item Cada objetivo específico (OE1--OE12) se traza contra al menos una RQ y una fase de validación.
-    \item Cada requisito (RF/RNF) se traza contra un caso de uso.
+    \item Cada requisito funcional (RF) se traza contra un caso de uso, y cada requisito no funcional (RNF) contra una característica del modelo ISO/IEC 25010.
     \item Cada escenario de simulación se traza contra un conjunto de métricas.
     \item Los resultados se documentan con datos reproducibles (semillas, configuraciones, versiones).
 \end{itemize}

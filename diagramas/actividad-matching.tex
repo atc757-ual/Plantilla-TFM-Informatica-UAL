@@ -7,12 +7,12 @@
     \useasboundingbox (0.0,0.15) rectangle (15.4,14.55);
 
     % ---------- particiones ----------
-    \foreach \x/\w/\n in {0.15/3.15/{Pasajero}, 3.30/6.00/{\textit{Sistema}},
+    \foreach \x/\w/\n in {0.15/3.15/{Pasajero}, 3.30/6.00/{\textit{Backend} (\textit{matching})},
                           9.30/3.10/{Conductor}, 12.40/2.95/{Gemelo Digital}} {
       \draw[draw=Color2!45, line width=0.4pt, fill=Color2!2]
         (\x,0.30) rectangle (\x+\w,14.15);
     }
-    \foreach \x/\w/\n in {0.15/3.15/{Pasajero}, 3.30/6.00/{\textit{Sistema}},
+    \foreach \x/\w/\n in {0.15/3.15/{Pasajero}, 3.30/6.00/{\textit{Backend} (\textit{matching})},
                           9.30/3.10/{Conductor}, 12.40/2.95/{Gemelo Digital}} {
       \node[draw=Color2, fill=Color2!12, font=\scriptsize\bfseries, text=Color2,
             minimum width=\w cm, minimum height=0.42cm, inner sep=1pt]

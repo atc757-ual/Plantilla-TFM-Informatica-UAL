@@ -2,106 +2,123 @@
 % ("Tipos de referencias") se ha eliminado por no formar parte del TFM.
 \addtocontents{toc}{ \vspace{5mm} \hrule \par}
 
-\chapter{Decisiones de diseño pendientes}
+\chapter{Decisiones de diseño}
 \label{anx:decisiones-diseno}
 
-Estas decisiones no bloquean la planificación, pero deberán cerrarse antes de implementar la versión definitiva (Tabla~\ref{tab:decisiones-pendientes}).
+La Tabla~\ref{tab:decisiones-pendientes} recoge las decisiones de diseño abiertas al inicio del proyecto y su estado. Las pendientes no bloquean la planificación y se cierran al final de F1 (23/10/2026).
 
+% NOTA (revisión): DP-07 usa lenguaje interno ("exigidos por la dirección").
+% Reformular o eliminar cuando la dirección cierre los criterios.
 \begin{table}[H]
   \centering
-  \begin{tabularx}{\textwidth}{Y{0.3636} Y{2.0000} Y{0.6364}}
+  \begin{tabularx}{\textwidth}{Y{0.3000} Y{1.5500} Y{1.1500}}
     \hline
-    \textbf{ID} & \textbf{Decisión pendiente} & \textbf{Fase de cierre} \\
+    \textbf{ID} & \textbf{Decisión} & \textbf{Estado} \\
     \hline
-    DP-01 & Base de datos concreta y estrategia de persistencia & F1 \\
-    DP-02 & Motor de mapas/rutas (OSRM, Google Maps u otro) & F1 \\
-    DP-03 & Tecnología concreta del motor de simulación (propio o SUMO) & F1 \\
-    DP-04 & Grado de tiempo real y frecuencia de actualización del DT & F1 \\
-    DP-05 & Modelo exacto de datos y eventos entre el \textit{backend} y el DT & F1 \\
-    DP-06 & Método final de generación de datos sintéticos para evaluación & F1 \\
-    DP-07 & Criterios académicos concretos de evaluación exigidos por la dirección del TFM & F1 \\
+    DP-01 & Base de datos concreta y estrategia de persistencia & Cerrada: PostgreSQL + PostGIS (RNF-15) \\
+    DP-02 & Motor de mapas/rutas (OSRM, Google Maps u otro) & Cerrada: OpenStreetMap + OSRM (RNF-16) \\
+    DP-03 & Tecnología concreta del motor de simulación (propio o SUMO) & Cerrada: motor propio (RNF-17) \\
+    DP-04 & Grado de tiempo real y frecuencia de actualización del DT & Pendiente (F1, 23/10/2026) \\
+    DP-05 & Modelo exacto de datos y eventos entre el \textit{backend} y el DT & Pendiente (F1, 23/10/2026) \\
+    DP-06 & Método final de generación de datos sintéticos para evaluación & Pendiente (F1, 23/10/2026) \\
+    DP-07 & Criterios académicos concretos de evaluación exigidos por la dirección del TFM & Pendiente (F1, 23/10/2026) \\
+    DP-08 & \textit{Framework} del \textit{backend} (Express directamente o NestJS) & Cerrada: NestJS sobre Express, por su TypeScript y estructura modular coherentes con Angular, y por incluir validación, autenticación, OpenAPI y pruebas (RNF-14) \\
     \hline
   \end{tabularx}
-  \caption{Decisiones de diseño pendientes.}
+  \caption{Decisiones de diseño y su estado.}
   \label{tab:decisiones-pendientes}
 \end{table}
 
-Todas las decisiones se cierran en F1 (Diseño y requisitos) para no bloquear las fases posteriores.
+\chapter{Diagramas de diseño}
+\label{anx:diagramas}
 
-\chapter{Diagramas UML}
-\label{anx:diagramas-uml}
+Este anexo reúne los diagramas de diseño que complementan el Capítulo~\ref{ch:arquitectura}, organizados en dos vistas: la estructural, que describe de qué partes se compone el sistema y cómo se despliega, y la de comportamiento, que describe cómo interactúan esas partes en los procesos principales. Los diagramas del cuerpo de la memoria se recogen en el índice de figuras.
 
-\section{Diagramas del cuerpo del documento}
+\section{Vista estructural}
+\label{sec:anx-vista-estructural}
 
-La Tabla~\ref{tab:diagramas-cuerpo} recoge los diagramas previstos para el cuerpo de la memoria. Se han actualizado las ubicaciones para que correspondan con la estructura actual del proyecto LaTeX; los que aún no están incorporados se identifican como pendientes.
+\subsection{Arquitectura por capas}
+\label{sec:anx-arquitectura-capas}
 
-\begin{longtable}{p{4.0cm} p{4.2cm} p{6.44cm}}
-  \caption{Diagramas del cuerpo del documento.}
-  \label{tab:diagramas-cuerpo}\\
-  \hline
-  \textbf{Diagrama} & \textbf{Ubicación actual o prevista} & \textbf{Descripción} \\
-  \hline
-  \endfirsthead
-  \multicolumn{3}{c}{\tablename\ \thetable{} -- continuación}\\
-  \hline
-  \textbf{Diagrama} & \textbf{Ubicación actual o prevista} & \textbf{Descripción} \\
-  \hline
-  \endhead
-  Diagrama de casos de uso & Capítulo~\ref{ch:actores}, Figura~\ref{fig:casos-uso} & Actores y casos de uso prioritarios (CU-01 a CU-12) \\
-  Diagrama de estados del viaje & Pendiente; capítulo~\ref{ch:requisitos}, junto a RF-11 & Ciclo de vida del viaje \\
-  Diagrama de estados de la solicitud & Pendiente; capítulo~\ref{ch:requisitos}, junto a RF-08 y RF-09 & Ciclo de vida de la solicitud \\
-  Diagrama de clases del dominio & Capítulo~\ref{ch:arquitectura}, Figura~\ref{fig:clases} & Entidades digitales del Gemelo Digital \\
-  Diagrama de secuencia: publicar viaje & Pendiente; capítulo~\ref{ch:arquitectura} & Flujo de publicación y actualización del DT \\
-  Diagrama de secuencia: \textit{matching} y solicitud & Anexo~\ref{anx:arquitectura-capas}, Sección~\ref{sec:anx-secuencia-matching} & Flujo del \textit{matching} progresivo \\
-  Diagrama de secuencia: simulación & Anexo~\ref{anx:arquitectura-capas}, Sección~\ref{sec:anx-secuencia-simulacion} & Flujo del módulo de simulación \\
-  Diagrama de arquitectura por capas & Anexo~\ref{anx:arquitectura-capas}, Sección~\ref{sec:anx-arquitectura-capas} & Arquitectura general del sistema \\
-  \hline
-\end{longtable}
+La arquitectura separa presentación, servicios, persistencia, Gemelo Digital, simulación y DevOps, permitiendo sustituir componentes sin rehacer el sistema (Figura~\ref{fig:arquitectura-capas}).
 
-\section{Diagramas complementarios}
-
-La Tabla~\ref{tab:diagramas-complementarios} conserva los diagramas complementarios propuestos en el Word. Su ubicación queda en este anexo, pendientes de elaboración.
-
-\begin{table}[H]
+\begin{figure}[H]
   \centering
-  \begin{tabularx}{\textwidth}{Y{0.6667} Y{1.3333}}
-    \hline
-    \textbf{Diagrama} & \textbf{Descripción} \\
-    \hline
-    Diagrama entidad-relación (ER) & Modelo de datos físico de la base de datos \\
-    Diagrama de despliegue & Distribución de componentes en entorno de desarrollo \\
-    Diagrama de componentes & Descomposición de módulos del \textit{backend} \\
-    \hline
-  \end{tabularx}
-  \caption{Diagramas complementarios propuestos para este anexo.}
-  \label{tab:diagramas-complementarios}
-\end{table}
+  \input{diagramas/arquitectura-capas}
+  \caption[Diagrama de arquitectura por capas]{Diagrama de arquitectura por capas. Las capas se apilan de presentación a persistencia; la capa de simulación trabaja sobre una copia del estado del Gemelo Digital. DevOps se representa como capa transversal porque no forma parte del sistema en ejecución.}
+  \label{fig:arquitectura-capas}
+\end{figure}
 
-Estos diagramas se generarán durante la fase F1 y se incorporarán al anexo en la versión final de la memoria.
+\subsection{Componentes}
 
-\chapter{Glosario de términos}
-\label{anx:glosario}
+La Figura~\ref{fig:componentes} descompone el \textit{backend} en componentes y muestra sus dependencias con los elementos externos.
 
-Se recogen en este anexo los términos propios del dominio que se emplean con un significado específico en la memoria. Las siglas y acrónimos se listan en el apartado de abreviaturas.
+\begin{figure}[H]
+  \centering
+  \input{diagramas/componentes}
+  \caption{Diagrama de componentes del \textit{backend} y dependencias con los elementos externos.}
+  \label{fig:componentes}
+\end{figure}
 
-\begin{longtable}{p{3.5cm} p{11.66cm}}
-  \caption{Glosario de términos.}
-  \label{tab:glosario}\\
-  \hline
-  \textbf{Término} & \textbf{Definición} \\
-  \hline
-  \endfirsthead
-  \multicolumn{2}{c}{\tablename\ \thetable{} -- continuación}\\
-  \hline
-  \textbf{Término} & \textbf{Definición} \\
-  \hline
-  \endhead
-  ARATÍES & Aplicación institucional de la UAL para la entrega de TFM \\
-  Carpooling P2P & Coche compartido entre particulares, donde el conductor ya tiene previsto realizar el desplazamiento \\
-  \textit{Ride-hailing} & Servicio donde un conductor profesional atiende solicitudes de viaje \\
-  \textit{Ride-sharing} & Uso compartido de un vehículo entre varios usuarios \\
-  \hline
-\end{longtable}
+\subsection{Despliegue}
+
+La Figura~\ref{fig:despliegue} muestra la distribución física prevista de los componentes.
+
+\begin{figure}[H]
+  \centering
+  \input{diagramas/despliegue}
+  \caption{Diagrama de despliegue del entorno previsto.}
+  \label{fig:despliegue}
+\end{figure}
+
+\subsection{Modelo entidad-relación}
+
+La Figura~\ref{fig:er-dominio} recoge el modelo de datos persistente del dominio.
+
+\begin{figure}[H]
+  \centering
+  \input{diagramas/er-dominio}
+  \caption{Modelo entidad-relación del dominio. Las claves primarias se marcan con (PK) y las externas con (FK). Cada perfil se guarda en su propia tabla, en relación 1:1 con USUARIO (su clave primaria es \texttt{id\_usuario}), de modo que una misma cuenta puede tener varios perfiles y cada tabla solo contiene los datos de ese perfil.}
+  \label{fig:er-dominio}
+\end{figure}
+
+\section{Vista de comportamiento}
+\label{sec:anx-vista-comportamiento}
+
+\subsection{Secuencia de \textit{matching} y solicitud de plaza}
+\label{sec:anx-secuencia-matching}
+
+El \textit{matching} se ejecuta de forma progresiva: primero se filtran candidatos por proximidad geoespacial mediante PostGIS; después se evalúan la ruta, el horario y el desvío. Cada solicitud genera un evento que actualiza el Gemelo Digital (Figura~\ref{fig:secuencia-matching}).
+
+\begin{figure}[H]
+  \centering
+  \input{diagramas/secuencia-matching}
+  \caption{Diagrama de secuencia: \textit{matching} y solicitud de plaza. Paso previo de comprobación de la ventana temporal y bucle de evaluación por candidato.}
+  \label{fig:secuencia-matching}
+\end{figure}
+
+\subsection{Actividad del proceso de \textit{matching}}
+\label{sec:anx-actividad-matching}
+
+La Figura~\ref{fig:actividad-matching} muestra el mismo proceso desde el punto de vista de las actividades: filtrado por proximidad geoespacial, evaluación de ruta, horario y desvío, y ordenación por puntuación de compatibilidad. Cada cambio de estado genera un evento que actualiza el Gemelo Digital.
+
+\begin{figure}[H]
+  \centering
+  \input{diagramas/actividad-matching}
+  \caption{Diagrama de actividad del proceso de \textit{matching}, con particiones por participante.} \label{fig:actividad-matching}
+\end{figure}
+
+\subsection{Secuencia de simulación de escenario}
+\label{sec:anx-secuencia-simulacion}
+
+El módulo de simulación parte del estado actual del Gemelo Digital, genera agentes sintéticos, ejecuta el \textit{matching} de forma iterativa y calcula las métricas al finalizar cada escenario. Los resultados se almacenan en formato estructurado para permitir su comparación posterior (Figura~\ref{fig:secuencia-simulacion}).
+
+\begin{figure}[H]
+  \centering
+  \input{diagramas/secuencia-simulacion}
+  \caption{Diagrama de secuencia: simulación de escenario. El generador crea el escenario y el motor lo ejecuta sobre una copia del estado, sin afectar a los datos reales.}
+  \label{fig:secuencia-simulacion}
+\end{figure}
 
 \chapter{Matriz de evaluación}
 \label{anx:matriz-evaluacion}
@@ -149,7 +166,7 @@ Este anexo amplía la información de la Sección~\ref{sec:escenarios-evaluacion
     \hline
     \textbf{Escenario} & \textbf{Descripción} & \textbf{Parámetros} & \textbf{Resultado esperado} \\
     \hline
-    S0 --- Base & Cada usuario realiza el desplazamiento de forma individual & Sin \textit{matching} & Base de comparación \\
+    S0 --- Base & Cada usuario se desplaza con su modo habitual (coche propio, transporte público u otro), sin coche compartido & Sin \textit{matching}; reparto modal de referencia (30\% en coche propio), con sensibilidad al 20\% y al 50\% & Base de comparación \\
     S1 --- Carpooling básico & \textit{Matching} con reglas de compatibilidad & Umbrales estándar & Reducción de vehículos \\
     S2 --- Mayor demanda & Aumenta el número de usuarios & 2$\times$, 5$\times$ usuarios & Análisis de escalabilidad \\
     S3 --- Horarios variables & Cambian las ventanas temporales & $\pm$15 min, $\pm$30 min, $\pm$60 min & Análisis de compatibilidad \\
@@ -161,52 +178,43 @@ Este anexo amplía la información de la Sección~\ref{sec:escenarios-evaluacion
   \label{tab:escenarios-detalle}
 \end{table}
 
-\chapter{Diagrama de arquitectura por capas}
-\label{anx:arquitectura-capas}
+\chapter{Glosario de términos}
+\label{anx:glosario}
 
-\section{Arquitectura por capas}
-\label{sec:anx-arquitectura-capas}
+Se recogen en este anexo los términos propios del dominio que se emplean con un significado específico en la memoria. Las siglas y acrónimos se listan en el apartado de abreviaturas.
 
-La arquitectura separa presentación, servicios, persistencia, Gemelo Digital, simulación y DevOps, permitiendo sustituir componentes sin rehacer el sistema (Figura~\ref{fig:arquitectura-capas}).
-
-\begin{figure}[H]
-  \centering
-  \input{diagramas/arquitectura-capas}
-  \caption[Diagrama de arquitectura por capas]{Diagrama de arquitectura por capas. Las capas se apilan de presentación a persistencia; la capa de simulación trabaja sobre una copia del estado del Gemelo Digital. DevOps se representa como capa transversal porque no forma parte del sistema en ejecución.}
-  \label{fig:arquitectura-capas}
-\end{figure}
-
-\section{Secuencia de \textit{matching} y solicitud de plaza}
-\label{sec:anx-secuencia-matching}
-
-El \textit{matching} se ejecuta de forma progresiva: primero se filtran candidatos por proximidad geoespacial mediante PostGIS; después se evalúan la ruta, el horario y el desvío. Cada solicitud genera un evento que actualiza el Gemelo Digital (Figura~\ref{fig:secuencia-matching}).
-
-\begin{figure}[H]
-  \centering
-  \input{diagramas/secuencia-matching}
-  \caption{Diagrama de secuencia: \textit{matching} y solicitud de plaza. Paso previo de comprobación de la ventana temporal y bucle de evaluación por candidato.}
-  \label{fig:secuencia-matching}
-\end{figure}
-
-\section{Secuencia de simulación de escenario}
-\label{sec:anx-secuencia-simulacion}
-
-El módulo de simulación parte del estado actual del Gemelo Digital, genera agentes sintéticos, ejecuta el \textit{matching} de forma iterativa y calcula las métricas al finalizar cada escenario. Los resultados se almacenan en formato estructurado para permitir su comparación posterior (Figura~\ref{fig:secuencia-simulacion}).
-
-\begin{figure}[H]
-  \centering
-  \input{diagramas/secuencia-simulacion}
-  \caption{Diagrama de secuencia: simulación de escenario. El generador crea el escenario y el motor lo ejecuta sobre una copia del estado, sin afectar a los datos reales.}
-  \label{fig:secuencia-simulacion}
-\end{figure}
-
-\section{Actividad del proceso de \textit{matching}}
-\label{sec:anx-actividad-matching}
-
-El proceso de \textit{matching} es progresivo: primero se filtran candidatos por proximidad geoespacial, después se evalúan la ruta, el horario y el desvío, y finalmente se ordenan por puntuación de compatibilidad. Cada cambio de estado genera un evento que actualiza el Gemelo Digital (Figura~\ref{fig:actividad-matching}).
-
-\begin{figure}[H]
-  \centering
-  \input{diagramas/actividad-matching}
-  \caption{Diagrama de actividad del proceso de \textit{matching}, con particiones por actor.} \label{fig:actividad-matching}
-\end{figure}
+\begin{longtable}{p{3.5cm} p{11.66cm}}
+  \caption{Glosario de términos.}
+  \label{tab:glosario}\\
+  \hline
+  \textbf{Término} & \textbf{Definición} \\
+  \hline
+  \endfirsthead
+  \multicolumn{2}{c}{\tablename\ \thetable{} -- continuación}\\
+  \hline
+  \textbf{Término} & \textbf{Definición} \\
+  \hline
+  \endhead
+  ARATÍES & Aplicación institucional de la UAL para la entrega de TFM \\
+  Carpooling P2P & Coche compartido entre particulares, donde el conductor ya tiene previsto realizar el desplazamiento \\
+  Desvío & Distancia o tiempo adicional que recorre el conductor para recoger o dejar a un pasajero \\
+  Escenario de simulación & Configuración de parámetros (usuarios, demanda, horarios, capacidad, reparto modal) que define un experimento \\
+  Evento & Registro con marca temporal de un cambio de estado en la plataforma, que actualiza el Gemelo Digital \\
+  Gemelo Digital & Representación digital del sistema de movilidad que la plataforma mantiene sincronizada mediante eventos y que sirve de base para la simulación \\
+  Idempotencia & Propiedad por la que procesar un mismo evento varias veces produce el mismo resultado que procesarlo una vez \\
+  Incidencia & Registro del motivo y del origen de una cancelación durante un viaje en curso \\
+  \textit{Matching} & Proceso que identifica y ordena los viajes compatibles con una solicitud según origen, destino, horario, plazas y desvío \\
+  Modo & Vista de la aplicación asociada a un perfil activo (Conductor, Pasajero o Administración, este último solo en web); el usuario cambia de modo con el selector \\
+  Ocupación media & Número medio de personas por vehículo en circulación \\
+  Perfil & Papel que una cuenta de usuario tiene activo en la plataforma (conductor, pasajero o administrador). Una misma cuenta puede tener varios perfiles, como máximo uno de cada tipo \\
+  Reparto modal & Proporción de desplazamientos que se realiza con cada modo de transporte \\
+  Réplica & Cada una de las ejecuciones de un escenario con una semilla distinta \\
+  \textit{Ride-hailing} & Servicio donde un conductor profesional atiende solicitudes de viaje \\
+  \textit{Ride-sharing} & Uso compartido de un vehículo entre varios usuarios \\
+  Semilla & Valor inicial del generador de números aleatorios que hace reproducible una réplica \\
+  Simulación basada en agentes & Técnica de simulación en la que cada participante se modela como un agente con atributos y comportamiento propios \\
+  Vehículos evitados & Diferencia de vehículos utilizados entre el escenario base y un escenario con coche compartido \\
+  Ventana temporal & Intervalo alrededor de la hora deseada dentro del cual un viaje se considera compatible \\
+  Viajero & Usuario que se desplaza en la plataforma, como conductor o como pasajero. Agrupa lo común a ambos perfiles: la gestión de sus viajes, la consulta de la ruta y la valoración \\
+  \hline
+\end{longtable}

@@ -1,0 +1,39 @@
+% Diagrama: Figura 8.2 - Ciclo de vida de la solicitud
+% TikZ vectorial. Se incluye con \input desde contenido8.tex.
+
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \useasboundingbox (0.0,1.05) rectangle (15.3,7.25);
+
+  % --- arranque ---
+  \node[circle, draw=Color2, fill=Color2, line width=0.6pt, minimum size=0.22cm,
+        inner sep=0pt] (ini) at (0.55,3.85) {};
+
+  % --- estados ---
+  \node[estado, minimum width=2.20cm] (pend) at (3.40,3.85) {\textbf{PENDIENTE}};
+  \node[estado, minimum width=2.20cm] (canc) at (3.40,6.15) {\textbf{CANCELADA}};
+  \node[estado, minimum width=2.20cm] (acep) at (8.30,4.95) {\textbf{ACEPTADA}};
+  \node[estado, minimum width=2.20cm] (rech) at (8.30,3.30) {\textbf{RECHAZADA}};
+
+  % --- estados finales ---
+  \foreach \x/\y in {6.30/6.15, 12.40/4.95, 12.40/3.30} {
+    \node[fin, minimum size=0.28cm, inner sep=0pt] at (\x,\y) {};
+    \node[circle, fill=Color2, minimum size=0.12cm, inner sep=0pt] at (\x,\y) {};
+  }
+
+  % --- transiciones ---
+  \draw[flujo] (ini) -- node[etqf, above, pos=0.55] {solicitar} (pend);
+  \draw[flujo] (pend.north east) -- node[etqf, above, pos=0.60] {aceptar} (acep.south west);
+  \draw[flujo] (pend.east) -- node[etqf, below, pos=0.62] {rechazar} (rech.west);
+
+  % cancelacion desde PENDIENTE
+  \draw[flujo] (pend.north) -- node[etqf, right] {cancelar} (canc.south);
+
+  % cancelacion desde ACEPTADA: rodea por arriba, sin cruzar nada
+  \draw[flujo] (acep.north) -- (8.30,6.75) -- (3.40,6.75) --
+    node[etqf, above, pos=0.35] {cancelar} (canc.north);
+
+  % salidas a los estados finales
+  \draw[flujo] (canc.east) -- (6.30,6.15);
+  \draw[flujo] (acep.east) -- node[etqf, above] {finalizar} (12.40,4.95);
+  \draw[flujo] (rech.east) -- (12.40,3.30);
+\end{tikzpicture}

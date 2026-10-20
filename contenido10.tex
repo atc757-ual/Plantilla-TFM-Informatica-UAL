@@ -10,12 +10,12 @@
 
 La solución se estructura en seis bloques funcionales de alto nivel, que separan responsabilidades y permiten sustituir componentes sin rehacer el sistema:
 \begin{enumerate}[label=\alph*)]
-    \item \textbf{Bloque de Presentación (\textit{Frontend}):} Punto de acceso para conductores y pasajeros. Se implementa con Angular + Ionic, lo que permite una única base de código que se compila para web y móvil (RNF-02). Incluye las pantallas de publicación de viajes, búsqueda, solicitudes y visualización de rutas.
-    \item \textbf{Bloque de Administración (Panel Admin):} Interfaz separada para el administrador. Desde aquí se lanzan las simulaciones (escenarios S0--S5), se consultan las métricas y se exportan los resultados en CSV (RF-15 a RF-18, RF-20). Se implementa exclusivamente en web, ya que las tareas de gestión resultan más cómodas en un navegador.
+    \item \textbf{Bloque de Presentación (\textit{Frontend}):} Punto de acceso para conductores y pasajeros. Se implementa con Angular + Ionic, lo que permite una única base de código que se compila para web y móvil (RNF-02). Incluye el selector de modo (conductor o pasajero) y las pantallas de publicación de viajes, búsqueda, solicitudes y visualización de rutas.
+    \item \textbf{Bloque de Administración (Panel Admin):} Interfaz para el administrador, implementada como un módulo independiente dentro del mismo \textit{frontend} y cargado bajo demanda. El acceso es único (CU-01): la misma cuenta y las mismas credenciales sirven para la aplicación y para el panel, y tras iniciar sesión, si el usuario tiene el perfil de administrador, la versión web añade un modo Administración al selector de modo, junto a Conductor y Pasajero. Al activarlo se carga el panel; en los otros modos, el administrador usa la aplicación como cualquier otro usuario. El selector solo muestra los modos de los perfiles activos, y en la aplicación móvil no incluye el modo Administración: el panel se ofrece exclusivamente en web, porque las tareas de gestión resultan más cómodas en un navegador, y solo es accesible con el perfil de administrador (RNF-04). Desde el panel se gestionan los usuarios y sus perfiles (RF-25), se lanzan las simulaciones (escenarios S0--S5), se consultan las métricas, se exportan los resultados en CSV (RF-15 a RF-18, RF-20) y se revisan las incidencias (RF-23).
     \item \textbf{Bloque de Comunicación (API Gateway):} Expone los servicios del Core y del Componente de Experimentación al \textit{frontend}. Gestiona autenticación, validación y enrutamiento de peticiones (Node.js).
     \item \textbf{Bloque del Core del Sistema:} Contiene la lógica de negocio: gestión de usuarios, viajes y solicitudes; el algoritmo de \textit{matching}; y el Gemelo Digital. Este mantiene una representación sincronizada de usuarios, vehículos, viajes, solicitudes y rutas, y se actualiza mediante eventos.
     \item \textbf{Bloque de Experimentación:} Se divide en A (Generador de Escenarios), que crea datos sintéticos y define los parámetros de cada escenario (S0--S5), y B (Motor de Simulación). El Motor B ejecuta el bucle de simulación sobre una copia del estado del Gemelo Digital, sin afectar a los datos reales; aplica el \textit{matching}, asigna plazas y calcula métricas como vehículos evitados, ocupación media y solicitudes cubiertas.
-    \item \textbf{Bloque de Persistencia:} Almacena y recupera datos de usuarios, viajes, solicitudes y resultados de simulación. Se implementa con PostgreSQL + PostGIS, que permite realizar consultas geoespaciales para el \textit{matching}.
+    \item \textbf{Bloque de Persistencia:} Almacena y recupera los datos de usuarios y perfiles, vehículos, viajes, solicitudes, incidencias y resultados de simulación. Se implementa con PostgreSQL + PostGIS, que permite realizar consultas geoespaciales para el \textit{matching}.
 \end{enumerate}
 
 La Figura~\ref{fig:bloques-funcionales} muestra el diagrama de bloques funcionales de alto nivel. En ella se aprecia la separación entre los bloques funcionales de la plataforma (a, b, c, d, f) y el bloque de experimentación (e), que opera sobre una copia del estado del Gemelo Digital.
@@ -23,13 +23,13 @@ La Figura~\ref{fig:bloques-funcionales} muestra el diagrama de bloques funcional
 \begin{figure}[H]
   \centering
   \input{diagramas/bloques-funcionales}
-  \caption[Diagrama de bloques funcionales]{Diagrama de bloques funcionales de alto nivel. Los bloques de presentación y administración son clientes independientes que entran por la misma API; el bloque de experimentación no accede al estado real, sino a una copia del Gemelo Digital.}
+  \caption[Diagrama de bloques funcionales]{Diagrama de bloques funcionales de alto nivel. Los bloques de presentación y administración comparten el \textit{frontend} y el inicio de sesión, pero el panel es un módulo independiente que se abre en modo Administración, solo con el perfil de administrador y en la versión web; ambos entran por la misma API; el bloque de experimentación no accede al estado real, sino a una copia del Gemelo Digital.}
   \label{fig:bloques-funcionales}
 \end{figure}
 
 \section{Vista técnica (arquitectura por capas)}
 
-Mientras que la sección anterior presenta la visión conceptual del sistema (bloques funcionales: qué hace cada parte), esta sección presenta la visión técnica (capas: cómo se implementa con tecnologías concretas). Ambas vistas son complementarias y responden al enfoque de múltiples vistas arquitectónicas \cite{Kruchten1995}.
+Mientras que la sección anterior presenta la visión conceptual del sistema (bloques funcionales: qué hace cada parte), esta sección presenta la visión técnica (capas: cómo se implementa con tecnologías concretas). Ambas vistas son complementarias y responden al enfoque de múltiples vistas arquitectónicas \cite{Kruchten1995}. Los diagramas de capas, componentes, despliegue y modelo de datos se recogen en la vista estructural del Anexo~\ref{anx:diagramas} (Sección~\ref{sec:anx-vista-estructural}).
 
 La Tabla~\ref{tab:capas} muestra la arquitectura técnica del sistema.
 
@@ -40,10 +40,10 @@ La Tabla~\ref{tab:capas} muestra la arquitectura técnica del sistema.
     \textbf{Capa} & \textbf{Responsabilidad} & \textbf{Tecnología prevista} \\
     \hline
     Presentación & \textit{Frontend} usuarios (web + móvil) + Panel Admin (web) & Angular + Ionic \\
-    API / \textit{Backend} & Autenticación, usuarios, viajes, \textit{matching}, reglas & Node.js \\
-    Persistencia & Usuarios, vehículos, viajes, solicitudes, estados, datos de simulación & PostgreSQL + PostGIS \\
+    API / \textit{Backend} & Autenticación, usuarios, viajes, \textit{matching}, reglas & Node.js + NestJS \\
+    Persistencia & Usuarios y perfiles, vehículos, viajes, solicitudes, incidencias, estados, datos de simulación & PostgreSQL + PostGIS \\
     Gemelo Digital & Representación de entidades y estado del sistema & Servicio/módulo DT \\
-    Simulación & Generación de escenarios y ejecución de experimentos & Módulo de simulación \\
+    Simulación & Generación de escenarios y ejecución de experimentos & Motor propio basado en agentes \\
     DevOps & Control de versiones, pruebas y despliegue & GitHub + GitHub Actions \\
     \hline
   \end{tabularx}
@@ -54,7 +54,7 @@ La Tabla~\ref{tab:capas} muestra la arquitectura técnica del sistema.
 \textbf{Descripción de las capas:}
 \begin{itemize}
     \item \textbf{Capa de Presentación:} Interfaz de usuario para conductores y pasajeros (web + móvil) y panel de administración (web). Se implementa con Angular + Ionic.
-    \item \textbf{Capa de API/\textit{Backend}:} Expone los servicios del sistema mediante APIs REST. Se implementa con Node.js.
+    \item \textbf{Capa de API/\textit{Backend}:} Expone los servicios del sistema mediante APIs REST. Se implementa con Node.js y el \textit{framework} NestJS, cuyos módulos se corresponden con los bloques de la arquitectura.
     \item \textbf{Capa de Persistencia:} Almacena y recupera datos. PostgreSQL + PostGIS permite consultas geoespaciales para el \textit{matching}.
     \item \textbf{Capa de Gemelo Digital:} Mantiene una representación sincronizada del estado del sistema. Se actualiza por eventos.
     \item \textbf{Capa de Simulación:} Genera escenarios (S0--S5) y ejecuta simulaciones sobre una copia del estado del Gemelo Digital.
@@ -87,6 +87,7 @@ La Tabla~\ref{tab:correspondencia} muestra la correspondencia entre los bloques 
 \end{table}
 
 \section{Modelo del Gemelo Digital}
+\label{sec:modelo-dt}
 
 El Gemelo Digital será una representación computacional del sistema de movilidad compartida gestionado por la plataforma. Se prioriza el nivel de abstracción necesario para responder a la pregunta de investigación, sin modelar elementos físicos complejos del vehículo.
 
@@ -100,12 +101,13 @@ Las entidades digitales del Gemelo Digital se detallan en la Tabla~\ref{tab:enti
     \hline
     \textbf{Entidad} & \textbf{Atributos principales} & \textbf{Eventos / cambios} \\
     \hline
-    Usuario & id, rol, preferencias, origen/destino del viaje & registro, solicitud, aceptación, cancelación \\
-    Vehículo & id, capacidad, plazas disponibles, estado, localización & alta, disponibilidad, ocupación, movimiento \\
-    Viaje & id, origen, destino, hora, ruta, estado & creación, confirmación, inicio, finalización \\
-    Solicitud & pasajero, viaje, estado & creación, aceptación, rechazo, cancelación \\
-    Ruta & origen, destino, distancia, duración, secuencia & recálculo o actualización \\
-    Escenario & usuarios, vehículos, demanda, reglas & creación, ejecución, comparación \\
+    Usuario & id, datos de cuenta, tolerancia horaria, perfiles (conductor, pasajero, administrador) & registro, activación de perfil, actualización de datos \\
+    Vehículo & id, propietario (conductor), matrícula, capacidad, estado, localización & alta, disponibilidad, movimiento \\
+    Viaje & id, conductor, vehículo, origen, destino, hora de salida, plazas ofertadas y disponibles, desvío máximo, ruta, estado & publicación, confirmación, inicio, finalización, cancelación \\
+    Solicitud & pasajero, viaje, prioritaria, estado & creación, aceptación, rechazo, cancelación \\
+    Ruta & distancia, duración, secuencia de puntos & recálculo o actualización \\
+    Incidencia & informante, viaje, solicitud afectada, categoría, descripción & registro, revisión por el administrador \\
+    Escenario & agentes simulados, número de usuarios, nivel de adopción, reparto modal, ventana temporal, capacidad media, réplicas & creación, ejecución, comparación \\
     \hline
   \end{tabularx}
   \caption{Entidades digitales del Gemelo Digital.}
@@ -114,14 +116,18 @@ Las entidades digitales del Gemelo Digital se detallan en la Tabla~\ref{tab:enti
 
 El tipo \texttt{Coordenada} se modela como un \textit{value object} reutilizable para representar ubicaciones geográficas. El tipo \texttt{Evento} desempeña un papel clave en la sincronización con el Gemelo Digital: cada cambio de estado de una entidad genera un evento que permite actualizar su representación digital.
 
-La Figura~\ref{fig:clases} muestra el diagrama de clases del dominio.
+La Figura~\ref{fig:clases} muestra el diagrama de clases del dominio. Los atributos comunes de las entidades del Gemelo Digital (identificador y marcas de tiempo) se generalizan en la clase abstracta \texttt{EntidadDigital}, de la que heredan \texttt{Usuario}, \texttt{Vehiculo}, \texttt{Viaje}, \texttt{Solicitud} e \texttt{Incidencia}; así, cualquier entidad puede originar un \texttt{Evento} mediante una única asociación. \texttt{Ruta} no hereda de ella porque es parte de \texttt{Viaje} (composición) y no tiene identidad propia.
 
-\begin{figure}[H]
+Los roles se modelan como perfiles y no como subclases de \texttt{Usuario}, porque un mismo usuario puede ser conductor en unos viajes y pasajero en otros, y un objeto no puede pertenecer a dos subclases a la vez ni cambiar de clase. \texttt{Usuario} guarda solo los datos de la cuenta y se compone de uno a tres perfiles, como máximo uno de cada tipo, que derivan de la clase abstracta \texttt{Perfil} (estado de activación y fecha de alta). Los perfiles de quien viaja comparten además la valoración media, que se generaliza en la clase abstracta intermedia \texttt{PerfilViajero}, de la que derivan \texttt{PerfilConductor} (declaración responsable de licencia, RF-21) y \texttt{PerfilPasajero} (prioridad por incidencia, RF-24); \texttt{PerfilAdministrador} deriva directamente de \texttt{Perfil}, porque el administrador no viaja en ese papel ni recibe valoraciones. Así, una misma cuenta puede combinar perfiles: un administrador que también se desplaza al campus activa su perfil de pasajero o de conductor sin crear otra cuenta. En el modelo de datos (Figura~\ref{fig:er-dominio}), cada perfil concreto se guarda en su propia tabla, en relación 1:1 con \texttt{USUARIO}, de modo que ninguna tabla contiene columnas que no le correspondan. Cada asociación apunta al perfil que corresponde: el viaje a su conductor, la solicitud a su pasajero y el vehículo a su propietario. El origen y el destino no se guardan como datos del usuario: se indican en cada búsqueda, a partir de la ubicación del dispositivo o de forma manual, lo que además aplica el principio de minimización de datos personales. Del mismo modo, el modo de transporte habitual solo interviene en la simulación, como atributo de los agentes sintéticos (\texttt{AgenteSimulado}) que genera cada \texttt{Escenario}.
+
+En las asociaciones solo se nombran los roles, y las flechas indican la navegabilidad: la mayoría son unidireccionales y solo la relación entre \texttt{Viaje} y \texttt{Solicitud} es bidireccional, porque el conductor consulta las solicitudes de su viaje y cada solicitud necesita conocer su viaje.
+
+\begin{sidewaysfigure}
   \centering
-  \includegraphics[width=0.8\textwidth]{clases-dominio}
+  \resizebox{\linewidth}{!}{\input{diagramas/clases-dominio}}
   \caption{Diagrama de clases del dominio del Gemelo Digital.}
   \label{fig:clases}
-\end{figure}
+\end{sidewaysfigure}
 
 \subsection{Principios de sincronización}
 
@@ -141,6 +147,15 @@ El DT es de baja fidelidad:
     \item Se alimenta de los eventos generados por la propia aplicación.
 \end{itemize}
 
+El flujo completo de publicación de un viaje, desde que el conductor lo registra hasta que el Gemelo Digital incorpora el evento, se recoge en la Figura~\ref{fig:secuencia-publicar}.
+
+\begin{figure}[H]
+  \centering
+  \input{diagramas/secuencia-publicar}
+  \caption{Diagrama de secuencia: publicación de un viaje y actualización del Gemelo Digital.}
+  \label{fig:secuencia-publicar}
+\end{figure}
+
 \section{Lógica de \textit{matching}}
 
 El \textit{matching} constituye una funcionalidad central. Su primera versión se plantea como un algoritmo interpretable basado en compatibilidad de atributos.
@@ -158,10 +173,10 @@ Los criterios de compatibilidad se detallan en la Tabla~\ref{tab:criterios}.
     Origen compatible & Distancia máxima entre puntos de origen & Alta \\
     Destino compatible & Destino igual o dentro de una zona definida & Alta \\
     Ventana temporal & Hora de salida $\pm$ tolerancia & Alta \\
-    Capacidad & Plazas disponibles del vehículo & Alta \\
+    Capacidad & Plazas disponibles del viaje & Alta \\
     Desvío & Incremento de recorrido por recoger pasajeros & Media \\
-    Preferencias & Preferencias declaradas por usuarios & Media \\
     Ocupación & Maximizar número de plazas utilizadas & Media \\
+    Prioridad por incidencia & Pasajero afectado por la cancelación de un viaje en curso (RF-24) & Alta \\
     \hline
   \end{tabularx}
   \caption{Criterios de compatibilidad del \textit{matching}.}
@@ -177,47 +192,15 @@ Los criterios de compatibilidad se detallan en la Tabla~\ref{tab:criterios}.
     \item Puntuación de compatibilidad: ordenar los viajes resultantes.
 \end{itemize}
 
+El proceso se detalla en el diagrama de secuencia (Figura~\ref{fig:secuencia-matching}) y en el de actividad (Figura~\ref{fig:actividad-matching}) del Anexo~\ref{anx:diagramas}.
+
 En una fase posterior, si los resultados lo justifican, podrá incorporarse una función de puntuación ponderada o un algoritmo de optimización. Esta ampliación no es necesaria para alcanzar el objetivo mínimo del TFM.
 
 \section{Módulo de simulación}
 
-La simulación es el mecanismo que convierte al Gemelo Digital en una herramienta de evaluación y no solo de representación. Se propone comparar escenarios con diferentes niveles de demanda y participación en el coche compartido.
+La simulación es el mecanismo que convierte al Gemelo Digital en una herramienta de evaluación y no solo de representación. El módulo se compone de dos partes: el generador de escenarios, que crea la población sintética de usuarios y viajes a partir de los parámetros de cada escenario, y el motor de simulación, que ejecuta el bucle de \textit{matching} y asignación de plazas sobre una copia del estado del Gemelo Digital, sin afectar a los datos reales. Cada ejecución se repite con semillas registradas y sus resultados se almacenan en formato estructurado (RF-17) para compararlos entre escenarios. El flujo completo se recoge en la Figura~\ref{fig:secuencia-simulacion} del Anexo~\ref{anx:diagramas}.
 
-\subsection{Escenarios previstos}
-
-Los escenarios previstos se detallan en la Tabla~\ref{tab:escenarios}.
-
-\begin{table}[H]
-  \centering
-  \begin{tabularx}{\textwidth}{Y{0.6429} Y{1.5000} Y{0.8571}}
-    \hline
-    \textbf{Escenario} & \textbf{Descripción} & \textbf{Indicadores} \\
-    \hline
-    S0 --- Base & Cada usuario realiza el desplazamiento de forma individual & N.º vehículos, ocupación, viajes \\
-    S1 --- Carpooling básico & \textit{Matching} con reglas de compatibilidad & vehículos evitados, ocupación media \\
-    S2 --- Mayor demanda & Aumenta el número de usuarios & escalabilidad, tiempos de \textit{matching} \\
-    S3 --- Horarios variables & Cambian las ventanas temporales & compatibilidad, viajes cubiertos \\
-    S4 --- Capacidad variable & Vehículos con diferente número de plazas & ocupación y eficiencia \\
-    S5 --- Incidencias & Cancelaciones o cambios de disponibilidad & robustez y recuperación \\
-    \hline
-  \end{tabularx}
-  \caption{Escenarios previstos.}
-  \label{tab:escenarios}
-\end{table}
-
-\subsection{Indicadores iniciales}
-
-\begin{itemize}
-    \item Número total de viajes solicitados.
-    \item Número de viajes compatibles encontrados.
-    \item Número de vehículos utilizados.
-    \item Número de vehículos potencialmente evitados respecto al escenario base.
-    \item Ocupación media de los vehículos.
-    \item Porcentaje de solicitudes atendidas.
-    \item Tiempo de respuesta del \textit{matching}.
-    \item Distancia adicional por recogida, si se modela.
-    \item Número de cancelaciones/incidencias simuladas.
-\end{itemize}
+Los escenarios de simulación (S0--S5) y las métricas con las que se comparan se definen en el Capítulo~\ref{ch:evaluacion} (Secciones~\ref{sec:metricas-evaluacion} y~\ref{sec:escenarios-evaluacion}), y sus parámetros en el Anexo~\ref{anx:escenarios-detalle}.
 
 \section{Trazabilidad arquitectura \texorpdfstring{$\leftrightarrow$}{<->} requisitos \texorpdfstring{$\leftrightarrow$}{<->} objetivos}
 
@@ -229,13 +212,13 @@ La Tabla~\ref{tab:trazabilidad-arq} muestra la trazabilidad entre componentes ar
     \hline
     \textbf{Componente arquitectónico} & \textbf{Requisitos asociados} & \textbf{Objetivos} \\
     \hline
-    \textit{Frontend} (Angular + Ionic) & RF-01 a RF-12, RF-19 & OE9 \\
-    \textit{Backend} (Node.js) & RF-01 a RF-14, RF-18 & OE7, OE8, OE9 \\
-    Persistencia (PostgreSQL/PostGIS) & RF-03 a RF-14 & OE4, OE9 \\
+    \textit{Frontend} (Angular + Ionic) & RF-01 a RF-12, RF-19, RF-21 a RF-23 & OE9 \\
+    \textit{Backend} (Node.js + NestJS) & RF-01 a RF-14, RF-18 a RF-25 & OE7, OE8, OE9 \\
+    Persistencia (PostgreSQL/PostGIS) & RF-01 a RF-14, RF-17, RF-21 a RF-23, RF-25 & OE4, OE9 \\
     Gemelo Digital & RF-13, RF-14, RNF-13 & OE4, OE5, OE6 \\
-    \textit{Matching} & RF-06, RF-07 & OE7 \\
+    \textit{Matching} & RF-06, RF-07, RF-24 & OE7 \\
     Simulación & RF-15 a RF-17 & OE10 \\
-    Métricas y panel & RF-18, RF-20 & OE11, OE12 \\
+    Panel de administración (web) & RF-18, RF-20, RF-23, RF-25 & OE9, OE11, OE12 \\
     DevOps (GitHub + Actions) & RNF-05 & OE9 \\
     \hline
   \end{tabularx}

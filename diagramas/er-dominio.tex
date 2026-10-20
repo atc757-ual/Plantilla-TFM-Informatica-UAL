@@ -1,0 +1,81 @@
+% Diagrama: Figura B.4 - Modelo entidad-relacion del dominio
+% TikZ vectorial. Se incluye con \input desde apendices.tex.
+% Coherente con el diagrama de clases (diagramas/clases-dominio.tex):
+% la clase abstracta Perfil se traduce como una tabla por perfil concreto,
+% cada una 1:1 con USUARIO (su clave primaria es id_usuario), de modo que un
+% usuario puede tener varios perfiles y cada perfil solo guarda sus datos.
+% EVENTO guarda una referencia logica a la entidad que lo origina.
+
+\begin{tikzpicture}[x=1cm,y=1cm, entidad/.append style={minimum width=3.0cm}]
+  % columnas y filas
+  \def\xa{1.6} \def\xb{5.75} \def\xc{9.9} \def\xd{14.05}
+  \def\ya{13.0} \def\yb{9.3} \def\yc{5.6} \def\yd{1.9}
+
+  % ---------------- fila 1: cuenta y perfiles ----------------
+  \node[entidad] (pad) at (\xa,\ya) {\textbf{PERFIL\_ADMINISTRADOR}\\ \scriptsize id\_usuario (PK, FK)\\ activo, fecha\_alta};
+  \node[entidad] (usu) at (\xb,\ya) {\textbf{USUARIO}\\ \scriptsize id (PK)\\ nombre\\ email\\ password\_hash\\ tolerancia\_horaria};
+  \node[entidad] (pco) at (\xc,\ya) {\textbf{PERFIL\_CONDUCTOR}\\ \scriptsize id\_usuario (PK, FK)\\ activo, fecha\_alta\\ valoración\_media\\ declaración\_licencia\\ fecha\_declaración};
+  \node[entidad] (veh) at (\xd,\ya) {\textbf{VEHÍCULO}\\ \scriptsize id (PK)\\ id\_conductor (FK)\\ matrícula\\ capacidad\\ estado};
+
+  % ---------------- fila 2: operación ----------------
+  \node[entidad] (inc) at (\xa,\yb) {\textbf{INCIDENCIA}\\ \scriptsize id (PK)\\ id\_viaje (FK)\\ id\_solicitud (FK, nula)\\ id\_informante (FK)\\ categoría\\ descripción};
+  \node[entidad] (ppa) at (\xb,\yb) {\textbf{PERFIL\_PASAJERO}\\ \scriptsize id\_usuario (PK, FK)\\ activo, fecha\_alta\\ valoración\_media\\ prioridad\_alta};
+  \node[entidad] (via) at (\xc,\yb) {\textbf{VIAJE}\\ \scriptsize id (PK)\\ id\_conductor (FK)\\ id\_vehículo (FK)\\ origen, destino\\ fecha\_hora\_salida\\ plazas, desvío\_máximo\\ estado};
+  \node[entidad] (rut) at (\xd,\yb) {\textbf{RUTA}\\ \scriptsize id\_viaje (PK, FK)\\ distancia, duración\\ geometría};
+
+  % ---------------- fila 3: solicitudes y eventos ----------------
+  \node[entidad] (sol) at (\xb,\yc) {\textbf{SOLICITUD}\\ \scriptsize id (PK)\\ id\_viaje (FK)\\ id\_pasajero (FK)\\ fecha\_solicitud\\ prioritaria\\ estado};
+  \node[entidad] (eve) at (\xd,\yc) {\textbf{EVENTO}\\ \scriptsize id (PK)\\ id\_entidad\_origen\\ tipo\\ payload\\ marca\_temporal};
+
+  % ---------------- fila 4: simulación ----------------
+  \node[entidad] (age) at (\xb,\yd) {\textbf{AGENTE\_SIMULADO}\\ \scriptsize id (PK)\\ id\_escenario (FK)\\ origen, destino\\ hora\_deseada\\ modo\_habitual\\ conduce};
+  \node[entidad] (esc) at (\xc,\yd) {\textbf{ESCENARIO}\\ \scriptsize id (PK)\\ nombre, n\_usuarios\\ adopción, reparto\_modal\\ ventana\_temporal\\ réplicas};
+  \node[entidad] (res) at (\xd,\yd) {\textbf{RESULTADO}\\ \scriptsize id (PK)\\ id\_escenario (FK)\\ semilla\\ vehículos, ocupación\\ solicitudes\_cubiertas};
+
+  % ---------------- relaciones horizontales ----------------
+  % USUARIO 1 --- 0..1 PERFIL_ADMINISTRADOR
+  \draw[rel] (usu.west |- 0,\ya) -- node[etqr, pos=0.2, above] {1} node[etqr, pos=0.8, above] {0..1} (pad.east |- 0,\ya);
+  % USUARIO 1 --- 0..1 PERFIL_CONDUCTOR
+  \draw[rel] (usu.east |- 0,\ya) -- node[etqr, pos=0.2, above] {1} node[etqr, pos=0.8, above] {0..1} (pco.west |- 0,\ya);
+  % PERFIL_CONDUCTOR 1 --- N VEHICULO (propietario)
+  \draw[rel] (pco.east |- 0,\ya) -- node[etqr, pos=0.2, above] {1} node[etqr, pos=0.8, above] {N} (veh.west |- 0,\ya);
+  % VIAJE 1 --- 1 RUTA
+  \draw[rel] (via.east |- 0,\yb) -- node[etqr, pos=0.2, above] {1} node[etqr, pos=0.8, above] {1} (rut.west |- 0,\yb);
+  % AGENTE_SIMULADO N --- 1 ESCENARIO
+  \draw[rel] (age.east |- 0,\yd) -- node[etqr, pos=0.2, above] {N} node[etqr, pos=0.8, above] {1} (esc.west |- 0,\yd);
+  % ESCENARIO 1 --- N RESULTADO
+  \draw[rel] (esc.east |- 0,\yd) -- node[etqr, pos=0.2, above] {1} node[etqr, pos=0.8, above] {N} (res.west |- 0,\yd);
+
+  % ---------------- relaciones verticales ----------------
+  % USUARIO 1 --- 0..1 PERFIL_PASAJERO
+  \draw[rel] (usu.south) -- node[etqr, pos=0.15, right] {1} node[etqr, pos=0.85, right] {0..1} (ppa.north);
+  % PERFIL_PASAJERO 1 --- N SOLICITUD
+  \draw[rel] (ppa.south) -- node[etqr, pos=0.15, right] {1} node[etqr, pos=0.85, right] {N} (sol.north);
+  % PERFIL_CONDUCTOR 1 --- N VIAJE
+  \draw[rel] ($(pco.south)+(-0.6,0)$) -- node[etqr, pos=0.15, left] {1} node[etqr, pos=0.85, left] {N} ($(via.north)+(-0.6,0)$);
+
+  % ---------------- relaciones con codo ----------------
+  \def\ym{11.15}  % entre las filas 1 y 2
+  \def\yl{3.75}   % entre las filas 3 y 4
+  % USUARIO (informante) 1 --- N INCIDENCIA
+  \coordinate (u1) at ($(usu.south)+(-1.1,0)$);
+  \draw[rel] (u1) -- (u1 |- 0,\ym) -- (\xa,\ym) -- (inc.north);
+  \node[etqr, left] at ($(u1)+(0,-0.25)$) {1};
+  \node[etqr, right] at ($(inc.north)+(0,0.25)$) {N};
+  % VEHICULO 1 --- N VIAJE
+  \draw[rel] (veh.south) -- (\xd,\ym) -- (10.5,\ym) -- (10.5,0 |- via.north);
+  \node[etqr, right] at ($(veh.south)+(0,-0.25)$) {1};
+  \node[etqr, right] at ($(10.5,0 |- via.north)+(0,0.25)$) {N};
+  % VIAJE 1 --- N SOLICITUD
+  \draw[rel] (9.5,0 |- via.south) -- (9.5,\yc) -- (sol.east |- 0,\yc);
+  \node[etqr, left] at ($(9.5,0 |- via.south)+(0,-0.25)$) {1};
+  \node[etqr, above] at ($(sol.east |- 0,\yc)+(0.3,0)$) {N};
+  % INCIDENCIA N --- 0..1 SOLICITUD
+  \draw[rel] (2.0,0 |- inc.south) -- (2.0,\yc) -- (sol.west |- 0,\yc);
+  \node[etqr, right] at ($(2.0,0 |- inc.south)+(0,-0.25)$) {N};
+  \node[etqr, above] at ($(sol.west |- 0,\yc)+(-0.4,0)$) {0..1};
+  % INCIDENCIA N --- 1 VIAJE: por debajo de la fila 3
+  \draw[rel] (1.2,0 |- inc.south) -- (1.2,\yl) -- (10.6,\yl) -- (10.6,0 |- via.south);
+  \node[etqr, left] at ($(1.2,0 |- inc.south)+(0,-0.25)$) {N};
+  \node[etqr, right] at ($(10.6,0 |- via.south)+(0,-0.25)$) {1};
+\end{tikzpicture}

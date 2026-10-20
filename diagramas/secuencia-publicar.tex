@@ -1,0 +1,33 @@
+% Diagrama: Figura 10.3 - Secuencia de publicacion de un viaje
+% TikZ vectorial. Se incluye con \input desde contenido10.tex.
+
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \useasboundingbox (0.0,2.55) rectangle (15.4,8.85);
+
+  % --- lineas de vida ---
+  \foreach \x in {1.55, 4.45, 7.35, 10.25, 13.15} {
+    \draw[linea] (\x,8.40) -- (\x,2.85);
+  }
+  \node[participante] at (1.55,8.65) {Conductor};
+  \node[participante] at (4.45,8.65) {\textit{Frontend}};
+  \node[participante] at (7.35,8.65) {\textit{Backend}};
+  \node[participante] at (10.25,8.65) {Viaje};
+  \node[participante] at (13.15,8.65) {Gemelo Digital};
+
+  % --- mensajes ---
+  \draw[msg] (1.55,7.95) -- node[etq] {publica viaje (datos y vehículo)} (4.45,7.95);
+  \draw[msg] (4.45,7.35) -- node[etq] {POST /viajes} (7.35,7.35);
+
+  \draw[msg] (7.35,6.75) -- (7.95,6.75) -- (7.95,6.45) -- (7.35,6.45);
+  \node[etq, anchor=west] at (8.00,6.72) {valida datos y capacidad del vehículo};
+
+  \draw[msg] (7.35,6.05) -- node[etq] {crear viaje} (10.25,6.05);
+  \draw[ret] (10.25,5.45) -- node[etq] {id del viaje (PUBLICADO)} (7.35,5.45);
+
+  \draw[msg] (7.35,4.85) -- node[etq] {evento \texttt{ViajeCreado}} (13.15,4.85);
+  \draw[msg] (13.15,4.25) -- (13.75,4.25) -- (13.75,3.95) -- (13.15,3.95);
+  \node[etq, anchor=east] at (13.05,4.22) {actualiza estado};
+
+  \draw[ret] (7.35,3.35) -- node[etq] {201 Created} (4.45,3.35);
+  \draw[ret] (4.45,2.85) -- node[etq] {confirmación} (1.55,2.85);
+\end{tikzpicture}

@@ -16,13 +16,13 @@ Los recursos software previstos se resumen en la Tabla~\ref{tab:recursos-softwar
     \textbf{Recurso} & \textbf{Uso} & \textbf{Coste} \\
     \hline
     Angular + Ionic & \textit{Frontend} web/móvil & Open Source \\
-    Node.js + Express & \textit{Backend} y APIs & Open Source \\
+    Node.js + NestJS & \textit{Backend} y APIs & Open Source \\
     PostgreSQL + PostGIS & Persistencia y consultas geoespaciales & Open Source \\
     GitHub + GitHub Actions & Control de versiones y CI/CD & Gratuito \\
     OpenStreetMap + OSRM & Mapas y rutas & Open Source \\
-    Motor de simulación & Generación de escenarios & A concretar \\
-    Herramientas de \textit{testing} & Jest, Karma, Postman & Open Source \\
-    PlantUML / draw.io & Diagramas UML & Open Source \\
+    Motor de simulación propio & Generación y ejecución de escenarios & Desarrollo propio \\
+    Herramientas de \textit{testing} & Jest, Karma/Jasmine, Postman, Artillery/k6 & Open Source \\
+    TikZ (\LaTeX) & Diagramas UML y de arquitectura & Open Source \\
     \hline
   \end{tabularx}
   \caption{Recursos software.}
@@ -57,7 +57,7 @@ Los recursos software previstos se resumen en la Tabla~\ref{tab:recursos-softwar
     Datos sintéticos & Usuarios, viajes, demanda y horarios generados para simulación \\
     Datos geográficos & OpenStreetMap para la red vial del entorno de la UAL \\
     Datos de la UAL & No disponibles inicialmente; se usarán supuestos documentados \\
-    Escenarios reproducibles & Configuraciones con semilla fija para garantizar la repetibilidad \\
+    Escenarios reproducibles & Configuraciones y semillas registradas para garantizar la repetibilidad \\
     \hline
   \end{tabularx}
   \caption{Recursos de datos.}

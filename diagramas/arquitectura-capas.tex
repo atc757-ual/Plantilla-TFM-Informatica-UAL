@@ -9,8 +9,8 @@
        {\scriptsize\textit{Frontend} de usuarios (Angular + Ionic, web y móvil) $\cdot$ panel de administración (web)}};
 
     \node[capa, minimum width=12.7cm, minimum height=1.45cm] (api) at (6.5,10.30)
-      {\textbf{2. API / Backend (Node.js)}\\[1pt]
-       {\scriptsize autenticación $\cdot$ usuarios $\cdot$ viajes $\cdot$ solicitudes $\cdot$ \textit{matching} $\cdot$ notificaciones}};
+      {\textbf{2. API / Backend (Node.js + NestJS)}\\[1pt]
+       {\scriptsize autenticación $\cdot$ usuarios y perfiles $\cdot$ viajes $\cdot$ solicitudes $\cdot$ incidencias $\cdot$ \textit{matching} $\cdot$ notificaciones}};
 
     \node[capa, minimum width=6.1cm, minimum height=2.60cm] (dt) at (3.35,7.70)
       {\textbf{3a. Gemelo Digital}\\[1pt]
@@ -23,7 +23,7 @@
 
     \node[capa, minimum width=12.7cm, minimum height=1.45cm] (pers) at (6.5,5.60)
       {\textbf{4. Persistencia (PostgreSQL + PostGIS)}\\[1pt]
-       {\scriptsize usuarios, viajes, solicitudes, estados y resultados de simulación}};
+       {\scriptsize usuarios y perfiles, vehículos, viajes, solicitudes, incidencias, estados y resultados de simulación}};
 
     % --- capa transversal ---
     \draw[draw=Color2!70, fill=Color2!3, rounded corners=2pt, dashed]

@@ -15,10 +15,11 @@ Los actores principales del sistema se detallan en la Tabla~\ref{tab:actores}.
     \hline
     \textbf{ID} & \textbf{Actor} & \textbf{Descripción} \\
     \hline
-    ACT-1 & Usuario conductor & Publica viajes, indica origen/destino, horario y plazas disponibles, y acepta o rechaza solicitudes. \\
-    ACT-2 & Usuario pasajero & Busca viajes compatibles, solicita plaza y consulta el estado del desplazamiento. \\
-    ACT-3 & Administrador & Consulta métricas, gestiona catálogos básicos y revisa incidencias. \\
-    ACT-4 & Motor de Gemelo Digital & Mantiene la representación digital y ejecuta simulaciones/actualizaciones. \\
+    ACT-0 & Usuario (abstracto) & Persona registrada en la plataforma. Agrupa lo común a todos los actores: registrarse, iniciar sesión y gestionar su cuenta y perfiles. \\
+    ACT-1 & Viajero (abstracto) & Usuario que se desplaza en la plataforma. Agrupa lo común a conductor y pasajero: gestionar el estado de sus viajes y consultar la ruta. \\
+    ACT-2 & Conductor & Viajero con el perfil de conductor activo. Registra sus vehículos, publica viajes, indica origen/destino, horario y plazas disponibles, y acepta o rechaza solicitudes. \\
+    ACT-3 & Pasajero & Viajero con el perfil de pasajero activo. Busca viajes compatibles, solicita plaza y consulta el estado del desplazamiento. \\
+    ACT-4 & Administrador & Usuario con el perfil de administrador. Con el mismo inicio de sesión que el resto de usuarios, accede en la versión web al modo Administración, que carga el panel de administración, donde gestiona los usuarios y sus perfiles, lanza simulaciones, consulta métricas y revisa las incidencias registradas. En la aplicación de \textit{carpooling} actúa como cualquier otro usuario, según los perfiles que tenga activos. \\
     \hline
   \end{tabularx}
   \caption{Actores principales.}
@@ -35,18 +36,19 @@ Los casos de uso prioritarios se detallan en la Tabla~\ref{tab:casos-uso}.
     \hline
     \textbf{ID} & \textbf{Caso de uso} & \textbf{Actor} & \textbf{Resultado} \\
     \hline
-    CU-01 & Registrar / iniciar sesión & Usuario & Acceso a la plataforma \\
-    CU-02 & Gestionar perfil & Usuario & Perfil y preferencias almacenados \\
+    CU-01 & Registrarse / iniciar sesión & Usuario & Acceso a la plataforma \\
+    CU-02 & Gestionar perfil & Usuario & Datos de cuenta y tolerancia horaria almacenados \\
     CU-03 & Publicar viaje & Conductor & Viaje disponible con plazas \\
     CU-04 & Buscar viajes & Pasajero & Listado de viajes compatibles \\
     CU-05 & Solicitar plaza & Pasajero & Solicitud asociada a un viaje \\
     CU-06 & Aceptar / rechazar pasajero & Conductor & Asignación actualizada \\
-    CU-07 & Gestionar viaje & Conductor / Pasajero & Estados: pendiente, confirmado, en curso, finalizado, cancelado \\
-    CU-08 & Consultar ruta / ubicación & Usuario & Visualización del desplazamiento \\
-    CU-09 & Actualizar estado digital & Sistema / DT & Sincronización del modelo digital \\
-    CU-10 & Simular escenario & Administrador / DT & Resultados comparables de un escenario \\
-    CU-11 & Consultar métricas & Administrador & Indicadores de movilidad \\
-    CU-12 & Notificar cambios & Sistema & Avisos de solicitudes, confirmaciones o cancelaciones \\
+    CU-07 & Gestionar viaje & Viajero & Estados: publicado, confirmado, en curso, finalizado, cancelado \\
+    CU-08 & Consultar ruta / ubicación & Viajero & Visualización del desplazamiento \\
+    CU-09 & Simular escenario & Administrador & Resultados comparables de un escenario \\
+    CU-10 & Consultar métricas & Administrador & Indicadores de movilidad \\
+    CU-11 & Notificar cambios & --- (lo dispara CU-07) & Avisos de solicitudes, confirmaciones o cancelaciones, y de incidencias al administrador \\
+    CU-12 & Revisar incidencias & Administrador & Incidencia revisada y cerrada \\
+    CU-13 & Gestionar usuarios y perfiles & Administrador & Perfiles asignados, retirados o desactivados \\
     \hline
   \end{tabularx}
   \caption{Casos de uso prioritarios.}
@@ -55,11 +57,13 @@ Los casos de uso prioritarios se detallan en la Tabla~\ref{tab:casos-uso}.
 
 \section{Diagrama de casos de uso}
 
-La Figura~\ref{fig:casos-uso} muestra el diagrama de casos de uso de la plataforma, con los cuatro actores principales (conductor, pasajero, administrador y motor de Gemelo Digital) y los doce casos de uso prioritarios identificados (CU-01 a CU-12). Las relaciones \texttt{<{}<include>{}>} reflejan dependencias entre casos de uso; las relaciones \texttt{<{}<extend>{}>} reflejan que las notificaciones (CU-12) se disparan como extensión de otras acciones.
+La Figura~\ref{fig:casos-uso} muestra el diagrama de casos de uso de la plataforma, con los trece casos de uso prioritarios (CU-01 a CU-13). Los actores siguen la misma jerarquía que los perfiles del modelo de dominio (Sección~\ref{sec:modelo-dt}). Los casos comunes a todos (acceso y gestión del perfil) se asocian al actor abstracto \textit{Usuario}, del que \textit{Administrador} y el actor abstracto \textit{Viajero} son especializaciones; los casos propios de quien viaja (gestionar el viaje y consultar la ruta) se asocian a \textit{Viajero}, del que \textit{Conductor} y \textit{Pasajero} son especializaciones. Así cada actor hereda las asociaciones que le corresponden sin repetirlas, y el administrador no hereda las del viaje. Un actor representa un rol, no una persona: un mismo usuario registrado puede actuar como conductor en unos viajes y como pasajero en otros, y un administrador puede actuar también como pasajero o conductor si activa esos perfiles.
+
+El pasajero busca viajes (CU-04), proceso en el que se ejecuta el \textit{matching}, y, una vez elegido uno de los resultados, solicita plaza (CU-05); por eso la solicitud se modela como extensión de la búsqueda. La solicitud queda pendiente hasta que el conductor la acepta o la rechaza (CU-06). La publicación de viajes, la solicitud de plaza y su aceptación o rechazo incluyen la gestión de estados del viaje (CU-07), y las notificaciones (CU-11) extienden esa gestión, porque se disparan solo ante determinados cambios (nuevas solicitudes, aceptaciones, rechazos y cancelaciones). El Gemelo Digital no aparece en el diagrama: no es un actor, porque forma parte del sistema, y su actualización es un mecanismo interno que no aporta valor directo a ningún actor. Su comportamiento se especifica en los requisitos RF-13 y RF-14, trazados a CU-07, y en los diagramas de arquitectura y de secuencia.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.8\textwidth]{casos-uso}
+  \resizebox{\textwidth}{!}{\input{diagramas/casos-uso}}
   \caption{Diagrama de casos de uso de la plataforma de carpooling.}
   \label{fig:casos-uso}
 \end{figure}
@@ -68,10 +72,12 @@ La Figura~\ref{fig:casos-uso} muestra el diagrama de casos de uso de la platafor
 
 Las relaciones entre los actores y los casos de uso prioritarios son las siguientes:
 \begin{itemize}
-    \item Conductor: CU-01, CU-02, CU-03, CU-06, CU-07, CU-08 y CU-12.
-    \item Pasajero: CU-01, CU-02, CU-04, CU-05, CU-07, CU-08 y CU-12.
-    \item Administrador: CU-01, CU-10 y CU-11.
-    \item Motor de Gemelo Digital: CU-09, CU-10 y CU-11.
+    \item Usuario (abstracto): CU-01 y CU-02.
+    \item Viajero (abstracto, especializa a Usuario): CU-07 y CU-08.
+    \item Conductor (especializa a Viajero): CU-03 y CU-06.
+    \item Pasajero (especializa a Viajero): CU-04, y CU-05 como extensión de la búsqueda.
+    \item Administrador (especializa a Usuario): CU-09, CU-10, CU-12 y CU-13.
+    \item CU-11 no tiene actor propio: se dispara al extender CU-07.
 \end{itemize}
 
 \section{Trazabilidad con los requisitos y objetivos}
@@ -85,11 +91,13 @@ La Tabla~\ref{tab:trazabilidad-cu} muestra la trazabilidad entre casos de uso, r
     \textbf{Caso de uso} & \textbf{Requisitos asociados} & \textbf{Objetivo específico} \\
     \hline
     CU-01, CU-02 & RF-01 a RF-03 & OE9 \\
-    CU-03 a CU-08 & RF-04 a RF-12 & OE7, OE8, OE9 \\
-    CU-09 & RF-13, RF-14 & OE4, OE5, OE6 \\
-    CU-10 & RF-15, RF-16 & OE10 \\
-    CU-11 & RF-17, RF-18 & OE11 \\
-    CU-12 & RF-19 & OE8 \\
+    CU-03 a CU-08 & RF-04 a RF-12, RF-21 a RF-24 & OE7, OE8, OE9 \\
+    CU-07 (sincronización del Gemelo Digital) & RF-13, RF-14 & OE4, OE5, OE6 \\
+    CU-09 & RF-15, RF-16, RF-17 & OE10 \\
+    CU-10 & RF-18, RF-20 & OE11, OE12 \\
+    CU-11 & RF-19 & OE8 \\
+    CU-12 & RF-23 & OE8 \\
+    CU-13 & RF-01, RF-25 & OE9 \\
     \hline
   \end{tabularx}
   \caption{Trazabilidad casos de uso \texorpdfstring{$\leftrightarrow$}{<->} requisitos \texorpdfstring{$\leftrightarrow$}{<->} objetivos.}

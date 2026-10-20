@@ -42,16 +42,13 @@
 % Referencias y biblio
 
 \usepackage{pdfpages}
-%\usepackage[pdftex,breaklinks=true,hidelinks]{hyperref} % para referencias/indice en pdf
+% hyperref se carga al final del preámbulo (justo antes de \begin{document}).
+% url se carga aquí porque UAL.sty usa \UrlBreaks (antes lo traía hyperref).
+\usepackage{url}
 
-% Enlaces activos (se puede hacer clic) pero en negro: el azul sobre 40 páginas
-% de índices resultaba demasiado llamativo. Para la versión digital con enlaces
-% en color, sustituir los tres "black" por "blue" (o solo el que interese).
-\usepackage[
-breaklinks=true,colorlinks=true,
-linkcolor=black,urlcolor=black,citecolor=black,
-bookmarks=true,bookmarksopenlevel=2]{hyperref}
-\usepackage{emptypage}
+% emptypage solo actúa con twoside (vacía las páginas en blanco que deja
+% \cleardoublepage). Con oneside no hace nada: descomentar junto con twoside.
+%\usepackage{emptypage}
 \usepackage{ragged2e} %Justificacion
 
 %\usepackage[toc,title,page]{appendix}
@@ -75,7 +72,7 @@ bookmarks=true,bookmarksopenlevel=2]{hyperref}
 \usepackage{UAL}
 
 % Librerías de TikZ para los diagramas vectoriales del capítulo 10 y del anexo F
-\usetikzlibrary{positioning,arrows.meta,calc,fit,backgrounds,shapes.geometric}
+\usetikzlibrary{positioning,arrows.meta,calc,fit,backgrounds,shapes.geometric,shapes.multipart}
 
 % Estilos comunes de los diagramas (mismo azul de la plantilla)
 \tikzset{
@@ -106,6 +103,33 @@ bookmarks=true,bookmarksopenlevel=2]{hyperref}
   flujo/.style={-{Latex[length=1.6mm]}, draw=Color2, line width=0.5pt},
   etqf/.style={font=\scriptsize, fill=white, inner sep=1pt},
   fin/.style={draw=Color2, line width=0.6pt, circle, minimum size=0.22cm, inner sep=0pt},
+  % --- estados, entidades, despliegue y componentes ---
+  estado/.style={draw=Color2, fill=Color2!8, rounded corners=8pt, minimum width=2.35cm,
+    minimum height=0.85cm, align=center, font=\small},
+  entidad/.style={draw=Color2, fill=Color2!6, rounded corners=2pt, align=center,
+    font=\footnotesize, inner sep=3pt, minimum width=3.35cm},
+  rel/.style={draw=Color2!80, line width=0.5pt},
+  etqr/.style={font=\scriptsize, fill=white, inner sep=1pt, text=Color2},
+  nodo/.style={draw=Color2, fill=Color2!6, rounded corners=2pt, align=center,
+    font=\footnotesize, inner sep=4pt, minimum height=1.0cm},
+  componente/.style={draw=Color2, fill=Color2!8, rounded corners=2pt, align=center,
+    font=\scriptsize, inner sep=3pt, minimum height=0.70cm},
+  dep/.style={-{Latex[length=1.5mm]}, draw=Color2!75, line width=0.45pt, dashed},
+  % --- diagrama de clases (UML): clase, enumeración y relaciones ---
+  clase/.style={rectangle split, rectangle split parts=3, draw=Color2, line width=0.5pt,
+    rectangle split part fill={Color2!12,white,white}, font=\scriptsize,
+    inner sep=2.2pt, align=left, anchor=north},
+  clase/.default={},
+  enumeracion/.style={rectangle split, rectangle split parts=2, draw=Color2, line width=0.5pt,
+    rectangle split part fill={Color2!12,white}, font=\scriptsize,
+    inner sep=2.2pt, align=left, anchor=north},
+  enumeracion/.default={},
+  asoc/.style={draw=Color2, line width=0.5pt, -{Straight Barb[length=1.6mm,width=2.2mm]}},
+  asocbi/.style={draw=Color2, line width=0.5pt, {Straight Barb[length=1.6mm,width=2.2mm]}-{Straight Barb[length=1.6mm,width=2.2mm]}},
+  compos/.style={draw=Color2, line width=0.5pt,
+    {Diamond[fill=Color2,length=2.8mm,width=1.8mm]}-{Straight Barb[length=1.6mm,width=2.2mm]}},
+  gen/.style={draw=Color2, line width=0.5pt, -{Triangle[open,fill=white,length=2.6mm,width=2.8mm]}},
+  rol/.style={font=\tiny, text=Color2!90!black, inner sep=1pt},
 }
 
 %\usepackage[print,doble]{UAL}
@@ -131,9 +155,9 @@ bookmarks=true,bookmarksopenlevel=2]{hyperref}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \author{Alex César Taquila Camasca}
-\titulo{Diseño de una plataforma de\\
-carpooling universitario P2P\\
-basada en Gemelos Digitales,\\
+\titulo{Plataforma de carpooling\\
+universitario P2P basada en\\
+Gemelos Digitales,\\
 matching y simulación}
 \subTitulo{DEPARTAMENTO DE INFORMÁTICA\\  MÁSTER EN INGENIERÍA INFORMÁTICA}
 \estudios{Máster en Ingeniería Informática}
@@ -177,6 +201,16 @@ matching y simulación}
   \sbox0{\fontfamily{phv}\selectfont x}%
   \DeclareFontShape{T1}{phv}{b}{scit}{<->ssub*phv/b/it}{}%
 }
+
+% hyperref debe ser de los últimos paquetes en cargarse, porque redefine
+% comandos de otros (footmisc, enumitem, longtable, titlesec...).
+% Enlaces activos (se puede hacer clic) pero en negro: el azul sobre 40 páginas
+% de índices resultaba demasiado llamativo. Para la versión digital con enlaces
+% en color, sustituir los tres "black" por "blue" (o solo el que interese).
+\usepackage[
+breaklinks=true,colorlinks=true,
+linkcolor=black,urlcolor=black,citecolor=black,
+bookmarks=true,bookmarksopenlevel=2]{hyperref}
 
 \begin{document}
 \frontmatter

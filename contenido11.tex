@@ -23,7 +23,7 @@ La evaluación se organiza en tres niveles complementarios (Tabla~\ref{tab:nivel
     \hline
     \textbf{Nivel} & \textbf{Qué se evalúa} & \textbf{Técnica} & \textbf{Herramientas} \\
     \hline
-    Funcional & Correcto funcionamiento de los casos de uso & Pruebas unitarias, de integración y de sistema & Jest/Mocha, Karma/Jasmine, Postman \\
+    Funcional & Correcto funcionamiento de los casos de uso & Pruebas unitarias, de integración y de sistema & Jest, Karma/Jasmine, Postman \\
     Técnico & Rendimiento y robustez del sistema & Pruebas de carga y verificación de sincronización & Artillery/k6, registros del DT \\
     Experimental & Impacto de las estrategias de carpooling & Simulación de escenarios S0--S5 & Módulo de simulación propio \\
     \hline
@@ -35,11 +35,11 @@ La evaluación se organiza en tres niveles complementarios (Tabla~\ref{tab:nivel
 \section{Hipótesis experimental}
 
 \begin{description}
-    \item[H1.] En escenarios simulados con demanda realista, el carpooling reduce el número de vehículos utilizados respecto al escenario base individual, manteniendo una proporción aceptable de solicitudes cubiertas.
-    \item[H0 (nula).] No existe diferencia significativa entre el escenario base y los escenarios de carpooling en el número de vehículos utilizados.
+    \item[HE1.] En escenarios simulados con demanda realista, el carpooling reduce el número de vehículos utilizados respecto al escenario base individual, manteniendo una proporción aceptable de solicitudes cubiertas.
+    \item[HE0 (nula).] No existe diferencia significativa entre el escenario base y los escenarios de carpooling en el número de vehículos utilizados.
 \end{description}
 
-Como criterio de éxito orientativo, se plantea una reducción de al menos el 15\% en los vehículos utilizados en, como mínimo, un escenario de carpooling respecto a S0, con al menos el 70\% de las solicitudes cubiertas. Este umbral deberá concretarse tras la primera ejecución.
+Como criterio de éxito, se plantea una reducción de al menos el 15\% en los vehículos utilizados en, como mínimo, un escenario de carpooling respecto a S0, con al menos el 70\% de las solicitudes cubiertas. Este umbral se fija antes de ejecutar los experimentos y no se ajusta a la vista de los resultados.
 
 \section{Métricas}
 \label{sec:metricas-evaluacion}
@@ -55,7 +55,7 @@ Las métricas previstas y su nivel de evaluación se recogen en la Tabla~\ref{ta
     Tiempo de respuesta del \textit{matching} & Tiempo medio para resolver una búsqueda & Técnico \\
     Latencia de sincronización del DT & Tiempo entre la generación de un evento y la actualización del estado digital & Técnico \\
     Número de vehículos utilizados & Vehículos necesarios para cubrir los viajes & Experimental \\
-    Vehículos evitados & Diferencia respecto al escenario base & Experimental \\
+    Vehículos evitados & Diferencia respecto al escenario base; solo cuentan los pasajeros cuyo modo habitual es el coche propio & Experimental \\
     Ocupación media & Pasajeros por vehículo & Experimental \\
     Solicitudes cubiertas & Porcentaje de solicitudes atendidas & Experimental \\
     Distancia adicional & Desvío medio por recogida & Experimental \\
@@ -77,7 +77,7 @@ Los escenarios permitirán comparar una situación base con variaciones en la de
     \hline
     \textbf{Escenario} & \textbf{Descripción} & \textbf{Métricas principales} \\
     \hline
-    S0 --- Base & Cada usuario realiza el viaje de forma individual & Vehículos y ocupación \\
+    S0 --- Base & Cada usuario se desplaza con su modo habitual (coche propio, transporte público u otro), sin coche compartido & Vehículos y ocupación \\
     S1 --- Carpooling básico & \textit{Matching} con reglas de compatibilidad & Vehículos evitados y ocupación \\
     S2 --- Mayor demanda & Aumento del número de usuarios & Escalabilidad y tiempo de \textit{matching} \\
     S3 --- Horarios variables & Variación de las ventanas temporales & Compatibilidad y solicitudes cubiertas \\
@@ -94,14 +94,15 @@ Los escenarios permitirán comparar una situación base con variaciones en la de
 La evaluación experimental seguirá estos pasos:
 \begin{enumerate}
     \item Definir el escenario base S0 con parámetros fijos.
-    \item Ejecutar cada escenario con la misma semilla para garantizar la reproducibilidad.
+    \item Ejecutar cada escenario con 30 réplicas, cada una con una semilla distinta y registrada. Las mismas 30 semillas se usan en todos los escenarios, de modo que las réplicas quedan emparejadas y los resultados son reproducibles.
     \item Registrar los resultados en un formato estructurado (CSV/JSON).
-    \item Comparar cada escenario con S0.
-    \item Analizar la sensibilidad ante variaciones de los parámetros.
+    \item Comparar cada escenario con S0 mediante intervalos de confianza t pareados sobre las réplicas emparejadas, con corrección de Bonferroni para las cinco comparaciones ($\alpha = 0{,}05/5$) \cite{LawKelton2015}. Si las diferencias se alejan claramente de la normalidad, se contrasta el resultado con la prueba de rangos con signo de Wilcoxon. Si algún intervalo resulta demasiado amplio, se aumenta el número de réplicas.
+    \item Analizar la sensibilidad ante variaciones de los parámetros, en particular del reparto modal supuesto (20\%, 30\% y 50\% de usuarios en coche propio; el 30\% es la referencia, elegida de forma conservadora), ya que no se dispone de datos de movilidad de la UAL.
     \item Documentar los supuestos, las limitaciones y las amenazas a la validez.
 \end{enumerate}
 
 \section{Criterios de éxito}
+\label{sec:criterios-exito}
 
 Los criterios iniciales de éxito se resumen en la Tabla~\ref{tab:criterios-exito}.
 
@@ -112,8 +113,8 @@ Los criterios iniciales de éxito se resumen en la Tabla~\ref{tab:criterios-exit
     \textbf{Nivel} & \textbf{Criterio} \\
     \hline
     Funcional & Todos los casos de uso del MVP funcionan sin errores críticos. \\
-    Técnico & El \textit{matching} responde en menos de 2 segundos para 50 usuarios y la sincronización del DT se produce en tiempo casi real. \\
-    Experimental & Se reduce al menos un 15\% el número de vehículos utilizados en, como mínimo, un escenario, con al menos el 70\% de las solicitudes cubiertas. \\
+    Técnico & El \textit{matching} responde en menos de 2 segundos para 50 usuarios y la latencia de sincronización del DT no supera el umbral fijado en DP-04 (RNF-07). \\
+    Experimental & Se reduce al menos un 15\% el número medio de vehículos utilizados en, como mínimo, un escenario, con al menos el 70\% de las solicitudes cubiertas, y se rechaza HE0 para ese escenario. \\
     \hline
   \end{tabularx}
   \caption{Criterios de éxito de la evaluación.}
@@ -121,10 +122,11 @@ Los criterios iniciales de éxito se resumen en la Tabla~\ref{tab:criterios-exit
 \end{table}
 
 \section{Amenazas a la validez}
+\label{sec:amenazas-validez}
 
 Se consideran las siguientes amenazas a la validez:
 \begin{itemize}
-    \item \textbf{Validez interna:} los resultados dependen de los supuestos del modelo, como las distribuciones, las tolerancias y el comportamiento representado.
+    \item \textbf{Validez interna:} los resultados dependen de los supuestos del modelo, como las distribuciones de demanda, las tolerancias y el comportamiento de los agentes.
     \item \textbf{Validez externa:} los escenarios sintéticos no garantizan que los resultados sean transferibles al comportamiento real de la comunidad universitaria de la UAL.
-    \item \textbf{Validez de constructo:} los indicadores son aproximaciones razonables, pero no capturan toda la complejidad de la movilidad compartida.
+    \item \textbf{Validez de constructo:} los indicadores seleccionados (vehículos evitados, ocupación, solicitudes cubiertas) son aproximaciones razonables, pero no capturan toda la complejidad de la movilidad compartida. En particular, los vehículos evitados dependen del reparto modal supuesto, que se trata mediante análisis de sensibilidad.
 \end{itemize}

@@ -1,6 +1,6 @@
 # TFM — Plataforma de carpooling universitario P2P con Gemelos Digitales
 
-Memoria del Trabajo Fin de Máster **«Diseño de una plataforma de carpooling universitario P2P basada en Gemelos Digitales, *matching* y simulación»**, del Máster en Ingeniería Informática de la Universidad de Almería.
+Memoria del Trabajo Fin de Máster **«Plataforma de carpooling universitario P2P basada en Gemelos Digitales, *matching* y simulación»**, del Máster en Ingeniería Informática de la Universidad de Almería.
 
 Autor: Alex César Taquila Camasca · Director: Javier Criado Rodríguez · Curso 2026/2027
 

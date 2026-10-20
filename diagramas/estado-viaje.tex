@@ -1,0 +1,47 @@
+% Diagrama: Figura 8.1 - Ciclo de vida del viaje
+% TikZ vectorial. Se incluye con \input desde contenido8.tex.
+% Solo estados propios del viaje: los de la solicitud estan en estado-solicitud.tex.
+
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \useasboundingbox (0.0,0.15) rectangle (15.3,6.55);
+
+  % --- arranque ---
+  \node[circle, draw=Color2, fill=Color2, line width=0.6pt, minimum size=0.22cm,
+        inner sep=0pt] (ini) at (0.30,4.55) {};
+
+  % --- estados ---
+  \node[estado, minimum width=2.30cm] (pub)   at (2.55,4.55)  {\textbf{PUBLICADO}};
+  \node[estado, minimum width=2.30cm] (conf)  at (7.30,4.55)  {\textbf{CONFIRMADO}};
+  \node[estado, minimum width=2.30cm] (curso) at (11.60,4.55) {\textbf{EN CURSO}};
+  \node[estado, minimum width=2.30cm] (final) at (11.60,1.55) {\textbf{FINALIZADO}};
+  \node[estado, minimum width=2.30cm] (canc)  at (7.30,1.55)  {\textbf{CANCELADO}};
+
+  % --- estados finales ---
+  \foreach \x/\y/\n in {14.10/1.55/ffin, 7.30/0.40/fcan} {
+    \node[fin, minimum size=0.28cm, inner sep=0pt] (\n) at (\x,\y) {};
+    \node[circle, fill=Color2, minimum size=0.12cm, inner sep=0pt] at (\x,\y) {};
+  }
+
+  % --- flujo principal ---
+  \draw[flujo] (ini) -- node[etqf, above, pos=0.55] {publicar} (pub);
+  \draw[flujo] (pub) -- node[etqf, above] {aceptar solicitud} (conf);
+  \draw[flujo] (conf) -- node[etqf, above] {iniciar} (curso);
+  \draw[flujo] (curso) -- node[etqf, right] {finalizar} (final);
+  \draw[flujo] (final) -- (ffin);
+
+  % vuelta a PUBLICADO si cancelan todos los pasajeros aceptados
+  \draw[flujo] (conf.north) .. controls (6.15,6.30) and (3.70,6.30) ..
+    node[etqf, above] {cancelan todos los aceptados} (pub.north);
+
+  % un pasajero cancela en curso: su plaza se libera y el viaje sigue
+  \draw[flujo] ([xshift=0.45cm]curso.north) .. controls (12.80,6.20) and (14.30,5.40) ..
+    node[etqf, above, pos=0.42, align=center] {pasajero cancela /\\ registrar incidencia}
+    (curso.east);
+
+  % cancelacion desde cualquier estado no terminal
+  \draw[flujo] (pub.south) -- node[etqf, pos=0.70, above left] {cancelar} (canc.west);
+  \draw[flujo] (conf.south) -- node[etqf, right] {cancelar} (canc.north);
+  \draw[flujo] ([xshift=-0.55cm]curso.south) -- node[etqf, pos=0.50, align=center]
+    {conductor cancela /\\ registrar incidencia} (canc.east);
+  \draw[flujo] (canc) -- (fcan);
+\end{tikzpicture}

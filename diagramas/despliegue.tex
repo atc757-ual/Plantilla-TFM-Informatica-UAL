@@ -1,0 +1,42 @@
+% Diagrama: Figura B.2 - Despliegue
+% TikZ vectorial. Se incluye con \input desde apendices.tex.
+
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \useasboundingbox (0.0,0.55) rectangle (15.4,8.30);
+
+  % ---------------- clientes ----------------
+  \node[nodo, minimum width=5.20cm] (movil) at (3.10,7.20)
+    {\textbf{\textless\textless device\textgreater\textgreater}\enspace Portátil o móvil del usuario\\
+     \scriptsize navegador web o aplicación Ionic};
+  \node[nodo, minimum width=5.20cm] (admin) at (9.60,7.20)
+    {\textbf{\textless\textless device\textgreater\textgreater}\enspace Equipo del administrador\\
+     \scriptsize navegador web (panel de administración)};
+
+  % ---------------- servidores ----------------
+  \node[nodo, minimum width=9.60cm, minimum height=1.55cm] (app) at (5.35,4.30)
+    {\textbf{\textless\textless execution environment\textgreater\textgreater}\enspace Servidor de aplicaciones\\
+     \scriptsize Node.js + NestJS: API REST, \textit{matching}, Gemelo Digital y motor de simulación\\
+     \scriptsize sirve además el \textit{frontend} compilado, que incluye el panel de administración};
+
+  \node[nodo, minimum width=9.60cm, minimum height=1.30cm] (bd) at (5.35,1.45)
+    {\textbf{\textless\textless execution environment\textgreater\textgreater}\enspace Servidor de base de datos\\
+     \scriptsize PostgreSQL + PostGIS (consultas geoespaciales)};
+
+  % ---------------- integracion continua ----------------
+  \node[nodo, minimum width=4.30cm, minimum height=1.55cm] (ci) at (13.05,4.30)
+    {\textbf{\textless\textless execution environment\textgreater\textgreater}\enspace GitHub\\
+     \scriptsize repositorio y GitHub Actions\\
+     \scriptsize despliegue del artefacto};
+
+  % ---------------- servidor de rutas ----------------
+  \node[nodo, minimum width=4.30cm, minimum height=1.30cm] (osrm) at (13.05,1.45)
+    {\textbf{\textless\textless execution environment\textgreater\textgreater}\\ Servidor de rutas\\
+     \scriptsize OSRM con el extracto OSM de Almería};
+
+  % ---------------- conexiones ----------------
+  \draw[flujo] (9.90,3.52) -- (9.90,2.65) -- node[etqf, above] {HTTP} (13.05,2.65) -- (osrm.north);
+  \draw[flujo] (movil.south) -- node[etqf, right] {HTTPS} (3.10,5.08);
+  \draw[flujo] (admin.south) -- node[etqf, right] {HTTPS} (9.60,5.08);
+  \draw[flujo] (app.south) -- node[etqf, right] {TCP 5432} (bd.north);
+  \draw[flujo] (ci.west) -- (10.15,4.30);
+\end{tikzpicture}
