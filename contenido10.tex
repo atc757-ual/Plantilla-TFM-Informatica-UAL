@@ -120,6 +120,15 @@ En la literatura conviven dos formas de modelar un gemelo digital de un sistema:
 
 Esta elección encaja con el motor de simulación basado en agentes (DP-03): en cada réplica, los gemelos de entidad son los agentes que actúan y evolucionan. Para evitar los problemas de coherencia que tendría que cada gemelo se sincronizase por su cuenta, la sincronización se separa del modelado: un único punto, el gemelo del sistema, recibe los eventos de la plataforma y los reparte a los gemelos a los que afectan (Sección~\ref{sec:sincronizacion-dt}).
 
+La Figura~\ref{fig:clases-gemelo} muestra esta composición. \texttt{GemeloSistema} consume los eventos y recuerda el último aplicado, se puede clonar para cada réplica de simulación (su tipo distingue el gemelo vivo de las réplicas) y calcula las métricas del sistema. Se compone de gemelos de entidad, que comparten en la clase abstracta \texttt{GemeloEntidad} el identificador de la entidad que reflejan, la aplicación de un evento a su estado y su avance en el tiempo durante la simulación.
+
+\begin{figure}[H]
+  \centering
+  \input{diagramas/clases-gemelo}
+  \caption{Diagrama de clases del Gemelo Digital: el gemelo del sistema compuesto por gemelos de entidad.}
+  \label{fig:clases-gemelo}
+\end{figure}
+
 \subsection{Entidades digitales}
 
 Las entidades digitales del Gemelo Digital se detallan en la Tabla~\ref{tab:entidades}.
@@ -145,7 +154,7 @@ Las entidades digitales del Gemelo Digital se detallan en la Tabla~\ref{tab:enti
 
 El tipo \texttt{Coordenada} se modela como un \textit{value object} reutilizable para representar ubicaciones geográficas. El tipo \texttt{Evento} desempeña un papel clave en la sincronización con el Gemelo Digital: cada cambio de estado de una entidad genera un evento que permite actualizar su representación digital.
 
-La Figura~\ref{fig:clases} muestra el diagrama de clases del dominio. Los atributos comunes de las entidades del Gemelo Digital (identificador y marcas de tiempo) se generalizan en la clase abstracta \texttt{EntidadDigital}, de la que heredan \texttt{Usuario}, \texttt{Vehiculo}, \texttt{Viaje}, \texttt{Solicitud} e \texttt{Incidencia}; así, cualquier entidad puede originar un \texttt{Evento} mediante una única asociación. \texttt{Ruta} no hereda de ella porque es parte de \texttt{Viaje} (composición) y no tiene identidad propia.
+La Figura~\ref{fig:clases} muestra el diagrama de clases del dominio de la plataforma, cuyas entidades refleja el Gemelo Digital. Los atributos comunes de las entidades (identificador y marcas de tiempo) se generalizan en la clase abstracta \texttt{Entidad}, de la que heredan \texttt{Usuario}, \texttt{Vehiculo}, \texttt{Viaje}, \texttt{Solicitud} e \texttt{Incidencia}; así, cualquier entidad puede originar un \texttt{Evento} mediante una única asociación. \texttt{Ruta} no hereda de ella porque es parte de \texttt{Viaje} (composición) y no tiene identidad propia.
 
 Los roles se modelan como perfiles y no como subclases de \texttt{Usuario}, porque un mismo usuario puede ser conductor en unos viajes y pasajero en otros, y un objeto no puede pertenecer a dos subclases a la vez ni cambiar de clase. \texttt{Usuario} guarda solo los datos de la cuenta y se compone de uno a tres perfiles, como máximo uno de cada tipo, que derivan de la clase abstracta \texttt{Perfil} (estado de activación y fecha de alta). Los perfiles de quien viaja comparten además la valoración media, que se generaliza en la clase abstracta intermedia \texttt{PerfilViajero}, de la que derivan \texttt{PerfilConductor} (declaración responsable de licencia, RF-21) y \texttt{PerfilPasajero} (prioridad por incidencia, RF-24); \texttt{PerfilAdministrador} deriva directamente de \texttt{Perfil}, porque el administrador no viaja en ese papel ni recibe valoraciones. Así, una misma cuenta puede combinar perfiles: un administrador que también se desplaza al campus activa su perfil de pasajero o de conductor sin crear otra cuenta. En el modelo de datos (Figura~\ref{fig:er-dominio}), cada perfil concreto se guarda en su propia tabla, en relación 1:1 con \texttt{USUARIO}, de modo que ninguna tabla contiene columnas que no le correspondan. Cada asociación apunta al perfil que corresponde: el viaje a su conductor, la solicitud a su pasajero y el vehículo a su propietario. El origen y el destino no se guardan como datos del usuario: se indican en cada búsqueda, a partir de la ubicación del dispositivo o de forma manual, lo que además aplica el principio de minimización de datos personales. Del mismo modo, el modo de transporte habitual solo interviene en la simulación, como atributo de los agentes sintéticos (\texttt{AgenteSimulado}) que genera cada \texttt{Escenario}.
 
@@ -154,7 +163,7 @@ En las asociaciones solo se nombran los roles, y las flechas indican la navegabi
 \begin{sidewaysfigure}
   \centering
   \resizebox{\linewidth}{!}{\input{diagramas/clases-dominio}}
-  \caption{Diagrama de clases del dominio del Gemelo Digital.}
+  \caption{Diagrama de clases del dominio de la plataforma.}
   \label{fig:clases}
 \end{sidewaysfigure}
 
@@ -164,7 +173,7 @@ En las asociaciones solo se nombran los roles, y las flechas indican la navegabi
 \begin{itemize}
     \item \textbf{Cada entidad relevante tiene su gemelo identificable}, con el mismo identificador que en la plataforma.
     \item \textbf{Ningún cambio sin su evento:} cada cambio de estado de la plataforma se guarda junto con su evento en la misma transacción de la base de datos (patrón \textit{outbox}), de modo que no puede haber un cambio sin evento ni un evento de un cambio que se deshizo (RNF-08). Cada evento lleva un identificador, su tipo (\texttt{entidad.acción}, en pasado), su marca temporal, la entidad de origen y el estado de esa entidad (DP-05).
-    \item \textbf{Un único consumidor, ordenado e idempotente:} el gemelo del sistema procesa los eventos en orden de identificador, recuerda el último procesado e ignora los que ya aplicó; así, un evento repetido no se aplica dos veces y, si el proceso se detiene, continúa desde donde se quedó sin perder ninguno (RNF-11). Cada evento se entrega a los gemelos de entidad a los que afecta: aceptar una solicitud, por ejemplo, añade un pasajero al gemelo del viaje y resta una plaza al de su vehículo.
+    \item \textbf{Un único consumidor, ordenado e idempotente:} el gemelo del sistema procesa los eventos en el orden en que se registraron (cada uno lleva un número de secuencia), recuerda el último procesado e ignora los que ya aplicó; así, un evento repetido no se aplica dos veces y, si el proceso se detiene, continúa desde donde se quedó sin perder ninguno (RNF-11). Cada evento se entrega a los gemelos de entidad a los que afecta: aceptar una solicitud, por ejemplo, añade un pasajero al gemelo del viaje y resta una plaza al de su vehículo.
     \item \textbf{Un gemelo vivo y una instancia por réplica:} el gemelo vivo se mantiene sincronizado con la plataforma; cada réplica de simulación parte de una copia de su estado, evoluciona por su cuenta y se descarta al terminar, quedándose solo con los resultados. Así se pueden ejecutar muchas réplicas sin afectar a los datos reales.
 \end{itemize}
 
@@ -232,7 +241,7 @@ En una fase posterior, si los resultados lo justifican, podrá incorporarse una 
 
 La simulación es el mecanismo que convierte al Gemelo Digital en una herramienta de evaluación y no solo de representación. El módulo se compone de dos partes: el generador de escenarios, que crea la población sintética de usuarios y viajes a partir de los parámetros de cada escenario, y el motor de simulación, que ejecuta el bucle de \textit{matching} y asignación de plazas sobre una copia del estado del Gemelo Digital, sin afectar a los datos reales. Cada ejecución se repite con semillas registradas y sus resultados se almacenan en formato estructurado (RF-17) para compararlos entre escenarios. El flujo completo se recoge en la Figura~\ref{fig:secuencia-simulacion} del Anexo~\ref{anx:diagramas}.
 
-La simulación se ejecuta en un proceso aparte (\textit{worker}) para no bloquear la API (Sección~\ref{sec:estilo-arquitectonico}). El administrador la lanza desde el panel; la API la registra y se la pasa al \textit{worker}, que carga la copia del estado, ejecuta las réplicas con el mismo \textit{matching} y los mismos gemelos de entidad que la plataforma, y guarda los resultados. Mientras tanto, el panel consulta su estado hasta que termina. Como las réplicas son independientes entre sí, pueden repartirse entre varios \textit{workers} si la ejecución se alarga.
+Para no bloquear la API, la simulación se ejecuta en un proceso aparte, un \textit{worker} (Sección~\ref{sec:estilo-arquitectonico}). El administrador la lanza desde el panel; la API la registra y se la pasa al \textit{worker}, que carga la copia del estado, ejecuta las réplicas con el mismo \textit{matching} y los mismos gemelos de entidad que la plataforma, y guarda los resultados. Mientras tanto, el panel consulta su estado hasta que termina. Como las réplicas son independientes entre sí, pueden repartirse entre varios \textit{workers} si la ejecución se alarga.
 
 Los escenarios de simulación (S0--S5) y las métricas con las que se comparan se definen en el Capítulo~\ref{ch:evaluacion} (Secciones~\ref{sec:metricas-evaluacion} y~\ref{sec:escenarios-evaluacion}), y sus parámetros en el Anexo~\ref{anx:escenarios-detalle}.
 

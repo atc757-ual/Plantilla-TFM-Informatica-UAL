@@ -1,8 +1,9 @@
-% Diagrama: Figura 10.x - Diagrama de clases del dominio del Gemelo Digital
+% Diagrama: Figura 10.x - Diagrama de clases del dominio de la plataforma (los
+% gemelos de cada entidad están en clases-gemelo.tex)
 % TikZ vectorial. Se incluye con \input desde contenido10.tex (página apaisada).
 % Criterios de la dirección: solo se nombran los roles (no las asociaciones),
 % se indica la navegabilidad y los atributos comunes se generalizan en clases
-% abstractas (EntidadDigital y Perfil).
+% abstractas (Entidad y Perfil).
 % Los roles del usuario se modelan como perfiles: un mismo Usuario puede tener
 % a la vez PerfilConductor y PerfilPasajero sin cambiar de clase.
 % Las cajas se ajustan a su contenido y se colocan de forma relativa; los
@@ -16,7 +17,7 @@
 
   \def\sep{0.45}
 
-  % ================= fila central: entidades del Gemelo Digital =================
+  % ================= fila central: entidades de la plataforma =================
   \node[clase, anchor=north west] (veh) at (0,0)
     {\textbf{Vehiculo}
      \nodepart{two} -matricula: String\\ -capacidad: int\\ -estado: EstadoVehiculo\\ -localizacion: Coordenada
@@ -58,7 +59,7 @@
   % ================= fila superior: abstracta, evento y tipos =================
   \def\ytop{1.25}
   \node[clase, anchor=south] (ent) at ($(rut.north east)!0.5!(via.north west)+(0,\ytop)$)
-    {\textbf{\textit{EntidadDigital}}\\ \textit{\{abstracta\}}
+    {\textbf{\textit{Entidad}}\\ \textit{\{abstracta\}}
      \nodepart{two} \#id: UUID\\ \#creadoEn: DateTime\\ \#actualizadoEn: DateTime
      \nodepart{three} +registrarEvento(tipo: String): Evento};
 
@@ -73,7 +74,7 @@
 
   \node[clase, anchor=south west] (eve) at ($(ent.south east)+(1.6,0)$)
     {\textbf{Evento}
-     \nodepart{two} -id: UUID\\ -tipo: String\\ -marcaTemporal: DateTime\\ -payload: JSON
+     \nodepart{two} -id: UUID\\ -secuencia: long\\ -tipo: String\\ -marcaTemporal: DateTime\\ -payload: JSON
      \nodepart{three} +serializar(): JSON};
 
   \node[enumeracion, anchor=south west] (estvia) at ($(eve.south east)+(\sep,0)$)
@@ -88,14 +89,14 @@
     {\textit{\guillemotleft enumeración\guillemotright}\\ \textbf{CategoriaIncidencia}
      \nodepart{two} TECNICA\\ CONDUCTOR\\ PASAJERO\\ OTRA};
 
-  % Evento --> EntidadDigital: el evento conoce la entidad que lo origina
+  % Evento --> Entidad: el evento conoce la entidad que lo origina
   \coordinate (ye) at ($(ent.south)+(0,0.55)$);
   \draw[asoc] (eve.west |- ye) -- (ent.east |- ye);
   \node[rol, above right, xshift=0.12cm] at (ent.east |- ye) {origen};
   \node[rol, below right, xshift=0.12cm] at (ent.east |- ye) {1};
   \node[rol, below left, xshift=-0.12cm] at (eve.west |- ye) {0..*};
 
-  % ---- generalización: las entidades del DT heredan de EntidadDigital ----
+  % ---- generalización: las entidades de la plataforma heredan de Entidad ----
   \def\ybus{0.6}
   \draw[gen] (ent.south |- 0,\ybus) -- (ent.south);
   \draw[draw=Color2, line width=0.5pt] (veh.north |- 0,\ybus) -- (usu.north |- 0,\ybus);
