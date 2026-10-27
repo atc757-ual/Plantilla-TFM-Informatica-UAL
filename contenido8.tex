@@ -81,6 +81,8 @@ Conviene distinguir dos tipos de requisito no funcional: las \emph{calidades}, q
 \subsection{Calidades}
 \label{sec:calidades}
 
+Las calidades se detallan en la Tabla~\ref{tab:rnf}.
+
 \setlength{\tabcolsep}{4pt}
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{1.30cm} >{\raggedright\arraybackslash}p{4.90cm} >{\raggedright\arraybackslash}p{3.30cm} >{\raggedright\arraybackslash}p{3.55cm} >{\raggedright\arraybackslash}p{1.65cm}@{}}
   \hline
@@ -94,7 +96,7 @@ Conviene distinguir dos tipos de requisito no funcional: las \emph{calidades}, q
   RNF-01 & El algoritmo de \textit{matching} debe ofrecer tiempos de respuesta compatibles con un uso interactivo. & Eficiencia de desempeño (comportamiento temporal) & Tiempo de respuesta p95 $<$ 2~s con 50 usuarios simultáneos, medido con una prueba de carga (Artillery/k6) & Debe \\
   RNF-02 & La plataforma debe ser accesible desde navegador web y desde dispositivo móvil con una única base de código. & Portabilidad (capacidad de adaptación) & Una única base de código compilada para web y móvil & Debe \\
   RNF-03 & La arquitectura debe ser modular y permitir sustituir el motor de simulación o el motor de mapas sin rehacer el resto del sistema. & Mantenibilidad (modularidad) & Sustitución de un módulo sin cambios en el resto & Debe \\
-  RNF-04 & El sistema debe proteger las credenciales y los datos personales de los usuarios, recogiendo solo los necesarios e informando de su tratamiento. & Seguridad (confidencialidad) & Contraseñas con \textit{hash}, autenticación por token y autorización por perfil: cada función solo es accesible con el perfil que le corresponde, y el panel de administración solo con el de administrador. Aceptación expresa de las condiciones de uso y de la política de privacidad al registrarse, con su fecha, como prueba de que se informó al usuario (el tratamiento se basa en la prestación del servicio, art.~6.1.b del RGPD); la ubicación del dispositivo solo se usa al pedirla y no se almacena & Debe \\
+  RNF-04 & El sistema debe proteger las credenciales y los datos personales de los usuarios, recogiendo solo los necesarios e informando de su tratamiento. & Seguridad (confidencialidad) & Contraseñas con \textit{hash}, autenticación por \textit{token} y autorización por perfil: cada función solo es accesible con el perfil que le corresponde, y el panel de administración solo con el de administrador. Aceptación expresa de las condiciones de uso y de la política de privacidad al registrarse, con su fecha, como prueba de que se informó al usuario (el tratamiento se basa en la prestación del servicio, art.~6.1.b del RGPD); la ubicación del dispositivo solo se usa al pedirla y no se almacena & Debe \\
   RNF-05 & El código debe estar versionado y disponer de integración y despliegue continuos. & Mantenibilidad (capacidad de modificación) & Repositorio versionado con integración y despliegue automáticos & Debe \\
   RNF-06 & Los escenarios de simulación deben poder reproducirse con resultados comparables entre ejecuciones. & Mantenibilidad (capacidad de prueba) & Datos sintéticos versionados y semillas registradas & Debe \\
   RNF-07 & El Gemelo Digital debe actualizarse por eventos en el momento en que se producen, sin procesamiento por lotes. & Eficiencia de desempeño (comportamiento temporal) & Latencia p95 $\leq$ 1~s entre el evento y la actualización del DT (DP-04), medida con la carga de RNF-01 & Debe \\
@@ -143,7 +145,7 @@ Entre calidades y restricciones quedan cubiertas las ocho características del m
 
 \section{Priorización MoSCoW}
 
-La priorización de funcionalidades sigue el modelo MoSCoW, definido en la Sección~\ref{sec:moscow-alcance}. Las categorías se aplican a los requisitos funcionales (Sección~\ref{sec:rf}) y a las calidades (Sección~\ref{sec:calidades}) mediante la columna ``Prioridad''; las restricciones (Sección~\ref{sec:restricciones}) son de obligado cumplimiento.
+La priorización de funcionalidades sigue el modelo MoSCoW, definido en la Sección~\ref{sec:moscow-alcance}. Las categorías se aplican a los requisitos funcionales (Sección~\ref{sec:rf}) y a las calidades (Sección~\ref{sec:calidades}) mediante la columna «Prioridad»; las restricciones (Sección~\ref{sec:restricciones}) son de obligado cumplimiento.
 
 \section{Trazabilidad requisitos \texorpdfstring{$\leftrightarrow$}{<->} casos de uso \texorpdfstring{$\leftrightarrow$}{<->} objetivos}
 
