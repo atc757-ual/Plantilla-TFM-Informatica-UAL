@@ -7,25 +7,29 @@
 
 La Tabla~\ref{tab:decisiones-pendientes} recoge las decisiones de diseño abiertas al inicio del proyecto y su estado. Las que siguen abiertas al final de F1 (23/10/2026) se adoptan de forma provisional y se revisan durante F2 sin bloquear el desarrollo.
 
-\begin{table}[H]
-  \centering
-  \begin{tabularx}{\textwidth}{Y{0.3000} Y{1.5500} Y{1.1500}}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{1.30cm} >{\raggedright\arraybackslash}p{5.90cm} >{\raggedright\arraybackslash}p{7.20cm}@{}}
     \hline
     \textbf{ID} & \textbf{Decisión} & \textbf{Estado} \\
     \hline
+    \endfirsthead
+    \hline
+    \textbf{ID} & \textbf{Decisión} & \textbf{Estado} \\
+    \hline
+    \endhead
     DP-01 & Base de datos concreta y estrategia de persistencia & Cerrada: PostgreSQL + PostGIS (RNF-15) \\
-    DP-02 & Motor de mapas/rutas (OSRM, Google Maps u otro) & Cerrada: OpenStreetMap + OSRM (RNF-16) \\
+    DP-02 & Motor de mapas/rutas (OSRM, Google Maps u otro) & Cerrada: OpenStreetMap + OSRM (RNF-16); las direcciones se resuelven con CartoCiudad (IGN), elegido frente a Photon porque da el número de portal y la dirección exacta de un punto \\
     DP-03 & Tecnología concreta del motor de simulación (propio o SUMO) & Cerrada: motor propio (RNF-17) \\
     DP-04 & Grado de tiempo real y frecuencia de actualización del DT & Cerrada: actualización por eventos en el momento en que se producen, con una latencia p95 $\leq$ 1~s entre el evento y la actualización del DT, el límite para que una respuesta se perciba sin interrupción \cite{Nielsen1993} (RNF-07) \\
-    DP-05 & Modelo exacto de datos y eventos entre el \textit{backend} y el DT & Provisional: sobre común de eventos (identificador, tipo, versión, marca temporal, entidad de origen y contenido), que permite descartar duplicados (RNF-11) y versionar el contrato (RNF-13); el transporte se fija con la arquitectura \\
+    DP-05 & Modelo exacto de datos y eventos entre el \textit{backend} y el DT & Cerrada: sobre común de eventos (identificador, número de secuencia, tipo, versión, marca temporal, entidad de origen y su estado) que se guarda en la misma transacción que el cambio (RNF-08); un único consumidor, el gemelo del sistema, los procesa en orden de secuencia y descarta los ya aplicados (RNF-11), y el contrato se versiona (RNF-13). Sin intermediario de mensajes (DP-09) \\
     DP-06 & Método final de generación de datos sintéticos para evaluación & Provisional: generador propio con semillas registradas a partir de los parámetros de cada escenario (Anexo~\ref{anx:escenarios-detalle}); se calibra en F6 con los datos que facilite la UAL \\
     DP-07 & Criterios de evaluación del TFM & Provisional: los del Capítulo~\ref{ch:evaluacion} (criterio de éxito experimental y criterios técnicos), pendientes de validar con la dirección \\
     DP-08 & \textit{Framework} del \textit{backend} (Express directamente o NestJS) & Cerrada: NestJS sobre Express, por su TypeScript y estructura modular coherentes con Angular, y por incluir validación, autenticación, OpenAPI y pruebas (RNF-14) \\
+    DP-09 & Estilo arquitectónico (servicios independientes o una aplicación modular) & Cerrada: monolito modular con la simulación en un proceso aparte (\textit{worker}), porque la escalabilidad por servicios no se puede evaluar en el alcance del trabajo y añadiría red, despliegues y coherencia entre servicios (Sección~\ref{sec:estilo-arquitectonico}) \\
+    DP-10 & Granularidad del Gemelo Digital (un gemelo del sistema o gemelos de entidad) & Cerrada: gemelo del sistema compuesto por gemelos de vehículo, viaje y usuario, con un único punto de sincronización; los gemelos de entidad son los agentes de la simulación (Sección~\ref{sec:granularidad-dt}) \\
     \hline
-  \end{tabularx}
   \caption{Decisiones de diseño y su estado.}
   \label{tab:decisiones-pendientes}
-\end{table}
+\end{longtable}
 
 \chapter{Diagramas de diseño}
 \label{anx:diagramas}
