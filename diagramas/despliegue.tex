@@ -7,7 +7,8 @@
   % ---------------- clientes ----------------
   \node[nodo, minimum width=5.20cm] (movil) at (3.10,7.20)
     {\textbf{\textless\textless device\textgreater\textgreater}\enspace Portátil o móvil del usuario\\
-     \scriptsize navegador web o aplicación Ionic};
+     \scriptsize navegador web o aplicación Ionic\\
+     \scriptsize mapas de OpenStreetMap};
   \node[nodo, minimum width=5.20cm] (admin) at (9.60,7.20)
     {\textbf{\textless\textless device\textgreater\textgreater}\enspace Equipo del administrador\\
      \scriptsize navegador web (panel de administración)};
@@ -15,8 +16,9 @@
   % ---------------- servidores ----------------
   \node[nodo, minimum width=9.60cm, minimum height=1.55cm] (app) at (5.35,4.30)
     {\textbf{\textless\textless execution environment\textgreater\textgreater}\enspace Servidor de aplicaciones\\
-     \scriptsize Node.js + NestJS: API REST, \textit{matching}, Gemelo Digital y motor de simulación\\
-     \scriptsize sirve además el \textit{frontend} compilado, que incluye el panel de administración};
+     \scriptsize una aplicación Node.js + NestJS (API REST, \textit{matching}, Gemelo Digital\ldots)\\
+     \scriptsize y su \textit{worker} de simulación; consulta CartoCiudad y envía correos (SMTP)\\
+     \scriptsize y sirve el \textit{frontend} compilado, que incluye el panel de administración};
 
   \node[nodo, minimum width=9.60cm, minimum height=1.30cm] (bd) at (5.35,1.45)
     {\textbf{\textless\textless execution environment\textgreater\textgreater}\enspace Servidor de base de datos\\

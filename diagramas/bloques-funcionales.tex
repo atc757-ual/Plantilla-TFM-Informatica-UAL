@@ -15,7 +15,7 @@
 
     % --- pasarela de comunicación ---
     \node[bloque, minimum width=14.9cm, minimum height=1.45cm] (c) at (7.9,9.85)
-      {\textbf{c) Bloque de Comunicación} --- API Gateway (Node.js)\\[1pt]
+      {\textbf{c) Bloque de Comunicación} --- API REST (Node.js + NestJS)\\[1pt]
        {\scriptsize autenticación, validación y enrutamiento de peticiones}};
 
     % --- core del sistema ---
@@ -30,7 +30,7 @@
     \draw[draw=Color2, fill=Color2!6, rounded corners=2pt] (10.35,4.85) rectangle (15.35,8.05);
     \node[rotulo] at (10.50,7.90) {e) Bloque de Experimentación};
     \node[subbloque, minimum width=2.30cm] at (11.62,6.30) {A) Generador\\de escenarios};
-    \node[subbloque, minimum width=2.30cm] at (14.08,6.30) {B) Motor de\\simulación};
+    \node[subbloque, minimum width=2.30cm] at (14.08,6.30) {B) Motor de\\simulación\\ (\textit{worker})};
     \node[font=\scriptsize, align=center, text width=4.6cm] at (12.85,5.35)
       {opera sobre una \textbf{copia} del estado del Gemelo Digital};
 

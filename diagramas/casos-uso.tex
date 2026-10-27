@@ -41,6 +41,8 @@
   % ---------------- casos de uso ----------------
   % comunes (Usuario)
   \node[cu] (cu01) at (4.85,12.55) {CU-01\\ Registrarse / iniciar sesión};
+  % Extensión de CU-01 (RF-26): sin número propio
+  \node[cu] (rec) at (8.45,12.55) {Recuperar\\ contraseña};
   \node[cu] (cu02) at (4.85,11.45) {CU-02\\ Gestionar perfil};
   \node[cu] (cu08) at (4.85,10.35) {CU-08\\ Consultar ruta / ubicación};
   % conductor
@@ -71,5 +73,6 @@
   \draw[incl] (cu06.east) -- node[estereo, pos=0.45, below, sloped] {\guillemotleft include\guillemotright} (cu07.south west);
   \draw[incl] (cu05.north) -- node[estereo, pos=0.5, right] {\guillemotleft include\guillemotright} (cu07.south);
   \draw[incl] (cu05.west) -- node[estereo, above] {\guillemotleft extend\guillemotright} (cu04.east);
+  \draw[incl] (rec.west) -- node[estereo, above] {\guillemotleft extend\guillemotright} (cu01.east);
   \draw[incl] (cu11.north west) -- node[estereo, pos=0.5, above, sloped] {\guillemotleft extend\guillemotright} (cu07.east);
 \end{tikzpicture}

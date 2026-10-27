@@ -17,8 +17,9 @@ Los elementos que se incluyen dentro del alcance del proyecto se detallan en la 
     \hline
     \textbf{Elemento} \\
     \hline
-    Registro e inicio de sesión único \\
+    Registro con verificación del correo, inicio de sesión único y recuperación de la contraseña \\
     Perfiles de conductor, pasajero y administrador (selector de modo) \\
+    Selección de direcciones y de la ubicación del dispositivo, y los parkings del campus como destino \\
     Publicación y solicitud de viajes \\
     \textit{Matching} conductor-pasajero \\
     Gestión de plazas y estado del viaje \\
@@ -31,6 +32,8 @@ Los elementos que se incluyen dentro del alcance del proyecto se detallan en la 
   \caption{Elementos dentro del alcance.}
   \label{tab:dentro-alcance}
 \end{table}
+
+El ámbito geográfico se limita a una \textbf{zona de servicio}: un círculo de 30~km de radio alrededor del campus de La Cañada, cuyo centro es la media de la posición de sus parkings. Abarca Almería y los municipios cercanos desde los que se viaja a diario al campus (como Huércal de Almería, Vícar o Roquetas de Mar), y deja fuera los más alejados de la provincia. Una dirección fuera de la zona no puede usarse para buscar ni publicar viajes (RF-27): la aplicación avisa de que aún no hay cobertura allí y registra, de forma anónima, el municipio y una zona aproximada de 1~km, para conocer la demanda no cubierta sin guardar datos personales (RNF-04). La zona se define en la base de datos, de modo que se puede ampliar o ajustar sin cambiar el código.
 
 \subsection{Fuera del alcance inicial}
 
@@ -61,7 +64,7 @@ Los elementos que quedan fuera del alcance inicial y sus motivos se muestran en 
 \subsection{Funcionalidades recortables}
 \label{sec:moscow-alcance}
 
-Estas funcionalidades no forman parte del MVP, pero se implementarán si el avance del proyecto lo permite. Mientras no se implementen, se usa la alternativa indicada: avisos dentro de la aplicación (RF-19) en lugar de notificaciones \textit{push} o por \textit{email}, vista de resultados con exportación CSV (RF-20) en lugar del panel con gráficos, configuraciones predefinidas (RF-16) en lugar de la parametrización libre, y reglas de aviso fijas (RF-19) en lugar de su configuración por perfil. En caso contrario, se pospondrán a trabajo futuro sin afectar a la validación del TFM (véase la Tabla~\ref{tab:moscow}).
+Estas funcionalidades no forman parte del MVP, pero se implementarán si el avance del proyecto lo permite. Mientras no se implementen, se usa la alternativa indicada: avisos dentro de la aplicación (RF-19) en lugar de notificaciones \textit{push} o por \textit{email}, vista de resultados con exportación CSV (RF-20) en lugar del panel con gráficos, configuraciones predefinidas (RF-16) en lugar de la parametrización libre, reglas de aviso fijas (RF-19) en lugar de su configuración por perfil, y avisos dentro de la aplicación (RF-19) para coordinar a conductor y pasajeros en lugar del chat. En caso contrario, se pospondrán a trabajo futuro sin afectar a la validación del TFM (véase la Tabla~\ref{tab:moscow}).
 
 \begin{table}[H]
   \centering
@@ -74,6 +77,12 @@ Estas funcionalidades no forman parte del MVP, pero se implementarán si el avan
     Panel de administrador con gráficos interactivos & Podría & Se implementa si sobra tiempo tras el MVP \\
     Parametrización libre de escenarios & Podría & Se implementa si sobra tiempo tras el MVP \\
     Configuración de avisos por perfil (cada modo configura los suyos) & Podría & Se implementa si sobra tiempo tras el MVP \\
+    Chat entre el conductor y los pasajeros aceptados de un viaje & Podría & Se implementa si sobra tiempo tras el MVP \\
+    Límite de intentos de inicio de sesión por cuenta e IP & Podría & Se implementa si sobra tiempo tras el MVP \\
+    Segundo factor (TOTP) para los administradores & Podría & Se implementa si sobra tiempo tras el MVP \\
+    Verificación del teléfono por SMS & Podría & Requiere un proveedor de pago; hoy solo se valida el formato \\
+    Aplicación instalable (PWA) & Podría & Se implementa si sobra tiempo tras el MVP \\
+    Idiomas español e inglés & Podría & Pensado para estudiantes Erasmus y profesorado visitante \\
     \hline
   \end{tabularx}
   \caption{Funcionalidades recortables (MoSCoW).}

@@ -1,0 +1,69 @@
+% Diagrama: diagrama de clases del Gemelo Digital (granularidad: gemelo del
+% sistema compuesto por gemelos de entidad).
+% TikZ vectorial. Se incluye con \input desde contenido10.tex.
+% Mismos criterios que el diagrama de clases del dominio: solo se nombran los
+% roles, se indica la navegabilidad y lo común se generaliza en una clase
+% abstracta (GemeloEntidad).
+% GemeloSistema es el único consumidor de los eventos (orden por secuencia e
+% idempotencia) y los reparte a sus gemelos de entidad; TipoInstancia distingue
+% el gemelo vivo de las copias de cada réplica de simulación.
+
+\begin{tikzpicture}[x=1cm,y=1cm,
+    every node/.append style={rectangle split part align={center,left,left}}]
+
+  % ================= fila superior: el gemelo del sistema =================
+  \node[clase, anchor=north] (sis) at (0,0)
+    {\textbf{GemeloSistema}
+     \nodepart{two} -tipo: TipoInstancia\\ -ultimaSecuencia: long
+     \nodepart{three} +aplicar(e: Evento): void\\ +clonar(): GemeloSistema\\ +metricas(): Metricas};
+
+  \node[clase, anchor=north east] (eve) at ($(sis.north west)+(-1.8,0)$)
+    {\textbf{Evento}
+     \nodepart{two} -id: UUID\\ -secuencia: long\\ -tipo: String\\ -marcaTemporal: DateTime\\ -payload: JSON
+     \nodepart{three} +serializar(): JSON};
+
+  \node[enumeracion, anchor=north west] (tip) at ($(sis.north east)+(1.8,0)$)
+    {\textit{\guillemotleft enumeración\guillemotright}\\ \textbf{TipoInstancia}
+     \nodepart{two} VIVO\\ REPLICA};
+
+  % GemeloSistema --> Evento: consume los eventos de la plataforma
+  \coordinate (ye) at ($(sis.north)+(0,-0.55)$);
+  \draw[asoc] (sis.west |- ye) -- (eve.east |- ye);
+  \node[rol, above right, xshift=0.12cm] at (eve.east |- ye) {eventos};
+  \node[rol, below right, xshift=0.12cm] at (eve.east |- ye) {0..*};
+
+  % ================= fila central: el gemelo de entidad (abstracto) =================
+  \node[clase, anchor=north] (ent) at ($(sis.south)+(0,-1.4)$)
+    {\textbf{\textit{GemeloEntidad}}\\ \textit{\{abstracta\}}
+     \nodepart{two} \#id: UUID
+     \nodepart{three} +aplicar(e: Evento): void\\ +avanzar(t: DateTime): void};
+
+  % GemeloSistema <>--> GemeloEntidad (composición)
+  \draw[compos] (sis.south) -- (ent.north);
+  \node[rol, above right, xshift=0.08cm] at (ent.north) {gemelos};
+  \node[rol, right, xshift=0.08cm, yshift=0.45cm] at (ent.north) {0..*};
+  \node[rol, below right, xshift=0.08cm] at (sis.south) {1};
+
+  % ================= fila inferior: gemelos de entidad =================
+  \node[clase, anchor=north] (via) at ($(ent.south)+(0,-1.3)$)
+    {\textbf{GemeloViaje}
+     \nodepart{two} -ruta: Ruta\\ -pasajeros: List<UUID>\\ -retrasoMin: int\\ -estado: EstadoViaje
+     \nodepart{three} +ocupacion(): double};
+
+  \node[clase, anchor=north east] (veh) at ($(via.north west)+(-1.0,0)$)
+    {\textbf{GemeloVehiculo}
+     \nodepart{two} -posicion: Coordenada\\ -plazasLibres: int\\ -estado: EstadoVehiculo
+     \nodepart{three} +moverA(p: Coordenada): void};
+
+  \node[clase, anchor=north west] (usu) at ($(via.north east)+(1.0,0)$)
+    {\textbf{GemeloUsuario}
+     \nodepart{two} -ubicacion: Coordenada\\ -esperando: boolean
+     \nodepart{three} +decidirModo(): ModoTransporte};
+
+  % ---- generalización: los gemelos concretos heredan de GemeloEntidad ----
+  \coordinate (yb) at ($(ent.south)+(0,-0.65)$);
+  \draw[gen] (ent.south |- yb) -- (ent.south);
+  \draw[draw=Color2, line width=0.5pt] (veh.north |- yb) -- (usu.north |- yb);
+  \foreach \n in {veh,via,usu}
+    \draw[draw=Color2, line width=0.5pt] (\n.north |- yb) -- (\n.north);
+\end{tikzpicture}

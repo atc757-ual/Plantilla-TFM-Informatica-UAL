@@ -15,19 +15,25 @@ Los recursos software previstos se resumen en la Tabla~\ref{tab:recursos-softwar
     \hline
     \textbf{Recurso} & \textbf{Uso} & \textbf{Coste} \\
     \hline
-    Angular + Ionic & \textit{Frontend} web/móvil & Open Source \\
+    Angular + Ionic + Capacitor & \textit{Frontend} web y móvil con una única base de código & Open Source \\
     Node.js + NestJS & \textit{Backend} y APIs & Open Source \\
     PostgreSQL + PostGIS & Persistencia y consultas geoespaciales & Open Source \\
     GitHub + GitHub Actions & Control de versiones y CI/CD & Gratuito \\
-    OpenStreetMap + OSRM & Mapas y rutas & Open Source \\
+    SonarCloud, CodeQL y Dependabot & Análisis de calidad y seguridad del código en cada cambio & Gratuito \\
+    Docker + Docker Compose & Entorno de ejecución reproducible (base de datos, OSRM y servidor de correo de pruebas) & Open Source \\
+    OpenStreetMap + OSRM + Leaflet & Visualización de mapas, rutas y desvíos & Open Source \\
+    CartoCiudad (IGN) & Búsqueda de direcciones y dirección de un punto & Gratuito (cita obligatoria) \\
     Motor de simulación propio & Generación y ejecución de escenarios & Desarrollo propio \\
-    Herramientas de \textit{testing} & Jest, Karma/Jasmine, Postman, Artillery/k6 & Open Source \\
+    Herramientas de \textit{testing} & Jest + Supertest, Vitest, Cypress, Artillery/k6 & Open Source \\
     TikZ (\LaTeX) & Diagramas UML y de arquitectura & Open Source \\
+    Figma (con Figma AI) & Maquetas de las pantallas e ilustración de acceso & Gratuito \\
     \hline
   \end{tabularx}
   \caption{Recursos software.}
   \label{tab:recursos-software}
 \end{table}
+
+\textit{Uso de inteligencia artificial generativa:} la ilustración de las pantallas de acceso se generó con Figma AI, la función de inteligencia artificial de Figma, y el autor la revisó y adaptó a la identidad visual de la plataforma. Las maquetas de las pantallas se diseñaron en Figma.
 
 \section{Recursos hardware}
 
@@ -55,7 +61,7 @@ Los recursos software previstos se resumen en la Tabla~\ref{tab:recursos-softwar
     \textbf{Recurso} & \textbf{Descripción} \\
     \hline
     Datos sintéticos & Usuarios, viajes, demanda y horarios generados para simulación \\
-    Datos geográficos & OpenStreetMap para la red vial del entorno de la UAL \\
+    Datos geográficos & OpenStreetMap para la red vial y CartoCiudad (IGN) para las direcciones del entorno de la UAL \\
     Datos de la UAL & No disponibles inicialmente; se usarán supuestos documentados \\
     Escenarios reproducibles & Configuraciones y semillas registradas para garantizar la repetibilidad \\
     \hline

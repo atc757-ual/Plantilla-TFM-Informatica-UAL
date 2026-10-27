@@ -10,11 +10,11 @@
 
 La solución se estructura en seis bloques funcionales de alto nivel, que separan responsabilidades y permiten sustituir componentes sin rehacer el sistema:
 \begin{enumerate}[label=\alph*)]
-    \item \textbf{Bloque de Presentación (\textit{Frontend}):} Punto de acceso para conductores y pasajeros. Se implementa con Angular + Ionic, lo que permite una única base de código que se compila para web y móvil (RNF-02). Incluye el selector de modo (conductor o pasajero) y las pantallas de publicación de viajes, búsqueda, solicitudes y visualización de rutas.
+    \item \textbf{Bloque de Presentación (\textit{Frontend}):} Punto de acceso para conductores y pasajeros. Se implementa con Angular + Ionic y Capacitor, lo que permite una única base de código que se compila para web y móvil (RNF-02). Incluye el selector de modo (conductor o pasajero) y las pantallas de publicación de viajes, búsqueda, solicitudes y visualización de rutas.
     \item \textbf{Bloque de Administración (Panel Admin):} Interfaz para el administrador, implementada como un módulo independiente dentro del mismo \textit{frontend} y cargado bajo demanda. El acceso es único (CU-01): la misma cuenta y las mismas credenciales sirven para la aplicación y para el panel, y tras iniciar sesión, si el usuario tiene el perfil de administrador, la versión web añade un modo Administración al selector de modo, junto a Conductor y Pasajero. Al activarlo se carga el panel; en los otros modos, el administrador usa la aplicación como cualquier otro usuario. El selector solo muestra los modos de los perfiles activos, y en la aplicación móvil no incluye el modo Administración: el panel se ofrece exclusivamente en web, porque las tareas de gestión resultan más cómodas en un navegador, y solo es accesible con el perfil de administrador (RNF-04). Desde el panel se gestionan los usuarios y sus perfiles (RF-25), se lanzan las simulaciones (escenarios S0--S5), se consultan las métricas, se exportan los resultados en CSV (RF-15 a RF-18, RF-20) y se revisan las incidencias (RF-23).
-    \item \textbf{Bloque de Comunicación (API Gateway):} Expone los servicios del Core y del Componente de Experimentación al \textit{frontend}. Gestiona autenticación, validación y enrutamiento de peticiones (Node.js).
+    \item \textbf{Bloque de Comunicación (API REST):} Único punto de entrada del \textit{frontend}, que expone las operaciones del Core y del bloque de Experimentación. Son los controladores de la propia aplicación Node.js + NestJS, que reciben las peticiones a cada \textit{endpoint}, comprueban la autenticación y el perfil, validan los datos y las pasan al módulo del Core que corresponde.
     \item \textbf{Bloque del Core del Sistema:} Contiene la lógica de negocio: gestión de usuarios, viajes y solicitudes; el algoritmo de \textit{matching}; y el Gemelo Digital. Este mantiene una representación sincronizada de usuarios, vehículos, viajes, solicitudes y rutas, y se actualiza mediante eventos.
-    \item \textbf{Bloque de Experimentación:} Se divide en A (Generador de Escenarios), que crea datos sintéticos y define los parámetros de cada escenario (S0--S5), y B (Motor de Simulación). El Motor B ejecuta el bucle de simulación sobre una copia del estado del Gemelo Digital, sin afectar a los datos reales; aplica el \textit{matching}, asigna plazas y calcula métricas como vehículos evitados, ocupación media y solicitudes cubiertas.
+    \item \textbf{Bloque de Experimentación:} Se divide en A (Generador de Escenarios), que crea datos sintéticos y define los parámetros de cada escenario (S0--S5), y B (Motor de Simulación). El Motor B ejecuta el bucle de simulación sobre una copia del estado del Gemelo Digital, sin afectar a los datos reales, en un proceso aparte para no bloquear la API; aplica el mismo \textit{matching} que la plataforma, asigna plazas y calcula métricas como vehículos evitados, ocupación media y solicitudes cubiertas.
     \item \textbf{Bloque de Persistencia:} Almacena y recupera los datos de usuarios y perfiles, vehículos, viajes, solicitudes, incidencias y resultados de simulación. Se implementa con PostgreSQL + PostGIS, que permite realizar consultas geoespaciales para el \textit{matching}.
 \end{enumerate}
 
@@ -39,11 +39,11 @@ La Tabla~\ref{tab:capas} muestra la arquitectura técnica del sistema.
     \hline
     \textbf{Capa} & \textbf{Responsabilidad} & \textbf{Tecnología prevista} \\
     \hline
-    Presentación & \textit{Frontend} usuarios (web + móvil) + Panel Admin (web) & Angular + Ionic \\
-    API / \textit{Backend} & Autenticación, usuarios, viajes, \textit{matching}, reglas & Node.js + NestJS \\
+    Presentación & \textit{Frontend} usuarios (web + móvil) + Panel Admin (web) & Angular + Ionic + Capacitor \\
+    API / \textit{Backend} & Autenticación, usuarios, viajes, \textit{matching}, reglas & Node.js + NestJS + TypeORM \\
     Persistencia & Usuarios y perfiles, vehículos, viajes, solicitudes, incidencias, estados, datos de simulación & PostgreSQL + PostGIS \\
-    Gemelo Digital & Representación de entidades y estado del sistema & Servicio/módulo DT \\
-    Simulación & Generación de escenarios y ejecución de experimentos & Motor propio basado en agentes \\
+    Gemelo Digital & Representación de entidades y estado del sistema & Módulo del \textit{backend} \\
+    Simulación & Generación de escenarios y ejecución de experimentos & Motor propio basado en agentes, en un proceso aparte (\textit{worker}) \\
     DevOps & Control de versiones, pruebas y despliegue & GitHub + GitHub Actions \\
     \hline
   \end{tabularx}
@@ -53,15 +53,24 @@ La Tabla~\ref{tab:capas} muestra la arquitectura técnica del sistema.
 
 \textbf{Descripción de las capas:}
 \begin{itemize}
-    \item \textbf{Capa de Presentación:} Interfaz de usuario para conductores y pasajeros (web + móvil) y panel de administración (web). Se implementa con Angular + Ionic.
-    \item \textbf{Capa de API/\textit{Backend}:} Expone los servicios del sistema mediante APIs REST. Se implementa con Node.js y el \textit{framework} NestJS, cuyos módulos se corresponden con los bloques de la arquitectura.
+    \item \textbf{Capa de Presentación:} Interfaz de usuario para conductores y pasajeros (web + móvil) y panel de administración (web). Se implementa con Angular + Ionic, y Capacitor da acceso a las funciones del dispositivo, como la ubicación.
+    \item \textbf{Capa de API/\textit{Backend}:} Expone los servicios del sistema mediante APIs REST. Se implementa con Node.js y el \textit{framework} NestJS, cuyos módulos se corresponden con los bloques de la arquitectura. El acceso a datos se realiza con TypeORM, que admite los tipos geográficos de PostGIS que necesita el \textit{matching}.
     \item \textbf{Capa de Persistencia:} Almacena y recupera datos. PostgreSQL + PostGIS permite consultas geoespaciales para el \textit{matching}.
-    \item \textbf{Capa de Gemelo Digital:} Mantiene una representación sincronizada del estado del sistema. Se actualiza por eventos.
-    \item \textbf{Capa de Simulación:} Genera escenarios (S0--S5) y ejecuta simulaciones sobre una copia del estado del Gemelo Digital.
+    \item \textbf{Capa de Gemelo Digital:} Mantiene una representación sincronizada del estado del sistema. Se actualiza por eventos (Sección~\ref{sec:modelo-dt}).
+    \item \textbf{Capa de Simulación:} Genera escenarios (S0--S5) y ejecuta simulaciones sobre copias del estado del Gemelo Digital, en un proceso aparte (\textit{worker}).
     \item \textbf{Capa de DevOps:} Capa transversal de soporte al desarrollo y despliegue.
 \end{itemize}
 
 \textit{Nota sobre DevOps:} DevOps se incluye en esta vista técnica como capa transversal de soporte al desarrollo y despliegue. No aparece en la vista conceptual (Sección~\ref{sec:vision-conceptual}) porque no constituye un bloque funcional del sistema, sino una infraestructura de soporte que afecta a todo el ciclo de vida.
+
+\subsection{Estilo arquitectónico}
+\label{sec:estilo-arquitectonico}
+
+El \textit{backend} es una única aplicación modular (monolito modular): cada bloque funcional es un módulo de NestJS con fronteras estrictas, de modo que un módulo solo usa lo que otro expone y nunca accede directamente a sus tablas (RNF-03). Se descartó repartir el \textit{matching}, el Gemelo Digital y la simulación en servicios independientes, porque la ventaja principal de esa división, escalar cada parte por separado según su carga, no se puede evaluar en el alcance de este trabajo, y en cambio añade varios despliegues, comunicación por red y el problema de mantener la coherencia entre servicios.
+
+Esta decisión se apoya en tres observaciones. Primero, el trabajo pesado del \textit{matching} no lo hace el propio módulo, sino PostGIS (el filtrado geoespacial) y OSRM (el cálculo de desvíos), y separarlo no aliviaría a ninguno de los dos; su requisito de rendimiento se verifica igualmente con la prueba de carga de RNF-01. Segundo, el Gemelo Digital necesita reaccionar a los cambios de la plataforma sin perder ni duplicar eventos (RNF-08 y RNF-11), y eso se consigue de forma más sencilla dentro de la misma aplicación, con el registro de eventos en la misma transacción que el cambio (Sección~\ref{sec:modelo-dt}), que entre servicios con un intermediario de mensajes. Tercero, el simulador ejecuta el \textit{matching} miles de veces sobre copias del estado; como servicio aparte, cada ejecución sería una llamada por red y trabajaría con datos que no están en la base de datos.
+
+La única parte que se ejecuta en un proceso aparte es la simulación: Node.js atiende las peticiones en un solo hilo, y una simulación larga bloquearía la API. Un proceso \textit{worker} de la misma aplicación reutiliza directamente el \textit{matching} y el modelo del Gemelo Digital sin duplicar código, y como las réplicas son independientes, pueden repartirse entre varios \textit{workers} si es necesario. La modularidad permite, además, extraer más adelante cualquier módulo como servicio si las pruebas de carga lo justificasen.
 
 \subsection{Correspondencia entre bloques funcionales y capas técnicas}
 
@@ -75,7 +84,7 @@ La Tabla~\ref{tab:correspondencia} muestra la correspondencia entre los bloques 
     \hline
     Bloque de Presentación (\textit{Frontend}) & Capa de Presentación \\
     Bloque de Administración (Panel Admin) & Capa de Presentación \\
-    Bloque de Comunicación (API Gateway) & Capa de API/\textit{Backend} \\
+    Bloque de Comunicación (API REST) & Capa de API/\textit{Backend} \\
     Bloque del Core del Sistema & Capa de API/\textit{Backend} + Capa de Gemelo Digital \\
     Bloque de Experimentación & Capa de Simulación \\
     Bloque de Persistencia & Capa de Persistencia \\
@@ -86,10 +95,39 @@ La Tabla~\ref{tab:correspondencia} muestra la correspondencia entre los bloques 
   \label{tab:correspondencia}
 \end{table}
 
+\subsection{Diseño de la API y seguridad}
+\label{sec:api-seguridad}
+
+Las APIs REST de la plataforma siguen la guía de diseño TMF630 de TM Forum \cite{TMF630}: cada recurso se devuelve con su identificador, su enlace (\texttt{href}) y su tipo (\texttt{@type}); las listas se paginan; y todos los errores comparten un mismo objeto \texttt{Error} con un código estable que el \textit{frontend} puede interpretar. Cada respuesta incluye además un identificador de petición (\texttt{X-Request-Id}) que permite seguirla en los registros del sistema. Las ubicaciones se intercambian como puntos GeoJSON (RFC~7946), el formato que leen directamente PostGIS y las librerías de mapas. Se eligió TMF630 por ser una norma de la industria con convenciones completas para la identificación de recursos, la paginación y los errores. La API se documenta con OpenAPI 3, generado a partir del propio código, de modo que la documentación no puede desfasarse de la implementación.
+
+La autenticación (RF-02) combina dos \textit{tokens}: uno de acceso, de corta duración (15 minutos), que acompaña a cada petición, y uno de renovación, que permite obtener otro de acceso sin volver a introducir la contraseña. Del de renovación solo se guarda su \textit{hash}; sirve una única vez y se sustituye en cada renovación, y si se presenta uno ya usado, señal de que ha sido robado, se anula toda la sesión, siguiendo las recomendaciones de seguridad de OAuth 2.0 \cite{RFC9700}. La sesión caduca tras 7 días sin uso y, como máximo, a los 30 días del inicio de sesión; cerrar sesión la anula de inmediato.
+
+La autorización por perfil (RNF-04) es segura por defecto: toda la API exige autenticación salvo las operaciones públicas declaradas de forma explícita (registro y verificación del correo, inicio de sesión, renovación de la sesión y recuperación de la contraseña), y cada operación indica qué perfiles pueden usarla. Así, una operación nueva queda protegida aunque se olvide indicarlo. El primer administrador se crea en el despliegue mediante un comando que genera una contraseña aleatoria.
+
+El registro solo admite correos de la Universidad de Almería y la cuenta no se crea hasta verificar el correo (RF-01): los datos quedan como registro pendiente, que caduca a las 24 horas, y se envía al correo un código de seis cifras válido durante 15 minutos. Del código solo se guarda un resumen (HMAC-SHA256), nunca el código en claro; se admiten tres intentos por código y un reenvío por minuto. La recuperación de la contraseña (RF-26) sigue el mismo esquema: un código enviado al correo permite elegir una contraseña nueva y cierra todas las sesiones abiertas. Al registrarse, el usuario acepta de forma expresa las condiciones de uso y la política de privacidad, y se guarda la fecha como prueba de que se le informó del tratamiento, que se basa en la prestación del servicio y no en el consentimiento (RNF-04) y, tras verificar el correo, elige con qué perfil empieza a usar la aplicación.
+
+El \textit{frontend} accede a la API mediante un servicio de Angular por dominio (sesión, usuarios, lugares, viajes\ldots), que encapsula sus \textit{endpoints} bajo un mismo prefijo (\texttt{/api}); las pantallas solo usan esos servicios. Un interceptor añade el \textit{token} de acceso a cada petición y lo renueva cuando caduca, y los errores se traducen a mensajes en un único punto a partir de su código. El contrato entre ambos es la especificación OpenAPI, generada desde el código y comprobada en la integración continua (RNF-21).
+
 \section{Modelo del Gemelo Digital}
 \label{sec:modelo-dt}
 
 El Gemelo Digital será una representación computacional del sistema de movilidad compartida gestionado por la plataforma. Se prioriza el nivel de abstracción necesario para responder a la pregunta de investigación, sin modelar elementos físicos complejos del vehículo.
+
+\subsection{Granularidad: un gemelo del sistema compuesto por gemelos de entidad}
+\label{sec:granularidad-dt}
+
+En la literatura conviven dos formas de modelar un gemelo digital de un sistema: un único gemelo del sistema completo, en el que las entidades son parte de su estado, o varios gemelos de entidad (uno por vehículo, por viaje\ldots) que, juntos, forman el del sistema. Este trabajo adopta la segunda: el gemelo del sistema se compone de un gemelo por cada vehículo, cada viaje y cada usuario, y cada uno guarda el estado de su entidad y su comportamiento (por ejemplo, el gemelo de un vehículo conoce su posición y sus plazas libres, y el de un viaje, su ruta y sus pasajeros). Las métricas del sistema, como la ocupación media o los vehículos evitados, se obtienen agregando las de sus gemelos.
+
+Esta elección encaja con el motor de simulación basado en agentes (DP-03): en cada réplica, los gemelos de entidad son los agentes que actúan y evolucionan. Para evitar los problemas de coherencia que tendría que cada gemelo se sincronizase por su cuenta, la sincronización se separa del modelado: un único punto, el gemelo del sistema, recibe los eventos de la plataforma y los reparte a los gemelos a los que afectan (Sección~\ref{sec:sincronizacion-dt}).
+
+La Figura~\ref{fig:clases-gemelo} muestra esta composición. \texttt{GemeloSistema} consume los eventos y recuerda el último aplicado, se puede clonar para cada réplica de simulación (su tipo distingue el gemelo vivo de las réplicas) y calcula las métricas del sistema. Se compone de gemelos de entidad, que comparten en la clase abstracta \texttt{GemeloEntidad} el identificador de la entidad que reflejan, la aplicación de un evento a su estado y su avance en el tiempo durante la simulación.
+
+\begin{figure}[H]
+  \centering
+  \input{diagramas/clases-gemelo}
+  \caption{Diagrama de clases del Gemelo Digital: el gemelo del sistema compuesto por gemelos de entidad.}
+  \label{fig:clases-gemelo}
+\end{figure}
 
 \subsection{Entidades digitales}
 
@@ -116,26 +154,27 @@ Las entidades digitales del Gemelo Digital se detallan en la Tabla~\ref{tab:enti
 
 El tipo \texttt{Coordenada} se modela como un \textit{value object} reutilizable para representar ubicaciones geográficas. El tipo \texttt{Evento} desempeña un papel clave en la sincronización con el Gemelo Digital: cada cambio de estado de una entidad genera un evento que permite actualizar su representación digital.
 
-La Figura~\ref{fig:clases} muestra el diagrama de clases del dominio. Los atributos comunes de las entidades del Gemelo Digital (identificador y marcas de tiempo) se generalizan en la clase abstracta \texttt{EntidadDigital}, de la que heredan \texttt{Usuario}, \texttt{Vehiculo}, \texttt{Viaje}, \texttt{Solicitud} e \texttt{Incidencia}; así, cualquier entidad puede originar un \texttt{Evento} mediante una única asociación. \texttt{Ruta} no hereda de ella porque es parte de \texttt{Viaje} (composición) y no tiene identidad propia.
+La Figura~\ref{fig:clases} muestra el diagrama de clases del dominio de la plataforma, cuyas entidades refleja el Gemelo Digital. Los atributos comunes de las entidades (identificador y marcas de tiempo) se generalizan en la clase abstracta \texttt{Entidad}, de la que heredan \texttt{Usuario}, \texttt{Vehiculo}, \texttt{Viaje}, \texttt{Solicitud} e \texttt{Incidencia}; así, cualquier entidad puede originar un \texttt{Evento} mediante una única asociación. \texttt{Ruta} no hereda de ella porque es parte de \texttt{Viaje} (composición) y no tiene identidad propia.
 
 Los roles se modelan como perfiles y no como subclases de \texttt{Usuario}, porque un mismo usuario puede ser conductor en unos viajes y pasajero en otros, y un objeto no puede pertenecer a dos subclases a la vez ni cambiar de clase. \texttt{Usuario} guarda solo los datos de la cuenta y se compone de uno a tres perfiles, como máximo uno de cada tipo, que derivan de la clase abstracta \texttt{Perfil} (estado de activación y fecha de alta). Los perfiles de quien viaja comparten además la valoración media, que se generaliza en la clase abstracta intermedia \texttt{PerfilViajero}, de la que derivan \texttt{PerfilConductor} (declaración responsable de licencia, RF-21) y \texttt{PerfilPasajero} (prioridad por incidencia, RF-24); \texttt{PerfilAdministrador} deriva directamente de \texttt{Perfil}, porque el administrador no viaja en ese papel ni recibe valoraciones. Así, una misma cuenta puede combinar perfiles: un administrador que también se desplaza al campus activa su perfil de pasajero o de conductor sin crear otra cuenta. En el modelo de datos (Figura~\ref{fig:er-dominio}), cada perfil concreto se guarda en su propia tabla, en relación 1:1 con \texttt{USUARIO}, de modo que ninguna tabla contiene columnas que no le correspondan. Cada asociación apunta al perfil que corresponde: el viaje a su conductor, la solicitud a su pasajero y el vehículo a su propietario. El origen y el destino no se guardan como datos del usuario: se indican en cada búsqueda, a partir de la ubicación del dispositivo o de forma manual, lo que además aplica el principio de minimización de datos personales. Del mismo modo, el modo de transporte habitual solo interviene en la simulación, como atributo de los agentes sintéticos (\texttt{AgenteSimulado}) que genera cada \texttt{Escenario}.
 
-En las asociaciones solo se nombran los roles, y las flechas indican la navegabilidad: la mayoría son unidireccionales y solo la relación entre \texttt{Viaje} y \texttt{Solicitud} es bidireccional, porque el conductor consulta las solicitudes de su viaje y cada solicitud necesita conocer su viaje.
+En las asociaciones solo se nombran los roles, y las flechas indican la navegabilidad: la mayoría son unidireccionales y solo la relación entre \texttt{Viaje} y \texttt{Solicitud} es bidireccional, porque el conductor consulta las solicitudes de su viaje y cada solicitud necesita conocer su viaje. El diagrama recoge las entidades con comportamiento propio; los avisos, las posiciones registradas durante el viaje, los parkings del campus y la zona de servicio son datos sin lógica que se muestran solo en el modelo de datos (Figura~\ref{fig:er-dominio}).
 
 \begin{sidewaysfigure}
   \centering
   \resizebox{\linewidth}{!}{\input{diagramas/clases-dominio}}
-  \caption{Diagrama de clases del dominio del Gemelo Digital.}
+  \caption{Diagrama de clases del dominio de la plataforma.}
   \label{fig:clases}
 \end{sidewaysfigure}
 
 \subsection{Principios de sincronización}
+\label{sec:sincronizacion-dt}
 
 \begin{itemize}
-    \item Cada entidad relevante del sistema real tiene una representación digital identificable.
-    \item Los cambios de estado de la plataforma se reflejan en el modelo digital.
-    \item El modelo digital puede consultar el estado actual y utilizarlo como entrada para simulación.
-    \item La comunicación entre plataforma y Gemelo Digital se diseña mediante interfaces bien definidas (eventos + API).
+    \item \textbf{Cada entidad relevante tiene su gemelo identificable}, con el mismo identificador que en la plataforma.
+    \item \textbf{Ningún cambio sin su evento:} cada cambio de estado de la plataforma se guarda junto con su evento en la misma transacción de la base de datos (patrón \textit{outbox}), de modo que no puede haber un cambio sin evento ni un evento de un cambio que se deshizo (RNF-08). Cada evento lleva un identificador, su tipo (\texttt{entidad.acción}, en pasado), su marca temporal, la entidad de origen y el estado de esa entidad (DP-05).
+    \item \textbf{Un único consumidor, ordenado e idempotente:} el gemelo del sistema procesa los eventos en el orden en que se registraron (cada uno lleva un número de secuencia), recuerda el último procesado e ignora los que ya aplicó; así, un evento repetido no se aplica dos veces y, si el proceso se detiene, continúa desde donde se quedó sin perder ninguno (RNF-11). Cada evento se entrega a los gemelos de entidad a los que afecta: aceptar una solicitud, por ejemplo, añade un pasajero al gemelo del viaje y resta una plaza al de su vehículo.
+    \item \textbf{Un gemelo vivo y una instancia por réplica:} el gemelo vivo se mantiene sincronizado con la plataforma; cada réplica de simulación parte de una copia de su estado, evoluciona por su cuenta y se descarta al terminar, quedándose solo con los resultados. Así se pueden ejecutar muchas réplicas sin afectar a los datos reales.
 \end{itemize}
 
 \subsection{Nivel de fidelidad}
@@ -171,7 +210,7 @@ Los criterios de compatibilidad se detallan en la Tabla~\ref{tab:criterios}.
     \textbf{Criterio} & \textbf{Ejemplo} & \textbf{Prioridad} \\
     \hline
     Origen compatible & Distancia máxima entre puntos de origen & Alta \\
-    Destino compatible & Destino igual o dentro de una zona definida & Alta \\
+    Destino compatible & Mismo parking del campus o uno cercano al ir; dirección cercana al volver & Alta \\
     Ventana temporal & Hora de salida $\pm$ tolerancia & Alta \\
     Capacidad & Plazas disponibles del viaje & Alta \\
     Desvío & Incremento de recorrido por recoger pasajeros & Media \\
@@ -194,11 +233,15 @@ Los criterios de compatibilidad se detallan en la Tabla~\ref{tab:criterios}.
 
 El proceso se detalla en el diagrama de secuencia (Figura~\ref{fig:secuencia-matching}) y en el de actividad (Figura~\ref{fig:actividad-matching}) del Anexo~\ref{anx:diagramas}.
 
+El módulo se divide en dos piezas para que la plataforma y el simulador usen el mismo código. La \textbf{puntuación} es pura: recibe los candidatos y la búsqueda, y devuelve la lista ordenada por compatibilidad, sin acceder a la base de datos, de modo que se prueba de forma aislada. La \textbf{obtención de candidatos} queda detrás de una interfaz con dos implementaciones: la de la plataforma consulta PostGIS (filtrado geoespacial) y OSRM (desvíos), y la del simulador trabaja sobre la copia en memoria del estado del Gemelo Digital. El origen y el destino de cada búsqueda son un punto elegido por el usuario (una dirección o su ubicación) y un parking del campus (RF-27).
+
 En una fase posterior, si los resultados lo justifican, podrá incorporarse una función de puntuación ponderada o un algoritmo de optimización. Esta ampliación no es necesaria para alcanzar el objetivo mínimo del TFM.
 
 \section{Módulo de simulación}
 
 La simulación es el mecanismo que convierte al Gemelo Digital en una herramienta de evaluación y no solo de representación. El módulo se compone de dos partes: el generador de escenarios, que crea la población sintética de usuarios y viajes a partir de los parámetros de cada escenario, y el motor de simulación, que ejecuta el bucle de \textit{matching} y asignación de plazas sobre una copia del estado del Gemelo Digital, sin afectar a los datos reales. Cada ejecución se repite con semillas registradas y sus resultados se almacenan en formato estructurado (RF-17) para compararlos entre escenarios. El flujo completo se recoge en la Figura~\ref{fig:secuencia-simulacion} del Anexo~\ref{anx:diagramas}.
+
+Para no bloquear la API, la simulación se ejecuta en un proceso aparte, un \textit{worker} (Sección~\ref{sec:estilo-arquitectonico}). El administrador la lanza desde el panel; la API la registra y se la pasa al \textit{worker}, que carga la copia del estado, ejecuta las réplicas con el mismo \textit{matching} y los mismos gemelos de entidad que la plataforma, y guarda los resultados. Mientras tanto, el panel consulta su estado hasta que termina. Como las réplicas son independientes entre sí, pueden repartirse entre varios \textit{workers} si la ejecución se alarga.
 
 Los escenarios de simulación (S0--S5) y las métricas con las que se comparan se definen en el Capítulo~\ref{ch:evaluacion} (Secciones~\ref{sec:metricas-evaluacion} y~\ref{sec:escenarios-evaluacion}), y sus parámetros en el Anexo~\ref{anx:escenarios-detalle}.
 
