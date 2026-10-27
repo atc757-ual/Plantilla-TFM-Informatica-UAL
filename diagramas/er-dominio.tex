@@ -14,15 +14,15 @@
 
   % ---------------- fila 1: cuenta y perfiles ----------------
   \node[entidad] (pad) at (\xa,\ya) {\textbf{PERFIL\_ADMINISTRADOR}\\ \scriptsize id\_usuario (PK, FK)\\ activo, fecha\_alta};
-  \node[entidad] (usu) at (\xb,\ya) {\textbf{USUARIO}\\ \scriptsize id (PK)\\ nombre, email, teléfono\\ password\_hash\\ condiciones\_aceptadas\_en\\ tolerancia\_horaria};
+  \node[entidad] (usu) at (\xb,\ya) {\textbf{USUARIO}\\ \scriptsize id (PK)\\ nombre, email, teléfono\\ password\_hash\\ correo\_verificado\_en\\ condiciones\_aceptadas\_en\\ tolerancia\_horaria};
   \node[entidad] (pco) at (\xc,\ya) {\textbf{PERFIL\_CONDUCTOR}\\ \scriptsize id\_usuario (PK, FK)\\ activo, fecha\_alta\\ valoración\_media\\ declaración\_licencia\\ fecha\_declaración};
   \node[entidad] (veh) at (\xd,\ya) {\textbf{VEHÍCULO}\\ \scriptsize id (PK)\\ id\_conductor (FK)\\ matrícula\\ capacidad\\ estado};
 
   % ---------------- fila 2: operación ----------------
-  \node[entidad] (inc) at (\xa,\yb) {\textbf{INCIDENCIA}\\ \scriptsize id (PK)\\ id\_viaje (FK)\\ id\_solicitud (FK, nula)\\ id\_informante (FK)\\ categoría\\ descripción};
+  \node[entidad] (inc) at (\xa,\yb) {\textbf{INCIDENCIA}\\ \scriptsize id (PK)\\ id\_viaje (FK)\\ id\_solicitud (FK, nula)\\ id\_informante (FK)\\ categoría, descripción\\ estado, resolución\\ revisión (quién, cuándo)};
   \node[entidad] (ppa) at (\xb,\yb) {\textbf{PERFIL\_PASAJERO}\\ \scriptsize id\_usuario (PK, FK)\\ activo, fecha\_alta\\ valoración\_media\\ prioridad\_alta};
-  \node[entidad] (via) at (\xc,\yb) {\textbf{VIAJE}\\ \scriptsize id (PK)\\ id\_conductor (FK)\\ id\_vehículo (FK)\\ origen, destino\\ fecha\_hora\_salida\\ plazas, desvío\_máximo\\ estado};
-  \node[entidad] (rut) at (\xd,\yb) {\textbf{RUTA}\\ \scriptsize id\_viaje (PK, FK)\\ distancia, duración\\ geometría};
+  \node[entidad] (via) at (\xc,\yb) {\textbf{VIAJE}\\ \scriptsize id (PK)\\ id\_conductor (FK)\\ id\_vehículo (FK)\\ origen, destino\\ fecha\_hora\_salida\\ plazas, desvío\_máximo\\ estado, iniciado\_en};
+  \node[entidad] (rut) at (\xd,\yb) {\textbf{RUTA}\\ \scriptsize id\_viaje (PK, FK)\\ distancia, duración\\ geometría\\ origen: OSRM\\ o estimada};
 
   % ---------------- fila 3: solicitudes y eventos ----------------
   \node[entidad] (sol) at (\xb,\yc) {\textbf{SOLICITUD}\\ \scriptsize id (PK)\\ id\_viaje (FK)\\ id\_pasajero (FK)\\ fecha\_solicitud\\ prioritaria\\ estado};
