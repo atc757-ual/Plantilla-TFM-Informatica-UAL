@@ -40,13 +40,14 @@
     \node[actividad, text width=2.10cm] (b6) at (7.75,4.35) {Descarta el candidato};
     \node[actividad] (b7) at (6.30,3.40) {Ordena y devuelve la lista};
     \node[actividad] (b8) at (6.30,2.45) {Crea la solicitud PENDIENTE};
-    \node[actividad] (b9) at (6.30,1.55) {Genera el evento SolicitudCreada};
+    \node[actividad] (b9) at (6.30,1.55) {Registra el evento request.created};
     \node[actividad] (b10) at (6.30,0.70) {Notifica al usuario};
 
     % ---------- actividades: conductor y DT ----------
     \node[actividad, text width=2.55cm] (c1) at (10.85,2.45) {Acepta o rechaza la solicitud\\ \textcolor{Color2}{RF-09}};
-    \node[actividad, text width=2.45cm] (e1) at (13.87,2.45) {Actualiza el estado del viaje};
+    \node[actividad, text width=2.45cm] (e1) at (13.87,1.42) {Aplica el evento a los gemelos del viaje y del vehículo};
     \node[fin] (fin) at (6.30,0.20) {};
+    \node[fin] (fin3) at (13.87,0.20) {};
 
     % ---------- flujo ----------
     \draw[flujo] (ini) -- (a1);
@@ -70,12 +71,13 @@
     \draw[flujo] (a2) -- (a3);
     \draw[flujo] (a3.east) -- (3.75,3.55) -- (3.75,2.45) -- (b8.west);
     \draw[flujo] (b8) -- (b9);
-    \draw[flujo] (b9.east) -- (c1.west);
-    \draw[flujo] (c1.east) -- (e1.west);
+    \draw[flujo] (b9.east |- 0,1.65) -- (8.95,1.65) |- (c1.west);
     \draw[flujo] (c1.south) -- (10.85,0.70) -- (b10.east);
     \draw[flujo] (b10.west) -- (a4.east);
     \draw[flujo] (a4.south) -- (1.65,0.20) -- (fin.west);
-    \draw[flujo] (e1.south) -- (13.87,0.20) -- (fin.east);
+    \draw[flujo] (e1.south) -- (fin3.north);
+    % evento asíncrono: el gemelo lo aplica después de guardar la solicitud
+    \draw[flechad] (b9.east |- 0,1.42) -- node[font=\tiny, below, pos=0.75] {request.created} (e1.west);
     \draw[flujo] (b10.south) -- (fin.north);
   \end{tikzpicture}
 }

@@ -20,8 +20,8 @@
     }]
 
   % ---------------- límite del sistema ----------------
-  \draw[draw=Color2!70, line width=0.5pt, rounded corners=2pt] (2.75,1.9) rectangle (13.95,13.45);
-  \node[font=\footnotesize\bfseries, text=Color2, anchor=north west] at (2.85,13.4)
+  \draw[draw=Color2!70, line width=0.5pt, rounded corners=2pt] (2.75,1.9) rectangle (13.95,14.05);
+  \node[font=\footnotesize\bfseries, text=Color2, anchor=north west] at (2.85,14.0)
     {Plataforma de carpooling universitario P2P};
 
   % ---------------- actores ----------------
@@ -34,7 +34,7 @@
   % generalización de actores:
   % Viajero y Administrador son Usuarios; Conductor y Pasajero son Viajeros
   \draw[gen] (1.0,11.58) -- (1.0,12.86);
-  \draw[gen] (15.15,12.1) -- (15.15,14.45) -- (1.0,14.45) -- (1.0,14.03);
+  \draw[gen] (15.15,12.1) -- (15.15,14.55) -- (1.0,14.55) -- (1.0,14.03);
   \draw[gen] (1.62,7.32) -- (1.3,9.98);
   \draw[gen] (0.58,3.72) -- (0.72,9.98);
 
@@ -42,7 +42,7 @@
   % comunes (Usuario)
   \node[cu] (cu01) at (4.85,12.55) {CU-01\\ Registrarse / iniciar sesión};
   % Extensión de CU-01 (RF-26): sin número propio
-  \node[cu] (rec) at (8.45,12.55) {Recuperar\\ contraseña};
+  \node[cu] (rec) at (9.9,12.95) {Recuperar\\ contraseña};
   \node[cu] (cu02) at (4.85,11.45) {CU-02\\ Gestionar perfil};
   \node[cu] (cu08) at (4.85,10.35) {CU-08\\ Consultar ruta / ubicación};
   % conductor
@@ -73,6 +73,6 @@
   \draw[incl] (cu06.east) -- node[estereo, pos=0.45, below, sloped] {\guillemotleft include\guillemotright} (cu07.south west);
   \draw[incl] (cu05.north) -- node[estereo, pos=0.5, right] {\guillemotleft include\guillemotright} (cu07.south);
   \draw[incl] (cu05.west) -- node[estereo, above] {\guillemotleft extend\guillemotright} (cu04.east);
-  \draw[incl] (rec.west) -- node[estereo, above] {\guillemotleft extend\guillemotright} (cu01.east);
+  \draw[incl] (rec.west) -- node[estereo, above, sloped] {\guillemotleft extend\guillemotright} (cu01.east);
   \draw[incl] (cu11.north west) -- node[estereo, pos=0.5, above, sloped] {\guillemotleft extend\guillemotright} (cu07.east);
 \end{tikzpicture}

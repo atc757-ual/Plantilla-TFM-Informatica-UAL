@@ -72,7 +72,7 @@ Las duraciones son estimaciones y se ajustarán al avance real. El proyecto arra
     F4. \textit{Matching} & 5 semanas & 02/11/2026 -- 06/12/2026 \\
     F5. Gemelo Digital & 6 semanas & 09/11/2026 -- 20/12/2026 \\
     F6. Simulación & 6 semanas & 16/11/2026 -- 27/12/2026 \\
-    F7. Evaluación & 3,5 semanas & 14/12/2026 -- 08/01/2027 (pruebas funcionales continuas desde F2) \\
+    F7. Evaluación & 3,5 semanas & 14/12/2026 -- 08/01/2027 \\
     F8. Redacción & 19,5 semanas & 01/09/2026 -- 15/01/2027 \\
     F9. Defensa & 3 semanas & 18/01/2027 -- 08/02/2027 \\
     \hline
@@ -81,9 +81,9 @@ Las duraciones son estimaciones y se ajustarán al avance real. El proyecto arra
   \label{tab:planificacion-temporal}
 \end{table}
 
-Como muestra la Tabla~\ref{tab:fases-proyecto}, la planificación no es secuencial: se adelanta todo lo que no depende de la interfaz. F1 incluye una holgura final hasta el 23/10/2026 para iterar sobre el diseño con la dirección y deja fijados el contrato de la API y el modelo de eventos (DP-05). A partir de ahí, a principios de noviembre arrancan en paralelo al \textit{backend} (F2) el \textit{frontend} (F3), que trabaja contra el contrato de la API con datos simulados; el \textit{matching} (F4), que es un módulo independiente y se prueba por separado; y el Gemelo Digital (F5), que solo necesita el modelo de eventos. La simulación (F6) empieza por el generador de escenarios, que solo requiere el modelo de dominio, e integra el motor cuando el \textit{matching} está disponible. Las pruebas funcionales acompañan al desarrollo desde F2 mediante integración continua, y la evaluación técnica y experimental (F7) ocupa el periodo final.
+La planificación no es secuencial: se adelanta todo lo que no depende de la interfaz. F1 fija el contrato de la API y el modelo de eventos (DP-05), y con ellos el \textit{frontend} (F3), el \textit{matching} (F4) y el Gemelo Digital (F5) arrancan en noviembre en paralelo al \textit{backend} (F2). La simulación (F6) empieza por el generador de escenarios e integra el motor cuando el \textit{matching} está listo. Las pruebas funcionales acompañan al desarrollo desde F2 y la evaluación (F7) ocupa el periodo final.
 
-Con esta disposición, el desarrollo termina el 27/12/2026 y la evaluación el 08/01/2027, lo que deja diez días antes de la entrega al director (18/01/2027) para redactar los resultados. La redacción (F8) acompaña al proyecto desde F1, de modo que en diciembre el grueso de la memoria esté escrito. Paralelizar no aumenta la capacidad de trabajo, porque el proyecto lo desarrolla una sola persona: lo que permite es no esperar al cierre de una fase para empezar la siguiente e integrar antes, de forma que los problemas aparezcan en noviembre y no en enero. Por eso exige mantener acotado el MVP (Sección~\ref{sec:moscow-alcance}).
+Así, el desarrollo termina el 27/12/2026 y quedan diez días tras la evaluación para redactar los resultados antes de la entrega al director. Al ser un trabajo individual, paralelizar no da más capacidad, pero permite integrar antes y detectar los problemas en noviembre y no en enero; por eso el MVP se mantiene acotado (Sección~\ref{sec:moscow-alcance}).
 
 \section{Hitos críticos}
 
@@ -130,7 +130,7 @@ Se distinguen hitos internos, propios de la planificación del proyecto, e hitos
 
 \section{Diagrama de Gantt}
 
-El diagrama de Gantt abarca desde septiembre de 2026 hasta febrero de 2027 y representa las fases F1--F9 y los hitos internos H1--H7 (Figura~\ref{fig:gantt}). Las barras se sitúan con las mismas fechas de la Tabla~\ref{tab:planificacion-temporal} y muestran el solapamiento descrito: noviembre y diciembre concentran la mayor carga, porque coinciden el \textit{backend}, el \textit{frontend}, el \textit{matching}, el Gemelo Digital y la simulación; a cambio, enero queda libre de desarrollo y se dedica a cerrar la evaluación y la memoria.
+El diagrama de Gantt abarca desde septiembre de 2026 hasta febrero de 2027 y representa las fases F1--F9, agrupadas por bloques, con cada hito interno (H1--H7) en la fila de su fase (Figura~\ref{fig:gantt}). Las barras se sitúan con las mismas fechas de la Tabla~\ref{tab:planificacion-temporal} y muestran el solapamiento descrito: noviembre y diciembre concentran la mayor carga, porque coinciden el \textit{backend}, el \textit{frontend}, el \textit{matching}, el Gemelo Digital y la simulación; a cambio, enero queda libre de desarrollo y se dedica a cerrar la evaluación y la memoria.
 
 \begin{figure}[H]
   \centering
@@ -158,6 +158,11 @@ El diagrama de Gantt abarca desde septiembre de 2026 hasta febrero de 2027 y rep
       title label font=\scriptsize,
       bar label font=\scriptsize,
       milestone label font=\scriptsize,
+      milestone inline label node/.append style={right=2pt, font=\tiny\bfseries},
+      group label font=\scriptsize\bfseries,
+      group/.append style={fill=black!55},
+      group peaks height=0.15,
+      group height=0.22,
       canvas/.append style={draw=black!35},
     ]{2026-09-01}{2027-02-14}
     \gantttitle{2026}{122}
@@ -168,22 +173,27 @@ El diagrama de Gantt abarca desde septiembre de 2026 hasta febrero de 2027 y rep
     \gantttitle{dic}{31}
     \gantttitle{ene}{31}
     \gantttitle{feb}{14} \\
-    \ganttbar{F1. Diseño y requisitos}{2026-09-01}{2026-10-23} \\
-    \ganttbar{F2. Backend}{2026-10-24}{2026-11-30} \\
-    \ganttbar{F3. Frontend}{2026-11-02}{2026-12-13} \\
+    % Fases agrupadas por bloque; cada hito va en la fila de su fase.
+    \ganttgroup{Diseño}{2026-09-01}{2026-10-23} \\
+    \ganttbar{F1. Diseño y requisitos}{2026-09-01}{2026-10-23}
+      \ganttmilestone[inline]{H1}{2026-10-23} \\
+    \ganttgroup{Desarrollo}{2026-10-24}{2026-12-27} \\
+    \ganttbar{F2. Backend}{2026-10-24}{2026-11-30}
+      \ganttmilestone[inline]{H2}{2026-11-30} \\
+    \ganttbar{F3. Frontend}{2026-11-02}{2026-12-13}
+      \ganttmilestone[inline]{H3}{2026-12-13} \\
     \ganttbar{F4. \textit{Matching}}{2026-11-02}{2026-12-06} \\
-    \ganttbar{F5. Gemelo Digital}{2026-11-09}{2026-12-20} \\
-    \ganttbar{F6. Simulación}{2026-11-16}{2026-12-27} \\
-    \ganttbar{F7. Evaluación}{2026-12-14}{2027-01-08} \\
-    \ganttbar{F8. Redacción}{2026-09-01}{2027-01-15} \\
+    \ganttbar{F5. Gemelo Digital}{2026-11-09}{2026-12-20}
+      \ganttmilestone[inline]{H5}{2026-12-20} \\
+    \ganttbar{F6. Simulación}{2026-11-16}{2026-12-27}
+      \ganttmilestone[inline]{H6}{2026-12-27} \\
+    \ganttgroup{Evaluación y cierre}{2026-12-14}{2027-02-08} \\
+    \ganttbar{F7. Evaluación}{2026-12-14}{2027-01-08}
+      \ganttmilestone[inline]{H7}{2027-01-08} \\
     \ganttbar{F9. Defensa}{2027-01-18}{2027-02-08} \\
-    \ganttmilestone{H1}{2026-10-23} \\
-    \ganttmilestone{H2}{2026-11-30} \\
-    \ganttmilestone{H3}{2026-12-13} \\
-    \ganttmilestone{H4}{2026-12-20} \\
-    \ganttmilestone{H5}{2026-12-20} \\
-    \ganttmilestone{H6}{2026-12-27} \\
-    \ganttmilestone{H7}{2027-01-08}
+    \ganttgroup{Transversal}{2026-09-01}{2027-01-15} \\
+    \ganttbar{F8. Redacción}{2026-09-01}{2027-01-15}
+      \ganttmilestone[inline, milestone inline label node/.append style={above=-1pt}]{H4}{2026-12-20}
   \end{ganttchart}
   \caption{Diagrama de Gantt del proyecto (septiembre de 2026--febrero de 2027).}
   \label{fig:gantt}

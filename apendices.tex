@@ -58,7 +58,7 @@ La Figura~\ref{fig:componentes} descompone el \textit{backend} en componentes y 
 \begin{figure}[H]
   \centering
   \input{diagramas/componentes}
-  \caption{Diagrama de componentes del \textit{backend}: una sola aplicación cuyos controladores (API REST) dan paso a los módulos expuestos, que usan los internos; la simulación se ejecuta en un proceso aparte (\textit{worker}) que reutiliza el \textit{matching} y el Gemelo Digital. Todos los módulos acceden a la base de datos por la capa de acceso a datos, donde también se registran los eventos que consume el Gemelo Digital.}
+  \caption[Diagrama de componentes del \textit{backend}]{Diagrama de componentes del \textit{backend}: una sola aplicación cuyos controladores (API REST) dan paso a los módulos expuestos, que usan los internos; la simulación se ejecuta en un proceso aparte (\textit{worker}) que reutiliza el \textit{matching} y el Gemelo Digital. Todos los módulos acceden a la base de datos por la capa de acceso a datos, donde también se registran los eventos que consume el Gemelo Digital.}
   \label{fig:componentes}
 \end{figure}
 
@@ -79,8 +79,8 @@ La Figura~\ref{fig:er-dominio} recoge el modelo de datos persistente del dominio
 
 \begin{figure}[H]
   \centering
-  \input{diagramas/er-dominio}
-  \caption{Modelo entidad-relación del dominio. Las claves primarias se marcan con (PK) y las externas con (FK). Cada perfil se guarda en su propia tabla, en relación 1:1 con USUARIO (su clave primaria es \texttt{id\_usuario}), de modo que una misma cuenta puede tener varios perfiles y cada tabla solo contiene los datos de ese perfil. Se omiten las tablas técnicas que no forman parte del dominio, como las de sesiones de usuario.}
+  \resizebox{\textwidth}{!}{\input{diagramas/er-dominio}}
+  \caption[Modelo entidad-relación del dominio]{Modelo entidad-relación del dominio. Las claves primarias se marcan con (PK) y las externas con (FK). Cada perfil se guarda en su propia tabla, en relación 1:1 con USUARIO (su clave primaria es \texttt{id\_usuario}), de modo que una misma cuenta puede tener varios perfiles y cada tabla solo contiene los datos de ese perfil. Se omiten las tablas técnicas que no forman parte del dominio, como las de sesiones de usuario.}
   \label{fig:er-dominio}
 \end{figure}
 
@@ -95,7 +95,7 @@ El \textit{matching} se ejecuta de forma progresiva: primero se filtran candidat
 \begin{figure}[H]
   \centering
   \input{diagramas/secuencia-matching}
-  \caption{Diagrama de secuencia: \textit{matching} y solicitud de plaza. Paso previo de comprobación de la ventana temporal y bucle de evaluación por candidato.}
+  \caption[Diagrama de secuencia: \textit{matching} y solicitud de plaza]{Diagrama de secuencia: \textit{matching} y solicitud de plaza. Paso previo de comprobación de la ventana temporal y bucle de evaluación por candidato.}
   \label{fig:secuencia-matching}
 \end{figure}
 
@@ -107,7 +107,7 @@ La Figura~\ref{fig:actividad-matching} muestra el mismo proceso desde el punto d
 \begin{figure}[H]
   \centering
   \input{diagramas/actividad-matching}
-  \caption{Diagrama de actividad del proceso de \textit{matching}, con particiones por participante.} \label{fig:actividad-matching}
+  \caption[Diagrama de actividad del proceso de \textit{matching}]{Diagrama de actividad del proceso de \textit{matching}, con particiones por participante.} \label{fig:actividad-matching}
 \end{figure}
 
 \subsection{Secuencia de simulación de escenario}
@@ -118,7 +118,7 @@ El módulo de simulación parte del estado actual del Gemelo Digital, genera age
 \begin{figure}[H]
   \centering
   \input{diagramas/secuencia-simulacion}
-  \caption{Diagrama de secuencia: simulación de escenario. El generador crea el escenario y el motor lo ejecuta sobre una copia del estado, sin afectar a los datos reales.}
+  \caption[Diagrama de secuencia: simulación de escenario]{Diagrama de secuencia: simulación de escenario. El generador crea el escenario y el motor lo ejecuta sobre una copia del estado, sin afectar a los datos reales.}
   \label{fig:secuencia-simulacion}
 \end{figure}
 
