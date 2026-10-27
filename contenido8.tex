@@ -21,7 +21,7 @@ Los requisitos funcionales se detallan en la Tabla~\ref{tab:rf}.
   \textbf{ID} & \textbf{Requisito} & \textbf{Módulo} & \textbf{CU} & \textbf{Prioridad} \\
   \hline
   \endhead
-  RF-01 & El sistema debe permitir registrar usuarios con un correo de la Universidad de Almería y activar en su cuenta el perfil de conductor, el de pasajero o ambos. El perfil de administrador no se autoactiva: lo asigna un administrador existente (RF-25), y el primero se crea en el despliegue. & Usuarios & CU-01 & Debe \\
+  RF-01 & El sistema debe permitir registrar usuarios con un correo de la Universidad de Almería, verificado antes de crear la cuenta, y activar en ella el perfil de conductor, el de pasajero o ambos; con los dos, el usuario elige con cuál usa la aplicación. El perfil de administrador no se autoactiva: lo asigna un administrador existente (RF-25), y el primero se crea en el despliegue. & Usuarios & CU-01 & Debe \\
   RF-02 & El sistema debe permitir autenticar usuarios y mantener sesiones activas de forma segura. & Usuarios & CU-01 & Debe \\
   RF-03 & El sistema debe permitir al usuario gestionar los datos de su cuenta y su tolerancia horaria. El origen y el destino se indican en cada búsqueda y no se almacenan como datos del usuario. & Usuarios & CU-02 & Debe \\
   RF-04 & El sistema debe permitir al conductor publicar un viaje indicando origen, destino, fecha/hora de salida, plazas disponibles y uno de sus vehículos registrados; las plazas ofertadas no pueden superar la capacidad del vehículo. & Viajes & CU-03 & Debe \\
@@ -46,6 +46,8 @@ Los requisitos funcionales se detallan en la Tabla~\ref{tab:rf}.
   RF-23 & El sistema debe permitir al conductor y al pasajero cancelar durante un viaje en curso, exigiendo el registro de una incidencia con quién la origina, la categoría del motivo (problema técnico, con el conductor, con el pasajero u otro) y una descripción, revisable por el administrador. La cancelación libera la plaza afectada sin bloquear al conductor para publicar nuevos viajes ni al pasajero para buscar otros. & Viajes & CU-07, CU-12 & Debe \\
   RF-24 & El sistema debe dar prioridad alta en el \textit{matching} al pasajero afectado por la cancelación de un viaje en curso, de modo que sus nuevas solicitudes se presenten a los conductores por delante del resto. & \textit{Matching} & CU-04, CU-05 & Debería \\
   RF-25 & El sistema debe permitir al administrador, desde el panel web, consultar los usuarios y gestionar sus perfiles: asignar o retirar el perfil de administrador y desactivar o reactivar perfiles. & Usuarios & CU-13 & Debe \\
+  RF-26 & El sistema debe permitir al usuario recuperar el acceso a su cuenta si ha olvidado la contraseña. & Usuarios & CU-01 & Debe \\
+  RF-27 & El sistema debe permitir indicar el origen o el destino fuera del campus mediante una dirección sugerida o la ubicación del dispositivo, y el del campus mediante uno de sus parkings, limitados a la zona de servicio. & Viajes & CU-03, CU-04 & Debe \\
   \hline
   \caption{Requisitos funcionales (RF).}
   \label{tab:rf}
@@ -92,7 +94,7 @@ Conviene distinguir dos tipos de requisito no funcional: las \emph{calidades}, q
   RNF-01 & El algoritmo de \textit{matching} debe ofrecer tiempos de respuesta compatibles con un uso interactivo. & Eficiencia de desempeño (comportamiento temporal) & Tiempo de respuesta p95 $<$ 2~s con 50 usuarios simultáneos, medido con una prueba de carga (Artillery/k6) & Debe \\
   RNF-02 & La plataforma debe ser accesible desde navegador web y desde dispositivo móvil con una única base de código. & Portabilidad (capacidad de adaptación) & Una única base de código compilada para web y móvil & Debe \\
   RNF-03 & La arquitectura debe ser modular y permitir sustituir el motor de simulación o el motor de mapas sin rehacer el resto del sistema. & Mantenibilidad (modularidad) & Sustitución de un módulo sin cambios en el resto & Debe \\
-  RNF-04 & El sistema debe proteger las credenciales y los datos personales de los usuarios. & Seguridad (confidencialidad) & Contraseñas con \textit{hash}, autenticación por token y autorización por perfil: cada función solo es accesible con el perfil que le corresponde, y el panel de administración solo con el de administrador & Debe \\
+  RNF-04 & El sistema debe proteger las credenciales y los datos personales de los usuarios, recogiendo solo los necesarios y con su consentimiento. & Seguridad (confidencialidad) & Contraseñas con \textit{hash}, autenticación por token y autorización por perfil: cada función solo es accesible con el perfil que le corresponde, y el panel de administración solo con el de administrador. Aceptación expresa de las condiciones de uso y de la política de privacidad al registrarse, y la ubicación del dispositivo solo se usa al pedirla y no se almacena & Debe \\
   RNF-05 & El código debe estar versionado y disponer de integración y despliegue continuos. & Mantenibilidad (capacidad de modificación) & Repositorio versionado con integración y despliegue automáticos & Debe \\
   RNF-06 & Los escenarios de simulación deben poder reproducirse con resultados comparables entre ejecuciones. & Mantenibilidad (capacidad de prueba) & Datos sintéticos versionados y semillas registradas & Debe \\
   RNF-07 & El Gemelo Digital debe actualizarse por eventos en el momento en que se producen, sin procesamiento por lotes. & Eficiencia de desempeño (comportamiento temporal) & Latencia p95 $\leq$ 1~s entre el evento y la actualización del DT (DP-04), medida con la carga de RNF-01 & Debe \\
@@ -102,6 +104,8 @@ Conviene distinguir dos tipos de requisito no funcional: las \emph{calidades}, q
   RNF-11 & El sistema debe mantener la coherencia entre el estado de la plataforma y el estado del Gemelo Digital, evitando divergencias por eventos perdidos o duplicados. & Fiabilidad (tolerancia a fallos) & Eventos idempotentes; cero divergencias en la verificación de consistencia tras pruebas con eventos duplicados y perdidos & Debe \\
   RNF-12 & La interfaz debe seguir principios de usabilidad reconocidos (consistencia, retroalimentación y prevención de errores). & Usabilidad (operabilidad; protección frente a errores de usuario) & Evaluación heurística de Nielsen sin problemas de severidad alta & Podría \\
   RNF-13 & El Gemelo Digital debe exponer sus actualizaciones mediante una API de eventos versionada y documentada, consumible por la plataforma y por el simulador. & Compatibilidad (capacidad de interoperabilidad) & Contrato de eventos versionado y probado con dos consumidores & Debe \\
+  RNF-20 & La interfaz debe ser accesible según el nivel AA de las pautas WCAG 2.1. & Usabilidad (accesibilidad) & Revisión de cada pantalla con herramientas automáticas, teclado y lector de pantalla, sin incumplimientos de nivel A ni AA & Debería \\
+  RNF-21 & La API de la plataforma debe seguir una guía de diseño REST reconocida y estar documentada de forma que se pueda consultar y probar. & Compatibilidad (capacidad de interoperabilidad) & Especificación OpenAPI generada desde el código y comprobada en la integración continua: toda operación expuesta queda documentada, y sus recursos y errores siguen la guía TMF630 & Debe \\
   \hline
   \caption{Requisitos no funcionales de calidad, clasificados según ISO/IEC 25010:2011.}
   \label{tab:rnf}
@@ -151,8 +155,8 @@ La Tabla~\ref{tab:trazabilidad-req} muestra la trazabilidad entre bloques de req
     \hline
     \textbf{Bloque} & \textbf{Requisitos} & \textbf{Casos de uso} & \textbf{Objetivos} \\
     \hline
-    Usuarios & RF-01, RF-02, RF-03, RF-21, RF-25 & CU-01, CU-02, CU-03, CU-13 & OE9 \\
-    Viajes & RF-04, RF-05, RF-06, RF-10, RF-11, RF-12, RF-23 & CU-03, CU-04, CU-06, CU-07, CU-08, CU-12 & OE8, OE9 \\
+    Usuarios & RF-01, RF-02, RF-03, RF-21, RF-25, RF-26 & CU-01, CU-02, CU-03, CU-13 & OE9 \\
+    Viajes & RF-04, RF-05, RF-06, RF-10, RF-11, RF-12, RF-23, RF-27 & CU-03, CU-04, CU-06, CU-07, CU-08, CU-12 & OE8, OE9 \\
     \textit{Matching} & RF-07, RF-24 & CU-04, CU-05 & OE7 \\
     Solicitudes & RF-08, RF-09 & CU-05, CU-06 & OE8 \\
     Gemelo Digital & RF-13, RF-14, RNF-13 & CU-07 & OE4, OE5, OE6 \\
