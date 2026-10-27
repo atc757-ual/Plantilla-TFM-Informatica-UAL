@@ -10,11 +10,11 @@
 
 La solución se estructura en seis bloques funcionales de alto nivel, que separan responsabilidades y permiten sustituir componentes sin rehacer el sistema:
 \begin{enumerate}[label=\alph*)]
-    \item \textbf{Bloque de Presentación (\textit{Frontend}):} Punto de acceso para conductores y pasajeros. Se implementa con Angular + Ionic, lo que permite una única base de código que se compila para web y móvil (RNF-02). Incluye el selector de modo (conductor o pasajero) y las pantallas de publicación de viajes, búsqueda, solicitudes y visualización de rutas.
+    \item \textbf{Bloque de Presentación (\textit{Frontend}):} Punto de acceso para conductores y pasajeros. Se implementa con Angular + Ionic y Capacitor, lo que permite una única base de código que se compila para web y móvil (RNF-02). Incluye el selector de modo (conductor o pasajero) y las pantallas de publicación de viajes, búsqueda, solicitudes y visualización de rutas.
     \item \textbf{Bloque de Administración (Panel Admin):} Interfaz para el administrador, implementada como un módulo independiente dentro del mismo \textit{frontend} y cargado bajo demanda. El acceso es único (CU-01): la misma cuenta y las mismas credenciales sirven para la aplicación y para el panel, y tras iniciar sesión, si el usuario tiene el perfil de administrador, la versión web añade un modo Administración al selector de modo, junto a Conductor y Pasajero. Al activarlo se carga el panel; en los otros modos, el administrador usa la aplicación como cualquier otro usuario. El selector solo muestra los modos de los perfiles activos, y en la aplicación móvil no incluye el modo Administración: el panel se ofrece exclusivamente en web, porque las tareas de gestión resultan más cómodas en un navegador, y solo es accesible con el perfil de administrador (RNF-04). Desde el panel se gestionan los usuarios y sus perfiles (RF-25), se lanzan las simulaciones (escenarios S0--S5), se consultan las métricas, se exportan los resultados en CSV (RF-15 a RF-18, RF-20) y se revisan las incidencias (RF-23).
-    \item \textbf{Bloque de Comunicación (API Gateway):} Expone los servicios del Core y del Componente de Experimentación al \textit{frontend}. Gestiona autenticación, validación y enrutamiento de peticiones (Node.js).
+    \item \textbf{Bloque de Comunicación (API REST):} Único punto de entrada del \textit{frontend}, que expone las operaciones del Core y del bloque de Experimentación. Son los controladores de la propia aplicación Node.js + NestJS, que reciben las peticiones a cada \textit{endpoint}, comprueban la autenticación y el perfil, validan los datos y las pasan al módulo del Core que corresponde.
     \item \textbf{Bloque del Core del Sistema:} Contiene la lógica de negocio: gestión de usuarios, viajes y solicitudes; el algoritmo de \textit{matching}; y el Gemelo Digital. Este mantiene una representación sincronizada de usuarios, vehículos, viajes, solicitudes y rutas, y se actualiza mediante eventos.
-    \item \textbf{Bloque de Experimentación:} Se divide en A (Generador de Escenarios), que crea datos sintéticos y define los parámetros de cada escenario (S0--S5), y B (Motor de Simulación). El Motor B ejecuta el bucle de simulación sobre una copia del estado del Gemelo Digital, sin afectar a los datos reales; aplica el \textit{matching}, asigna plazas y calcula métricas como vehículos evitados, ocupación media y solicitudes cubiertas.
+    \item \textbf{Bloque de Experimentación:} Se divide en A (Generador de Escenarios), que crea datos sintéticos y define los parámetros de cada escenario (S0--S5), y B (Motor de Simulación). El Motor B ejecuta el bucle de simulación sobre una copia del estado del Gemelo Digital, sin afectar a los datos reales, en un proceso aparte para no bloquear la API; aplica el mismo \textit{matching} que la plataforma, asigna plazas y calcula métricas como vehículos evitados, ocupación media y solicitudes cubiertas.
     \item \textbf{Bloque de Persistencia:} Almacena y recupera los datos de usuarios y perfiles, vehículos, viajes, solicitudes, incidencias y resultados de simulación. Se implementa con PostgreSQL + PostGIS, que permite realizar consultas geoespaciales para el \textit{matching}.
 \end{enumerate}
 
@@ -39,11 +39,11 @@ La Tabla~\ref{tab:capas} muestra la arquitectura técnica del sistema.
     \hline
     \textbf{Capa} & \textbf{Responsabilidad} & \textbf{Tecnología prevista} \\
     \hline
-    Presentación & \textit{Frontend} usuarios (web + móvil) + Panel Admin (web) & Angular + Ionic \\
+    Presentación & \textit{Frontend} usuarios (web + móvil) + Panel Admin (web) & Angular + Ionic + Capacitor \\
     API / \textit{Backend} & Autenticación, usuarios, viajes, \textit{matching}, reglas & Node.js + NestJS + TypeORM \\
     Persistencia & Usuarios y perfiles, vehículos, viajes, solicitudes, incidencias, estados, datos de simulación & PostgreSQL + PostGIS \\
-    Gemelo Digital & Representación de entidades y estado del sistema & Servicio/módulo DT \\
-    Simulación & Generación de escenarios y ejecución de experimentos & Motor propio basado en agentes \\
+    Gemelo Digital & Representación de entidades y estado del sistema & Módulo del \textit{backend} \\
+    Simulación & Generación de escenarios y ejecución de experimentos & Motor propio basado en agentes, en un proceso aparte (\textit{worker}) \\
     DevOps & Control de versiones, pruebas y despliegue & GitHub + GitHub Actions \\
     \hline
   \end{tabularx}
@@ -53,15 +53,24 @@ La Tabla~\ref{tab:capas} muestra la arquitectura técnica del sistema.
 
 \textbf{Descripción de las capas:}
 \begin{itemize}
-    \item \textbf{Capa de Presentación:} Interfaz de usuario para conductores y pasajeros (web + móvil) y panel de administración (web). Se implementa con Angular + Ionic.
+    \item \textbf{Capa de Presentación:} Interfaz de usuario para conductores y pasajeros (web + móvil) y panel de administración (web). Se implementa con Angular + Ionic, y Capacitor da acceso a las funciones del dispositivo, como la ubicación.
     \item \textbf{Capa de API/\textit{Backend}:} Expone los servicios del sistema mediante APIs REST. Se implementa con Node.js y el \textit{framework} NestJS, cuyos módulos se corresponden con los bloques de la arquitectura. El acceso a datos se realiza con TypeORM, que admite los tipos geográficos de PostGIS que necesita el \textit{matching}.
     \item \textbf{Capa de Persistencia:} Almacena y recupera datos. PostgreSQL + PostGIS permite consultas geoespaciales para el \textit{matching}.
-    \item \textbf{Capa de Gemelo Digital:} Mantiene una representación sincronizada del estado del sistema. Se actualiza por eventos.
-    \item \textbf{Capa de Simulación:} Genera escenarios (S0--S5) y ejecuta simulaciones sobre una copia del estado del Gemelo Digital.
+    \item \textbf{Capa de Gemelo Digital:} Mantiene una representación sincronizada del estado del sistema. Se actualiza por eventos (Sección~\ref{sec:modelo-dt}).
+    \item \textbf{Capa de Simulación:} Genera escenarios (S0--S5) y ejecuta simulaciones sobre copias del estado del Gemelo Digital, en un proceso aparte (\textit{worker}).
     \item \textbf{Capa de DevOps:} Capa transversal de soporte al desarrollo y despliegue.
 \end{itemize}
 
 \textit{Nota sobre DevOps:} DevOps se incluye en esta vista técnica como capa transversal de soporte al desarrollo y despliegue. No aparece en la vista conceptual (Sección~\ref{sec:vision-conceptual}) porque no constituye un bloque funcional del sistema, sino una infraestructura de soporte que afecta a todo el ciclo de vida.
+
+\subsection{Estilo arquitectónico}
+\label{sec:estilo-arquitectonico}
+
+El \textit{backend} es una única aplicación modular (monolito modular): cada bloque funcional es un módulo de NestJS con fronteras estrictas, de modo que un módulo solo usa lo que otro expone y nunca accede directamente a sus tablas (RNF-03). Se descartó repartir el \textit{matching}, el Gemelo Digital y la simulación en servicios independientes, porque la ventaja principal de esa división, escalar cada parte por separado según su carga, no se puede evaluar en el alcance de este trabajo, y en cambio añade varios despliegues, comunicación por red y el problema de mantener la coherencia entre servicios.
+
+Esta decisión se apoya en tres observaciones. Primero, el trabajo pesado del \textit{matching} no lo hace el propio módulo, sino PostGIS (el filtrado geoespacial) y OSRM (el cálculo de desvíos), y separarlo no aliviaría a ninguno de los dos; su requisito de rendimiento se verifica igualmente con la prueba de carga de RNF-01. Segundo, el Gemelo Digital necesita reaccionar a los cambios de la plataforma sin perder ni duplicar eventos (RNF-08 y RNF-11), y eso se consigue de forma más sencilla dentro de la misma aplicación, con el registro de eventos en la misma transacción que el cambio (Sección~\ref{sec:modelo-dt}), que entre servicios con un intermediario de mensajes. Tercero, el simulador ejecuta el \textit{matching} miles de veces sobre copias del estado; como servicio aparte, cada ejecución sería una llamada por red y trabajaría con datos que no están en la base de datos.
+
+La única parte que se ejecuta en un proceso aparte es la simulación: Node.js atiende las peticiones en un solo hilo, y una simulación larga bloquearía la API. Un proceso \textit{worker} de la misma aplicación reutiliza directamente el \textit{matching} y el modelo del Gemelo Digital sin duplicar código, y como las réplicas son independientes, pueden repartirse entre varios \textit{workers} si es necesario. La modularidad permite, además, extraer más adelante cualquier módulo como servicio si las pruebas de carga lo justificasen.
 
 \subsection{Correspondencia entre bloques funcionales y capas técnicas}
 
@@ -75,7 +84,7 @@ La Tabla~\ref{tab:correspondencia} muestra la correspondencia entre los bloques 
     \hline
     Bloque de Presentación (\textit{Frontend}) & Capa de Presentación \\
     Bloque de Administración (Panel Admin) & Capa de Presentación \\
-    Bloque de Comunicación (API Gateway) & Capa de API/\textit{Backend} \\
+    Bloque de Comunicación (API REST) & Capa de API/\textit{Backend} \\
     Bloque del Core del Sistema & Capa de API/\textit{Backend} + Capa de Gemelo Digital \\
     Bloque de Experimentación & Capa de Simulación \\
     Bloque de Persistencia & Capa de Persistencia \\
@@ -96,6 +105,8 @@ La autenticación (RF-02) combina dos \textit{tokens}: uno de acceso, de corta d
 La autorización por perfil (RNF-04) es segura por defecto: toda la API exige autenticación salvo las operaciones públicas declaradas de forma explícita (registro y verificación del correo, inicio de sesión, renovación de la sesión y recuperación de la contraseña), y cada operación indica qué perfiles pueden usarla. Así, una operación nueva queda protegida aunque se olvide indicarlo. El primer administrador se crea en el despliegue mediante un comando que genera una contraseña aleatoria.
 
 El registro solo admite correos de la Universidad de Almería y la cuenta no se crea hasta verificar el correo (RF-01): los datos quedan como registro pendiente, que caduca a las 24 horas, y se envía al correo un código de seis cifras válido durante 15 minutos. Del código solo se guarda un resumen (HMAC-SHA256), nunca el código en claro; se admiten tres intentos por código y un reenvío por minuto. La recuperación de la contraseña (RF-26) sigue el mismo esquema: un código enviado al correo permite elegir una contraseña nueva y cierra todas las sesiones abiertas. Al registrarse, el usuario acepta de forma expresa las condiciones de uso y la política de privacidad (RNF-04) y, tras verificar el correo, elige con qué perfil empieza a usar la aplicación.
+
+El \textit{frontend} accede a la API mediante un servicio de Angular por dominio (sesión, usuarios, lugares, viajes\ldots), que encapsula sus \textit{endpoints} bajo un mismo prefijo (\texttt{/api}); las pantallas solo usan esos servicios. Un interceptor añade el \textit{token} de acceso a cada petición y lo renueva cuando caduca, y los errores se traducen a mensajes en un único punto a partir de su código. El contrato entre ambos es la especificación OpenAPI, generada desde el código y comprobada en la integración continua (RNF-21).
 
 \section{Modelo del Gemelo Digital}
 \label{sec:modelo-dt}
