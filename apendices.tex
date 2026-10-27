@@ -5,10 +5,8 @@
 \chapter{Decisiones de diseño}
 \label{anx:decisiones-diseno}
 
-La Tabla~\ref{tab:decisiones-pendientes} recoge las decisiones de diseño abiertas al inicio del proyecto y su estado. Las pendientes no bloquean la planificación y se cierran al final de F1 (23/10/2026).
+La Tabla~\ref{tab:decisiones-pendientes} recoge las decisiones de diseño abiertas al inicio del proyecto y su estado. Las que siguen abiertas al final de F1 (23/10/2026) se adoptan de forma provisional y se revisan durante F2 sin bloquear el desarrollo.
 
-% NOTA (revisión): DP-07 usa lenguaje interno ("exigidos por la dirección").
-% Reformular o eliminar cuando la dirección cierre los criterios.
 \begin{table}[H]
   \centering
   \begin{tabularx}{\textwidth}{Y{0.3000} Y{1.5500} Y{1.1500}}
@@ -18,10 +16,10 @@ La Tabla~\ref{tab:decisiones-pendientes} recoge las decisiones de diseño abiert
     DP-01 & Base de datos concreta y estrategia de persistencia & Cerrada: PostgreSQL + PostGIS (RNF-15) \\
     DP-02 & Motor de mapas/rutas (OSRM, Google Maps u otro) & Cerrada: OpenStreetMap + OSRM (RNF-16) \\
     DP-03 & Tecnología concreta del motor de simulación (propio o SUMO) & Cerrada: motor propio (RNF-17) \\
-    DP-04 & Grado de tiempo real y frecuencia de actualización del DT & Pendiente (F1, 23/10/2026) \\
-    DP-05 & Modelo exacto de datos y eventos entre el \textit{backend} y el DT & Pendiente (F1, 23/10/2026) \\
-    DP-06 & Método final de generación de datos sintéticos para evaluación & Pendiente (F1, 23/10/2026) \\
-    DP-07 & Criterios académicos concretos de evaluación exigidos por la dirección del TFM & Pendiente (F1, 23/10/2026) \\
+    DP-04 & Grado de tiempo real y frecuencia de actualización del DT & Cerrada: actualización por eventos en el momento en que se producen, con una latencia p95 $\leq$ 1~s entre el evento y la actualización del DT, el límite para que una respuesta se perciba sin interrupción \cite{Nielsen1993} (RNF-07) \\
+    DP-05 & Modelo exacto de datos y eventos entre el \textit{backend} y el DT & Provisional: sobre común de eventos (identificador, tipo, versión, marca temporal, entidad de origen y contenido), que permite descartar duplicados (RNF-11) y versionar el contrato (RNF-13); el transporte se fija con la arquitectura \\
+    DP-06 & Método final de generación de datos sintéticos para evaluación & Provisional: generador propio con semillas registradas a partir de los parámetros de cada escenario (Anexo~\ref{anx:escenarios-detalle}); se calibra en F6 con los datos que facilite la UAL \\
+    DP-07 & Criterios de evaluación del TFM & Provisional: los del Capítulo~\ref{ch:evaluacion} (criterio de éxito experimental y criterios técnicos), pendientes de validar con la dirección \\
     DP-08 & \textit{Framework} del \textit{backend} (Express directamente o NestJS) & Cerrada: NestJS sobre Express, por su TypeScript y estructura modular coherentes con Angular, y por incluir validación, autenticación, OpenAPI y pruebas (RNF-14) \\
     \hline
   \end{tabularx}
@@ -78,7 +76,7 @@ La Figura~\ref{fig:er-dominio} recoge el modelo de datos persistente del dominio
 \begin{figure}[H]
   \centering
   \input{diagramas/er-dominio}
-  \caption{Modelo entidad-relación del dominio. Las claves primarias se marcan con (PK) y las externas con (FK). Cada perfil se guarda en su propia tabla, en relación 1:1 con USUARIO (su clave primaria es \texttt{id\_usuario}), de modo que una misma cuenta puede tener varios perfiles y cada tabla solo contiene los datos de ese perfil.}
+  \caption{Modelo entidad-relación del dominio. Las claves primarias se marcan con (PK) y las externas con (FK). Cada perfil se guarda en su propia tabla, en relación 1:1 con USUARIO (su clave primaria es \texttt{id\_usuario}), de modo que una misma cuenta puede tener varios perfiles y cada tabla solo contiene los datos de ese perfil. Se omiten las tablas técnicas que no forman parte del dominio, como las de sesiones de usuario.}
   \label{fig:er-dominio}
 \end{figure}
 

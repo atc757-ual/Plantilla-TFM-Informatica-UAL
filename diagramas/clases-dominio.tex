@@ -7,6 +7,9 @@
 % a la vez PerfilConductor y PerfilPasajero sin cambiar de clase.
 % Las cajas se ajustan a su contenido y se colocan de forma relativa; los
 % carriles de las asociaciones se sitúan por debajo de la clase más alta.
+% La jerarquía de perfiles se dibuja como árbol (Perfil -> PerfilViajero /
+% PerfilAdministrador -> PerfilPasajero / PerfilConductor) y los carriles que
+% llegan a los perfiles concretos se colocan a la altura de cada uno.
 
 \begin{tikzpicture}[x=1cm,y=1cm,
     every node/.append style={rectangle split part align={center,left,left}}]
@@ -35,7 +38,7 @@
      \nodepart{two} -fechaSolicitud: DateTime\\ -estado: EstadoSolicitud\\ -prioritaria: boolean
      \nodepart{three} +aceptar(): void\\ +rechazar(): void\\ +cancelar(): void};
 
-  \node[clase, anchor=north west] (inc) at ($(sol.north east)+(1.3,0)$)
+  \node[clase, anchor=north west] (inc) at ($(sol.north east)+(1.6,0)$)
     {\textbf{Incidencia}
      \nodepart{two} -categoria: CategoriaIncidencia\\ -descripcion: String
      \nodepart{three} +notificarAdministrador(): void};
@@ -88,9 +91,9 @@
   % Evento --> EntidadDigital: el evento conoce la entidad que lo origina
   \coordinate (ye) at ($(ent.south)+(0,0.55)$);
   \draw[asoc] (eve.west |- ye) -- (ent.east |- ye);
-  \node[rol, above right] at (ent.east |- ye) {origen};
-  \node[rol, below right] at (ent.east |- ye) {1};
-  \node[rol, below left] at (eve.west |- ye) {0..*};
+  \node[rol, above right, xshift=0.12cm] at (ent.east |- ye) {origen};
+  \node[rol, below right, xshift=0.12cm] at (ent.east |- ye) {1};
+  \node[rol, below left, xshift=-0.12cm] at (eve.west |- ye) {0..*};
 
   % ---- generalización: las entidades del DT heredan de EntidadDigital ----
   \def\ybus{0.6}
@@ -128,55 +131,56 @@
   \node[rol, below left, xshift=-0.12cm] at (per.west |- 0,\yv) {1..3};
   \node[rol, below right, xshift=0.12cm] at (usu.east |- 0,\yv) {1};
 
-  % ---- carriles bajo la clase más alta ----
-  \path let \p1=(veh.south), \p2=(via.south), \p3=(sol.south), \p4=(inc.south), \p5=(usu.south)
-    in coordinate (lb) at (0,{min(\y1,\y2,\y3,\y4,\y5)});
-  \coordinate (Ls) at ($(lb)+(0,-0.45)$);   % Solicitud --> PerfilPasajero
-  \coordinate (Li) at ($(lb)+(0,-0.85)$);   % Incidencia --> Viaje
-  \coordinate (Lw) at ($(lb)+(0,-1.35)$);   % Viaje --> Vehiculo
-  \coordinate (Lv) at ($(lb)+(0,-1.85)$);   % Viaje --> PerfilConductor
-  \coordinate (Le) at ($(lb)+(0,-2.25)$);   % Vehiculo --> PerfilConductor
-
-  % perfiles concretos, alineados con los carriles que llegan a ellos
-  \node[clase, anchor=west] (pas) at (per.west |- Ls)
-    {\textbf{PerfilPasajero}
-     \nodepart{two} -prioridadAlta: boolean
-     \nodepart{three} +solicitarPlaza(v: Viaje): Solicitud};
-  \node[clase, anchor=west] (con) at ($(per.west |- Lv)!0.5!(per.west |- Le)$)
-    {\textbf{PerfilConductor}
-     \nodepart{two} -declaracionLicencia: boolean\\ -fechaDeclaracion: DateTime
-     \nodepart{three} +registrarVehiculo(): Vehiculo\\ +publicarViaje(): Viaje};
-  \node[clase, anchor=north west] (adm) at ($(con.south west)+(0,-0.45)$)
+  % ================= jerarquía de perfiles (árbol bajo Perfil) =================
+  % nivel 1: PerfilViajero y PerfilAdministrador, por debajo de Perfil y de Usuario
+  \path let \p1=(per.south), \p2=(usu.south) in
+    coordinate (b1) at (\x1,{min(\y1-0.4cm,\y2-0.05cm)});
+  \node[clase, anchor=north east] (vij) at ($(b1)+(-0.4,-0.4)$)
+    {\textbf{\textit{PerfilViajero}}\\ \textit{\{abstracta\}}
+     \nodepart{two} \#valoracionMedia: double
+     \nodepart{three} +recibirValoracion(p: int): void};
+  \node[clase, anchor=north west] (adm) at ($(b1)+(0.4,-0.4)$)
     {\textbf{PerfilAdministrador}
      \nodepart{two} \mbox{}
      \nodepart{three} +gestionarPerfiles(u: Usuario): void\\ +lanzarSimulacion(e: Escenario): void\\
        +revisarIncidencia(i: Incidencia): void};
 
-  % perfil abstracto intermedio: lo común a quien viaja (la valoración)
-  \path let \p1=(pas.east), \p2=(con.east) in coordinate (t1) at ({max(\x1,\x2)+0.45},0);
-  \coordinate (mv) at ($(pas.east)!0.5!(con.east)$);
-  \node[clase, anchor=west] (vij) at ($(t1 |- mv)+(0.45,0)$)
-    {\textbf{\textit{PerfilViajero}}\\ \textit{\{abstracta\}}
-     \nodepart{two} \#valoracionMedia: double
-     \nodepart{three} +recibirValoracion(p: int): void};
+  % nivel 2: perfiles de quien viaja; el conductor, más bajo, para que sus
+  % carriles pasen por debajo del pasajero
+  \coordinate (b2) at ($(vij.south)+(0,-0.4)$);
+  \node[clase, anchor=north east] (pas) at ($(b2)+(-0.25,-0.4)$)
+    {\textbf{PerfilPasajero}
+     \nodepart{two} -prioridadAlta: boolean
+     \nodepart{three} +solicitarPlaza(v: Viaje): Solicitud};
+  \node[clase, anchor=north west] (con) at ($(b2 |- pas.south)+(0.25,-0.3)$)
+    {\textbf{PerfilConductor}
+     \nodepart{two} -declaracionLicencia: boolean\\ -fechaDeclaracion: DateTime
+     \nodepart{three} +registrarVehiculo(): Vehiculo\\ +publicarViaje(): Viaje};
 
-  % generalización: PerfilConductor y PerfilPasajero --|> PerfilViajero
-  \draw[gen] (t1 |- vij.west) -- (vij.west);
-  \draw[draw=Color2, line width=0.5pt] (t1 |- pas.east) -- (t1 |- con.east);
-  \foreach \n in {pas,con}
-    \draw[draw=Color2, line width=0.5pt] (t1 |- \n.east) -- (\n.east);
-
-  % generalización: PerfilViajero y PerfilAdministrador --|> Perfil (tronco a la derecha)
-  \path let \p1=(per.east), \p2=(vij.east) in coordinate (tr) at ({max(\x1,\x2)+0.4},0);
-  \draw[gen] (tr |- per.east) -- (per.east);
-  \draw[draw=Color2, line width=0.5pt] (tr |- per.east) -- (tr |- adm.east);
+  % generalización: PerfilViajero y PerfilAdministrador --|> Perfil
+  \draw[gen] (b1) -- (per.south);
+  \draw[draw=Color2, line width=0.5pt] (vij.north |- b1) -- (adm.north |- b1);
   \foreach \n in {vij,adm}
-    \draw[draw=Color2, line width=0.5pt] (tr |- \n.east) -- (\n.east);
+    \draw[draw=Color2, line width=0.5pt] (\n.north |- b1) -- (\n.north);
+  % generalización: PerfilPasajero y PerfilConductor --|> PerfilViajero
+  \draw[gen] (b2) -- (vij.south);
+  \draw[draw=Color2, line width=0.5pt] (pas.north |- b2) -- (con.north |- b2);
+  \foreach \n in {pas,con}
+    \draw[draw=Color2, line width=0.5pt] (\n.north |- b2) -- (\n.north);
+
+  % ---- carriles bajo la clase más alta; los de los perfiles, a su altura ----
+  \path let \p1=(veh.south), \p2=(via.south), \p3=(sol.south), \p4=(inc.south), \p5=(usu.south)
+    in coordinate (lb) at (0,{min(\y1,\y2,\y3,\y4,\y5)});
+  \coordinate (Li) at ($(lb)+(0,-0.5)$);    % Incidencia --> Viaje
+  \coordinate (Lw) at ($(lb)+(0,-1.0)$);    % Viaje --> Vehiculo
+  \coordinate (Ls) at (pas.west);           % Solicitud --> PerfilPasajero
+  \coordinate (Lv) at ($(con.north west)!0.3!(con.south west)$);   % Viaje --> PerfilConductor
+  \coordinate (Le) at ($(con.north west)!0.75!(con.south west)$);  % Vehiculo --> PerfilConductor
 
   % Solicitud --> PerfilPasajero (pasajero)
   \coordinate (s1) at ($(sol.south)+(0.2,0)$);
   \draw[asoc] (s1) -- (s1 |- Ls) -- (pas.west |- Ls);
-  \node[rol, above left] at (pas.west |- Ls) {pasajero\ 1};
+  \node[rol, above left, xshift=-0.12cm] at (pas.west |- Ls) {pasajero\ 1};
   \node[rol, right] at ($(s1)+(0,-0.2)$) {0..*};
   % Incidencia --> Viaje
   \coordinate (s2) at ($(inc.south)+(-0.3,0)$);  \coordinate (t2) at ($(via.south)+(0.45,0)$);
@@ -184,20 +188,20 @@
   \node[rol, right] at ($(t2)+(0,-0.2)$) {viaje\ 1};
   \node[rol, left]  at ($(s2)+(0,-0.2)$) {0..*};
   % Viaje --> Vehiculo (vehículo con el que se realiza el viaje)
-  \coordinate (s5) at ($(via.south)+(-0.75,0)$);  \coordinate (t5) at ($(veh.south)+(0.6,0)$);
+  \coordinate (s5) at ($(via.south)+(-1.0,0)$);  \coordinate (t5) at ($(veh.south)+(0.8,0)$);
   \draw[asoc] (s5) -- (s5 |- Lw) -- (t5 |- Lw) -- (t5);
   \node[rol, right] at ($(t5)+(0,-0.2)$) {vehiculo\ 1};
   \node[rol, left]  at ($(s5)+(0,-0.2)$) {0..*};
   % Viaje --> PerfilConductor (conductor)
   \coordinate (s3) at ($(via.south)+(-0.25,0)$);
   \draw[asoc] (s3) -- (s3 |- Lv) -- (con.west |- Lv);
-  \node[rol, above left] at (con.west |- Lv) {conductor\ 1};
+  \node[rol, above left, xshift=-0.12cm] at (con.west |- Lv) {conductor\ 1};
   \node[rol, left] at ($(s3)+(0,-0.2)$) {0..*};
   % Vehiculo --> PerfilConductor (propietario)
   \coordinate (s4) at (veh.south);
   \draw[asoc] (s4) -- (s4 |- Le) -- (con.west |- Le);
-  \node[rol, below left] at (con.west |- Le) {propietario\ 1};
-  \node[rol, right] at ($(s4)+(0,-0.2)$) {0..*};
+  \node[rol, below left, xshift=-0.12cm] at (con.west |- Le) {propietario\ 1};
+  \node[rol, left] at ($(s4)+(0,-0.2)$) {0..*};
 
   % ================= fila inferior: simulación =================
   \coordinate (rc) at ($(Le)+(0,-0.6)$);
@@ -226,12 +230,12 @@
   % Escenario <>--> ResultadoSimulacion (un resultado por réplica)
   \coordinate (yr) at ($(esc.north)+(0,-1.2)$);
   \draw[compos] (esc.west |- yr) -- (res.east |- yr);
-  \node[rol, above right] at (res.east |- yr) {resultados};
-  \node[rol, below right] at (res.east |- yr) {1..*};
-  \node[rol, below left] at (esc.west |- yr) {1};
+  \node[rol, above right, xshift=0.12cm] at (res.east |- yr) {resultados};
+  \node[rol, below right, xshift=0.12cm] at (res.east |- yr) {1..*};
+  \node[rol, below left, xshift=-0.15cm] at (esc.west |- yr) {1};
   % Escenario <>--> AgenteSimulado (población sintética)
   \draw[compos] (esc.east |- yr) -- (age.west |- yr);
-  \node[rol, above left] at (age.west |- yr) {agentes};
-  \node[rol, below left] at (age.west |- yr) {1..*};
-  \node[rol, below right] at (esc.east |- yr) {1};
+  \node[rol, above left, xshift=-0.12cm] at (age.west |- yr) {agentes};
+  \node[rol, below left, xshift=-0.12cm] at (age.west |- yr) {1..*};
+  \node[rol, below right, xshift=0.15cm] at (esc.east |- yr) {1};
 \end{tikzpicture}

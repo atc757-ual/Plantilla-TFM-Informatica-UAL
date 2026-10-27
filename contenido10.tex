@@ -40,7 +40,7 @@ La Tabla~\ref{tab:capas} muestra la arquitectura técnica del sistema.
     \textbf{Capa} & \textbf{Responsabilidad} & \textbf{Tecnología prevista} \\
     \hline
     Presentación & \textit{Frontend} usuarios (web + móvil) + Panel Admin (web) & Angular + Ionic \\
-    API / \textit{Backend} & Autenticación, usuarios, viajes, \textit{matching}, reglas & Node.js + NestJS \\
+    API / \textit{Backend} & Autenticación, usuarios, viajes, \textit{matching}, reglas & Node.js + NestJS + TypeORM \\
     Persistencia & Usuarios y perfiles, vehículos, viajes, solicitudes, incidencias, estados, datos de simulación & PostgreSQL + PostGIS \\
     Gemelo Digital & Representación de entidades y estado del sistema & Servicio/módulo DT \\
     Simulación & Generación de escenarios y ejecución de experimentos & Motor propio basado en agentes \\
@@ -54,7 +54,7 @@ La Tabla~\ref{tab:capas} muestra la arquitectura técnica del sistema.
 \textbf{Descripción de las capas:}
 \begin{itemize}
     \item \textbf{Capa de Presentación:} Interfaz de usuario para conductores y pasajeros (web + móvil) y panel de administración (web). Se implementa con Angular + Ionic.
-    \item \textbf{Capa de API/\textit{Backend}:} Expone los servicios del sistema mediante APIs REST. Se implementa con Node.js y el \textit{framework} NestJS, cuyos módulos se corresponden con los bloques de la arquitectura.
+    \item \textbf{Capa de API/\textit{Backend}:} Expone los servicios del sistema mediante APIs REST. Se implementa con Node.js y el \textit{framework} NestJS, cuyos módulos se corresponden con los bloques de la arquitectura. El acceso a datos se realiza con TypeORM, que admite los tipos geográficos de PostGIS que necesita el \textit{matching}.
     \item \textbf{Capa de Persistencia:} Almacena y recupera datos. PostgreSQL + PostGIS permite consultas geoespaciales para el \textit{matching}.
     \item \textbf{Capa de Gemelo Digital:} Mantiene una representación sincronizada del estado del sistema. Se actualiza por eventos.
     \item \textbf{Capa de Simulación:} Genera escenarios (S0--S5) y ejecuta simulaciones sobre una copia del estado del Gemelo Digital.
@@ -85,6 +85,15 @@ La Tabla~\ref{tab:correspondencia} muestra la correspondencia entre los bloques 
   \caption{Correspondencia entre bloques funcionales y capas técnicas.}
   \label{tab:correspondencia}
 \end{table}
+
+\subsection{Diseño de la API y seguridad}
+\label{sec:api-seguridad}
+
+Las APIs REST de la plataforma siguen la guía de diseño TMF630 de TM Forum \cite{TMF630}: cada recurso se devuelve con su identificador, su enlace (\texttt{href}) y su tipo (\texttt{@type}); las listas se paginan; y todos los errores comparten un mismo objeto \texttt{Error} con un código estable que el \textit{frontend} puede interpretar. Cada respuesta incluye además un identificador de petición (\texttt{X-Request-Id}) que permite seguirla en los registros del sistema. Se eligió TMF630 por ser una norma de la industria con convenciones completas para la identificación de recursos, la paginación y los errores. La API se documenta con OpenAPI 3, generado a partir del propio código, de modo que la documentación no puede desfasarse de la implementación.
+
+La autenticación (RF-02) combina dos \textit{tokens}: uno de acceso, de corta duración (15 minutos), que acompaña a cada petición, y uno de renovación, que permite obtener otro de acceso sin volver a introducir la contraseña. Del de renovación solo se guarda su \textit{hash}; sirve una única vez y se sustituye en cada renovación, y si se presenta uno ya usado, señal de que ha sido robado, se anula toda la sesión, siguiendo las recomendaciones de seguridad de OAuth 2.0 \cite{RFC9700}. La sesión caduca tras 7 días sin uso y, como máximo, a los 30 días del inicio de sesión; cerrar sesión la anula de inmediato.
+
+La autorización por perfil (RNF-04) es segura por defecto: toda la API exige autenticación salvo las operaciones públicas declaradas de forma explícita (registro, inicio de sesión y renovación de la sesión), y cada operación indica qué perfiles pueden usarla. Así, una operación nueva queda protegida aunque se olvide indicarlo. El registro solo admite correos de la Universidad de Almería (RF-01), y el primer administrador se crea en el despliegue mediante un comando que genera una contraseña aleatoria.
 
 \section{Modelo del Gemelo Digital}
 \label{sec:modelo-dt}
