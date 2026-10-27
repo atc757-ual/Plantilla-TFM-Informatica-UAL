@@ -4,16 +4,17 @@
 % la clase abstracta Perfil se traduce como una tabla por perfil concreto,
 % cada una 1:1 con USUARIO (su clave primaria es id_usuario), de modo que un
 % usuario puede tener varios perfiles y cada perfil solo guarda sus datos.
-% EVENTO guarda una referencia logica a la entidad que lo origina.
+% EVENTO guarda una referencia logica a la entidad que lo origina; PARKING y
+% ZONA_SERVICIO son datos de referencia sin claves foraneas (fila 5).
 
 \begin{tikzpicture}[x=1cm,y=1cm, entidad/.append style={minimum width=3.0cm}]
   % columnas y filas
   \def\xa{1.6} \def\xb{5.75} \def\xc{9.9} \def\xd{14.05}
-  \def\ya{13.0} \def\yb{9.3} \def\yc{5.6} \def\yd{1.9}
+  \def\ya{13.0} \def\yb{9.3} \def\yc{5.6} \def\yd{1.9} \def\ye{-1.6}
 
   % ---------------- fila 1: cuenta y perfiles ----------------
   \node[entidad] (pad) at (\xa,\ya) {\textbf{PERFIL\_ADMINISTRADOR}\\ \scriptsize id\_usuario (PK, FK)\\ activo, fecha\_alta};
-  \node[entidad] (usu) at (\xb,\ya) {\textbf{USUARIO}\\ \scriptsize id (PK)\\ nombre\\ email\\ password\_hash\\ tolerancia\_horaria};
+  \node[entidad] (usu) at (\xb,\ya) {\textbf{USUARIO}\\ \scriptsize id (PK)\\ nombre, email, teléfono\\ password\_hash\\ condiciones\_aceptadas\_en\\ tolerancia\_horaria};
   \node[entidad] (pco) at (\xc,\ya) {\textbf{PERFIL\_CONDUCTOR}\\ \scriptsize id\_usuario (PK, FK)\\ activo, fecha\_alta\\ valoración\_media\\ declaración\_licencia\\ fecha\_declaración};
   \node[entidad] (veh) at (\xd,\ya) {\textbf{VEHÍCULO}\\ \scriptsize id (PK)\\ id\_conductor (FK)\\ matrícula\\ capacidad\\ estado};
 
@@ -25,12 +26,20 @@
 
   % ---------------- fila 3: solicitudes y eventos ----------------
   \node[entidad] (sol) at (\xb,\yc) {\textbf{SOLICITUD}\\ \scriptsize id (PK)\\ id\_viaje (FK)\\ id\_pasajero (FK)\\ fecha\_solicitud\\ prioritaria\\ estado};
-  \node[entidad] (eve) at (\xd,\yc) {\textbf{EVENTO}\\ \scriptsize id (PK)\\ id\_entidad\_origen\\ tipo\\ payload\\ marca\_temporal};
+  \node[entidad] (pos) at (\xd,\yc) {\textbf{POSICIÓN}\\ \scriptsize id (PK)\\ id\_viaje (FK)\\ ubicación\\ marca\_temporal};
 
   % ---------------- fila 4: simulación ----------------
   \node[entidad] (age) at (\xb,\yd) {\textbf{AGENTE\_SIMULADO}\\ \scriptsize id (PK)\\ id\_escenario (FK)\\ origen, destino\\ hora\_deseada\\ modo\_habitual\\ conduce};
   \node[entidad] (esc) at (\xc,\yd) {\textbf{ESCENARIO}\\ \scriptsize id (PK)\\ nombre, n\_usuarios\\ adopción, reparto\_modal\\ ventana\_temporal\\ réplicas};
   \node[entidad] (res) at (\xd,\yd) {\textbf{RESULTADO}\\ \scriptsize id (PK)\\ id\_escenario (FK)\\ semilla\\ vehículos, ocupación\\ solicitudes\_cubiertas};
+  \node[entidad] (avi) at (\xa,\yd) {\textbf{AVISO}\\ \scriptsize id (PK)\\ id\_usuario (FK)\\ tipo, contenido\\ leído\\ fecha};
+
+  % ---------------- fila 5: eventos y lugares de referencia ----------------
+  % Sin claves foráneas: EVENTO guarda una referencia lógica a su entidad, y
+  % PARKING y ZONA_SERVICIO son datos de referencia de la plataforma
+  \node[entidad] (eve) at (\xb,\ye) {\textbf{EVENTO}\\ \scriptsize id (PK)\\ secuencia\\ id\_entidad\_origen\\ tipo, payload\\ marca\_temporal};
+  \node[entidad] (par) at (\xc,\ye) {\textbf{PARKING}\\ \scriptsize id (PK)\\ nombre\\ ubicación\\ activo, orden};
+  \node[entidad] (zon) at (\xd,\ye) {\textbf{ZONA\_SERVICIO}\\ \scriptsize id (PK)\\ nombre, centro\\ radio, área\\ activa};
 
   % ---------------- relaciones horizontales ----------------
   % USUARIO 1 --- 0..1 PERFIL_ADMINISTRADOR
@@ -78,4 +87,13 @@
   \draw[rel] (1.2,0 |- inc.south) -- (1.2,\yl) -- (10.6,\yl) -- (10.6,0 |- via.south);
   \node[etqr, left] at ($(1.2,0 |- inc.south)+(0,-0.25)$) {N};
   \node[etqr, right] at ($(10.6,0 |- via.south)+(0,-0.25)$) {1};
+  % VIAJE 1 --- N POSICIÓN (seguimiento del viaje en curso)
+  \draw[rel] (11.1,0 |- via.south) -- (11.1,\yc) -- (pos.west |- 0,\yc);
+  \node[etqr, right] at ($(11.1,0 |- via.south)+(0,-0.25)$) {1};
+  \node[etqr, above] at ($(pos.west |- 0,\yc)+(-0.3,0)$) {N};
+  % USUARIO 1 --- N AVISO: por el margen izquierdo y por encima de la fila 1
+  \coordinate (ut) at ($(usu.north)+(0,0.35)$);
+  \draw[rel] (usu.north) -- (ut) -- (-0.3,0 |- ut) -- (-0.3,\yd) -- (avi.west |- 0,\yd);
+  \node[etqr, right] at ($(usu.north)+(0,0.2)$) {1};
+  \node[etqr, above] at ($(avi.west |- 0,\yd)+(-0.15,0)$) {N};
 \end{tikzpicture}

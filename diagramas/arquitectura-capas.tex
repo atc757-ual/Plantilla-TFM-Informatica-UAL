@@ -6,24 +6,25 @@
     % --- bandas de capas ---
     \node[capa, minimum width=12.7cm, minimum height=1.45cm] (pres) at (6.5,12.30)
       {\textbf{1. Presentación}\\[1pt]
-       {\scriptsize\textit{Frontend} de usuarios (Angular + Ionic, web y móvil) $\cdot$ panel de administración (web)}};
+       {\scriptsize\textit{Frontend} de usuarios (Angular + Ionic + Capacitor, web y móvil) $\cdot$ panel de administración (web)}};
 
     \node[capa, minimum width=12.7cm, minimum height=1.45cm] (api) at (6.5,10.30)
-      {\textbf{2. API / Backend (Node.js + NestJS)}\\[1pt]
-       {\scriptsize autenticación $\cdot$ usuarios y perfiles $\cdot$ viajes $\cdot$ solicitudes $\cdot$ incidencias $\cdot$ \textit{matching} $\cdot$ notificaciones}};
+      {\textbf{2. API / Backend (una aplicación Node.js + NestJS)}\\[1pt]
+       {\scriptsize autenticación $\cdot$ usuarios $\cdot$ viajes $\cdot$ solicitudes $\cdot$ incidencias $\cdot$ seguimiento $\cdot$ lugares $\cdot$ \textit{matching} $\cdot$ avisos}};
 
     \node[capa, minimum width=6.1cm, minimum height=2.60cm] (dt) at (3.35,7.70)
-      {\textbf{3a. Gemelo Digital}\\[1pt]
-       \scriptsize API del DT\\ sincronización por eventos\\ modelo de estado};
+      {\textbf{3a. Gemelo Digital} (módulo del \textit{backend})\\[1pt]
+       \scriptsize gemelos de vehículo, viaje y usuario\\ dentro de un gemelo del sistema\\
+       eventos en orden y sin duplicados\\ gemelo vivo y una copia por réplica};
 
     \node[capa, minimum width=6.1cm, minimum height=2.60cm] (sim) at (9.65,7.70)
-      {\textbf{3b. Simulación}\\[1pt]
+      {\textbf{3b. Simulación} (proceso aparte: \textit{worker})\\[1pt]
        \scriptsize generador de escenarios (A)\\ motor de simulación (B)\\ cálculo de métricas\\[1pt]
        sobre una \textbf{copia} del estado del DT};
 
     \node[capa, minimum width=12.7cm, minimum height=1.45cm] (pers) at (6.5,5.60)
       {\textbf{4. Persistencia (PostgreSQL + PostGIS)}\\[1pt]
-       {\scriptsize usuarios y perfiles, vehículos, viajes, solicitudes, incidencias, estados y resultados de simulación}};
+       {\scriptsize usuarios y perfiles, vehículos, viajes, solicitudes, incidencias, eventos, parkings, zona de servicio y resultados}};
 
     % --- capa transversal ---
     \draw[draw=Color2!70, fill=Color2!3, rounded corners=2pt, dashed]
