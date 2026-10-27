@@ -17,8 +17,9 @@ Los elementos que se incluyen dentro del alcance del proyecto se detallan en la 
     \hline
     \textbf{Elemento} \\
     \hline
-    Registro e inicio de sesión único \\
+    Registro con verificación del correo, inicio de sesión único y recuperación de la contraseña \\
     Perfiles de conductor, pasajero y administrador (selector de modo) \\
+    Selección de direcciones y de la ubicación del dispositivo, y los parkings del campus como destino \\
     Publicación y solicitud de viajes \\
     \textit{Matching} conductor-pasajero \\
     Gestión de plazas y estado del viaje \\
@@ -31,6 +32,8 @@ Los elementos que se incluyen dentro del alcance del proyecto se detallan en la 
   \caption{Elementos dentro del alcance.}
   \label{tab:dentro-alcance}
 \end{table}
+
+El ámbito geográfico se limita a una \textbf{zona de servicio}: un círculo de 30~km de radio alrededor del campus de La Cañada, cuyo centro es la media de la posición de sus parkings. Abarca Almería y los municipios cercanos desde los que se viaja a diario al campus (como Huércal de Almería, Vícar o Roquetas de Mar), y deja fuera los más alejados de la provincia. Una dirección fuera de la zona no puede usarse para buscar ni publicar viajes (RF-27): la aplicación avisa de que aún no hay cobertura allí y registra, de forma anónima, el municipio y una zona aproximada de 1~km, para conocer la demanda no cubierta sin guardar datos personales (RNF-04). La zona se define en la base de datos, de modo que se puede ampliar o ajustar sin cambiar el código.
 
 \subsection{Fuera del alcance inicial}
 

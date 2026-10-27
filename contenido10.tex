@@ -113,6 +113,13 @@ El \textit{frontend} accede a la API mediante un servicio de Angular por dominio
 
 El Gemelo Digital será una representación computacional del sistema de movilidad compartida gestionado por la plataforma. Se prioriza el nivel de abstracción necesario para responder a la pregunta de investigación, sin modelar elementos físicos complejos del vehículo.
 
+\subsection{Granularidad: un gemelo del sistema compuesto por gemelos de entidad}
+\label{sec:granularidad-dt}
+
+En la literatura conviven dos formas de modelar un gemelo digital de un sistema: un único gemelo del sistema completo, en el que las entidades son parte de su estado, o varios gemelos de entidad (uno por vehículo, por viaje\ldots) que, juntos, forman el del sistema. Este trabajo adopta la segunda: el gemelo del sistema se compone de un gemelo por cada vehículo, cada viaje y cada usuario, y cada uno guarda el estado de su entidad y su comportamiento (por ejemplo, el gemelo de un vehículo conoce su posición y sus plazas libres, y el de un viaje, su ruta y sus pasajeros). Las métricas del sistema, como la ocupación media o los vehículos evitados, se obtienen agregando las de sus gemelos.
+
+Esta elección encaja con el motor de simulación basado en agentes (DP-03): en cada réplica, los gemelos de entidad son los agentes que actúan y evolucionan. Para evitar los problemas de coherencia que tendría que cada gemelo se sincronizase por su cuenta, la sincronización se separa del modelado: un único punto, el gemelo del sistema, recibe los eventos de la plataforma y los reparte a los gemelos a los que afectan (Sección~\ref{sec:sincronizacion-dt}).
+
 \subsection{Entidades digitales}
 
 Las entidades digitales del Gemelo Digital se detallan en la Tabla~\ref{tab:entidades}.
@@ -152,12 +159,13 @@ En las asociaciones solo se nombran los roles, y las flechas indican la navegabi
 \end{sidewaysfigure}
 
 \subsection{Principios de sincronización}
+\label{sec:sincronizacion-dt}
 
 \begin{itemize}
-    \item Cada entidad relevante del sistema real tiene una representación digital identificable.
-    \item Los cambios de estado de la plataforma se reflejan en el modelo digital.
-    \item El modelo digital puede consultar el estado actual y utilizarlo como entrada para simulación.
-    \item La comunicación entre plataforma y Gemelo Digital se diseña mediante interfaces bien definidas (eventos + API).
+    \item \textbf{Cada entidad relevante tiene su gemelo identificable}, con el mismo identificador que en la plataforma.
+    \item \textbf{Ningún cambio sin su evento:} cada cambio de estado de la plataforma se guarda junto con su evento en la misma transacción de la base de datos (patrón \textit{outbox}), de modo que no puede haber un cambio sin evento ni un evento de un cambio que se deshizo (RNF-08). Cada evento lleva un identificador, su tipo (\texttt{entidad.acción}, en pasado), su marca temporal, la entidad de origen y el estado de esa entidad (DP-05).
+    \item \textbf{Un único consumidor, ordenado e idempotente:} el gemelo del sistema procesa los eventos en orden de identificador, recuerda el último procesado e ignora los que ya aplicó; así, un evento repetido no se aplica dos veces y, si el proceso se detiene, continúa desde donde se quedó sin perder ninguno (RNF-11). Cada evento se entrega a los gemelos de entidad a los que afecta: aceptar una solicitud, por ejemplo, añade un pasajero al gemelo del viaje y resta una plaza al de su vehículo.
+    \item \textbf{Un gemelo vivo y una instancia por réplica:} el gemelo vivo se mantiene sincronizado con la plataforma; cada réplica de simulación parte de una copia de su estado, evoluciona por su cuenta y se descarta al terminar, quedándose solo con los resultados. Así se pueden ejecutar muchas réplicas sin afectar a los datos reales.
 \end{itemize}
 
 \subsection{Nivel de fidelidad}
@@ -193,7 +201,7 @@ Los criterios de compatibilidad se detallan en la Tabla~\ref{tab:criterios}.
     \textbf{Criterio} & \textbf{Ejemplo} & \textbf{Prioridad} \\
     \hline
     Origen compatible & Distancia máxima entre puntos de origen & Alta \\
-    Destino compatible & Destino igual o dentro de una zona definida & Alta \\
+    Destino compatible & Mismo parking del campus o uno cercano al ir; dirección cercana al volver & Alta \\
     Ventana temporal & Hora de salida $\pm$ tolerancia & Alta \\
     Capacidad & Plazas disponibles del viaje & Alta \\
     Desvío & Incremento de recorrido por recoger pasajeros & Media \\
@@ -216,11 +224,15 @@ Los criterios de compatibilidad se detallan en la Tabla~\ref{tab:criterios}.
 
 El proceso se detalla en el diagrama de secuencia (Figura~\ref{fig:secuencia-matching}) y en el de actividad (Figura~\ref{fig:actividad-matching}) del Anexo~\ref{anx:diagramas}.
 
+El módulo se divide en dos piezas para que la plataforma y el simulador usen el mismo código. La \textbf{puntuación} es pura: recibe los candidatos y la búsqueda, y devuelve la lista ordenada por compatibilidad, sin acceder a la base de datos, de modo que se prueba de forma aislada. La \textbf{obtención de candidatos} queda detrás de una interfaz con dos implementaciones: la de la plataforma consulta PostGIS (filtrado geoespacial) y OSRM (desvíos), y la del simulador trabaja sobre la copia en memoria del estado del Gemelo Digital. El origen y el destino de cada búsqueda son un punto elegido por el usuario (una dirección o su ubicación) y un parking del campus (RF-27).
+
 En una fase posterior, si los resultados lo justifican, podrá incorporarse una función de puntuación ponderada o un algoritmo de optimización. Esta ampliación no es necesaria para alcanzar el objetivo mínimo del TFM.
 
 \section{Módulo de simulación}
 
 La simulación es el mecanismo que convierte al Gemelo Digital en una herramienta de evaluación y no solo de representación. El módulo se compone de dos partes: el generador de escenarios, que crea la población sintética de usuarios y viajes a partir de los parámetros de cada escenario, y el motor de simulación, que ejecuta el bucle de \textit{matching} y asignación de plazas sobre una copia del estado del Gemelo Digital, sin afectar a los datos reales. Cada ejecución se repite con semillas registradas y sus resultados se almacenan en formato estructurado (RF-17) para compararlos entre escenarios. El flujo completo se recoge en la Figura~\ref{fig:secuencia-simulacion} del Anexo~\ref{anx:diagramas}.
+
+La simulación se ejecuta en un proceso aparte (\textit{worker}) para no bloquear la API (Sección~\ref{sec:estilo-arquitectonico}). El administrador la lanza desde el panel; la API la registra y se la pasa al \textit{worker}, que carga la copia del estado, ejecuta las réplicas con el mismo \textit{matching} y los mismos gemelos de entidad que la plataforma, y guarda los resultados. Mientras tanto, el panel consulta su estado hasta que termina. Como las réplicas son independientes entre sí, pueden repartirse entre varios \textit{workers} si la ejecución se alarga.
 
 Los escenarios de simulación (S0--S5) y las métricas con las que se comparan se definen en el Capítulo~\ref{ch:evaluacion} (Secciones~\ref{sec:metricas-evaluacion} y~\ref{sec:escenarios-evaluacion}), y sus parámetros en el Anexo~\ref{anx:escenarios-detalle}.
 
