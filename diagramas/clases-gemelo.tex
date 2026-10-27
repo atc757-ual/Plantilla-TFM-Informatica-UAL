@@ -29,8 +29,8 @@
   % GemeloSistema --> Evento: consume los eventos de la plataforma
   \coordinate (ye) at ($(sis.north)+(0,-0.55)$);
   \draw[asoc] (sis.west |- ye) -- (eve.east |- ye);
-  \node[rol, above left, xshift=-0.12cm] at (eve.east |- ye) {eventos};
-  \node[rol, below left, xshift=-0.12cm] at (eve.east |- ye) {0..*};
+  \node[rol, above right, xshift=0.12cm] at (eve.east |- ye) {eventos};
+  \node[rol, below right, xshift=0.12cm] at (eve.east |- ye) {0..*};
 
   % ================= fila central: el gemelo de entidad (abstracto) =================
   \node[clase, anchor=north] (ent) at ($(sis.south)+(0,-1.4)$)
