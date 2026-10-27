@@ -39,8 +39,8 @@ El trabajo se organiza en nueve fases internas (F1--F9). Estas fases no tienen f
     \textbf{Fase} & \textbf{Contenido} & \textbf{Entregables} & \textbf{Se paraleliza con} \\
     \hline
     F1. Diseño y requisitos & Arquitectura, modelo de datos, modelo DT, casos de uso y requisitos & Capítulo de arquitectura y diagramas UML & F8 \\
-    F2. Backend & API, usuarios, viajes, solicitudes y estados & Código del \textit{backend} en el repositorio & F3, F4 y F5, desde el contrato de API y el modelo de eventos \\
-    F3. Frontend & Pantallas, navegación, publicación y búsqueda de viajes & Código del \textit{frontend} en el repositorio & F2, F4 y F5 \\
+    F2. \textit{Backend} & API, usuarios, viajes, solicitudes y estados & Código del \textit{backend} en el repositorio & F3, F4 y F5, desde el contrato de API y el modelo de eventos \\
+    F3. \textit{Frontend} & Pantallas, navegación, publicación y búsqueda de viajes & Código del \textit{frontend} en el repositorio & F2, F4 y F5 \\
     F4. \textit{Matching} & Reglas de compatibilidad y asignación & Módulo de \textit{matching} implementado y probado & F2, F3 y F6 \\
     F5. Gemelo Digital & Entidades, estados y sincronización & Módulo DT operativo & F2, F3, F4 y F6 \\
     F6. Simulación & Escenarios, experimentos y métricas & Motor de simulación y escenarios S0--S5 & F4, F5 y F7 \\
@@ -67,8 +67,8 @@ Las duraciones son estimaciones y se ajustarán al avance real. El proyecto arra
     \textbf{Fase} & \textbf{Duración} & \textbf{Periodo} \\
     \hline
     F1. Diseño y requisitos & 7,5 semanas & 01/09/2026 -- 23/10/2026 \\
-    F2. Backend & 5,5 semanas & 24/10/2026 -- 30/11/2026 \\
-    F3. Frontend & 6 semanas & 02/11/2026 -- 13/12/2026 \\
+    F2. \textit{Backend} & 5,5 semanas & 24/10/2026 -- 30/11/2026 \\
+    F3. \textit{Frontend} & 6 semanas & 02/11/2026 -- 13/12/2026 \\
     F4. \textit{Matching} & 5 semanas & 02/11/2026 -- 06/12/2026 \\
     F5. Gemelo Digital & 6 semanas & 09/11/2026 -- 20/12/2026 \\
     F6. Simulación & 6 semanas & 16/11/2026 -- 27/12/2026 \\
@@ -90,6 +90,8 @@ Así, el desarrollo termina el 27/12/2026 y quedan diez días tras la evaluació
 Se distinguen hitos internos, propios de la planificación del proyecto, e hitos oficiales, establecidos por el calendario administrativo.
 
 \subsection{Hitos internos}
+
+Los hitos internos se recogen en la Tabla~\ref{tab:hitos-internos}.
 
 \begin{table}[H]
   \centering
@@ -178,9 +180,9 @@ El diagrama de Gantt abarca desde septiembre de 2026 hasta febrero de 2027 y rep
     \ganttbar{F1. Diseño y requisitos}{2026-09-01}{2026-10-23}
       \ganttmilestone[inline]{H1}{2026-10-23} \\
     \ganttgroup{Desarrollo}{2026-10-24}{2026-12-27} \\
-    \ganttbar{F2. Backend}{2026-10-24}{2026-11-30}
+    \ganttbar{F2. \textit{Backend}}{2026-10-24}{2026-11-30}
       \ganttmilestone[inline]{H2}{2026-11-30} \\
-    \ganttbar{F3. Frontend}{2026-11-02}{2026-12-13}
+    \ganttbar{F3. \textit{Frontend}}{2026-11-02}{2026-12-13}
       \ganttmilestone[inline]{H3}{2026-12-13} \\
     \ganttbar{F4. \textit{Matching}}{2026-11-02}{2026-12-06} \\
     \ganttbar{F5. Gemelo Digital}{2026-11-09}{2026-12-20}
