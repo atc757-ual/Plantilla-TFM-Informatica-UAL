@@ -12,33 +12,33 @@
       {\textbf{2. API / Backend (una aplicación Node.js + NestJS)}\\[1pt]
        {\scriptsize autenticación $\cdot$ usuarios $\cdot$ viajes $\cdot$ solicitudes $\cdot$ incidencias $\cdot$ seguimiento $\cdot$ lugares $\cdot$ \textit{matching} $\cdot$ avisos}};
 
-    \node[capa, minimum width=6.1cm, minimum height=2.60cm] (dt) at (3.35,7.70)
+    \node[capa, minimum width=6.25cm, minimum height=2.60cm] (dt) at (3.275,7.55)
       {\textbf{3a. Gemelo Digital} (módulo del \textit{backend})\\[1pt]
        {\scriptsize\begin{tabular}{@{}l@{}}gemelos de vehículo, viaje y usuario\\ dentro de un gemelo del sistema\\
        eventos en orden y sin duplicados\\ gemelo vivo y una copia por réplica\end{tabular}}};
 
-    \node[capa, minimum width=6.1cm, minimum height=2.60cm] (sim) at (9.65,7.70)
+    \node[capa, minimum width=6.25cm, minimum height=2.60cm] (sim) at (9.725,7.55)
       {\textbf{3b. Simulación} (proceso aparte: \textit{worker})\\[1pt]
        {\scriptsize\begin{tabular}{@{}l@{}}generador de escenarios (A)\\ motor de simulación (B)\\ cálculo de métricas\\
        sobre una \textbf{copia} del estado del DT\end{tabular}}};
 
-    \node[capa, minimum width=12.7cm, minimum height=1.45cm] (pers) at (6.5,5.60)
+    \node[capa, minimum width=12.7cm, minimum height=1.45cm] (pers) at (6.5,5.15)
       {\textbf{4. Persistencia (PostgreSQL + PostGIS)}\\[1pt]
        {\scriptsize usuarios, perfiles, vehículos, viajes, solicitudes, incidencias, eventos, lugares y resultados}};
 
     % --- capa transversal ---
     \draw[draw=Color2!70, fill=Color2!3, rounded corners=2pt, dashed]
-      (13.05,4.90) rectangle (15.60,13.00);
-    \node[font=\scriptsize, rotate=90, align=center, text=Color2] at (14.32,8.95)
+      (13.05,4.40) rectangle (15.60,13.00);
+    \node[font=\scriptsize, rotate=90, align=center, text=Color2] at (14.32,8.70)
       {\textbf{DevOps (transversal)}\\ GitHub $\cdot$ GitHub Actions};
 
     % --- conectores ---
     \draw[flecha] (6.5,11.55) -- (6.5,11.05);
-    \draw[flecha] (api.south) -- (6.5,9.10) -- (3.35,9.10) -- (dt.north);
-    \draw[flecha] (api.south) -- (6.5,9.10) -- (9.65,9.10) -- (sim.north);
+    \draw[flecha] (api.south) -- (6.5,9.10) -- (3.275,9.10) -- (dt.north);
+    \draw[flecha] (api.south) -- (6.5,9.10) -- (9.725,9.10) -- (sim.north);
     \draw[flecha] (dt.south) -- (dt.south |- pers.north);
     \draw[flecha] (sim.south) -- (sim.south |- pers.north);
 
     % --- barra de soporte ---
-    \node[font=\scriptsize, fill=white, inner sep=1pt] at (14.32,4.70) {};
+    \node[font=\scriptsize, fill=white, inner sep=1pt] at (14.32,4.20) {};
   \end{tikzpicture}
